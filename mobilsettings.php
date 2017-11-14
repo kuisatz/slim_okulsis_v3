@@ -79,15 +79,28 @@ $app->get("/mobilUrlData_mobilsettings/", function () use ($app ) {
  *  * Okan CIRAN
  * @since 25.10.2017
  */
-$app->get("/mobilwsdl_mobilsettings/", function () use ($app ) {
+$app->get("/MobilwsdlEncryptPassword_mobilsettings/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mobilSettingsBLL'); 
     
    
-    $resDataInsert = $BLL->mobilwsdl( ); 
-  
+    $vpswrd = NULL; 
+    if (isset($_GET['pswrd'])) {
+        $stripper->offsetSet('pswrd', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL1, 
+                $app, $_GET['pswrd']));
+    }
     
+    $stripper->strip();
+    if ($stripper->offsetExists('pswrd')) {
+        $vpswrd = $stripper->offsetGet('pswrd')->getFilterValue();
+    }
+    
+   
+    $resDataInsert = $BLL->mobilwsdlEncryptPassword(array( 
+        'url' => $_GET['url'], 
+        'PswrD' => $vpswrd,  
+        ));
     
     $app->response()->header("Content-Type", "application/json"); 
     $app->response()->body(json_encode($resDataInsert));
@@ -95,5 +108,37 @@ $app->get("/mobilwsdl_mobilsettings/", function () use ($app ) {
 }
 );
   
-
+/**
+ *  * Okan CIRAN
+ * @since 25.10.2017
+ */
+$app->get("/MobilwsdlDecryptPassword_mobilsettings/", function () use ($app ) {
+    $stripper = $app->getServiceManager()->get('filterChainerCustom');
+    $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
+    $BLL = $app->getBLLManager()->get('mobilSettingsBLL'); 
+    
+   
+    $vpswrd = NULL; 
+    if (isset($_GET['pswrd'])) {
+        $stripper->offsetSet('pswrd', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL1, 
+                $app, $_GET['pswrd']));
+    }
+    
+    $stripper->strip();
+    if ($stripper->offsetExists('pswrd')) {
+        $vpswrd = $stripper->offsetGet('pswrd')->getFilterValue();
+    }
+    
+   
+    $resDataInsert = $BLL->mobilwsdlDecryptPassword(array( 
+        'url' => $_GET['url'], 
+        'PswrD' => $vpswrd,  
+        ));
+    
+    $app->response()->header("Content-Type", "application/json"); 
+    $app->response()->body(json_encode($resDataInsert));
+     
+}
+);
+  
 $app->run();

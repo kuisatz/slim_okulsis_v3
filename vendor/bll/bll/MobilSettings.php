@@ -100,12 +100,22 @@ class MobilSettings extends \BLL\BLLSlim{
         * pk zorunlu 
      * @return array
      */
-    public function mobilwsdl($params = array()) {
+    public function mobilwsdlEncryptPassword($params = array()) {
         $DAL = $this->slimApp->getDALManager()->get('mobilSettingsPDO');
-        $resultSet = $DAL->mobilwsdl($params);  
+        $resultSet = $DAL->mobilwsdlEncryptPassword($params);  
         return $resultSet['resultSet'];
     }
-    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params
+        * pk zorunlu 
+     * @return array
+     */
+    public function mobilwsdlDecryptPassword($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mobilSettingsPDO');
+        $resultSet = $DAL->mobilwsdlDecryptPassword($params);  
+        return $resultSet['resultSet'];
+    }
     
        /**
      * Function to get datagrid row count on user interface layer

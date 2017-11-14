@@ -157,37 +157,72 @@ class MobilSettings extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
-        /** 
+    
+    /** 
      * @author Okan CIRAN
-     * @ login olan userin okul bilgileri ve okul id leri   !!
+     * @ wsdl den EncryptPassword  !!
      * @version v 1.0  20.10.2017
      * @param array | null $args
      * @return array
      * @throws \PDOException
      */
-    public function mobilwsdl($params = array()) {
-      
-        ini_set("soap.wsdl_cache_enabled", "0");
-        $client = new SoapClient("https://tckimlik.nvi.gov.tr/Service/KPSPublic.asmx?WSDL");
-        
-        $_POST['tckimlikno'] *= 1; // Gönderilen talepte TC Kimlik Numarası integer olmalı.
-        try {
-            $requestData = array(// Formdan gelen değerler
-                "TCKimlikNo" => $_POST['tckimlikno'],
-                "Ad" => $_POST['ad'],
-                "Soyad" => $_POST['soyad'],
-                "DogumYili" => $_POST['dogumyili']
-            );
-            $result = $client->TCKimlikNoDogrula($requestData);
-          
+    public function mobilwsdlEncryptPassword($params = array()) {
+       try {
+        $client = new \Zend\Soap\Client("http://ws.okulsis.net/MobileLogin.asmx?wsdl");
+       
+        $PswrD='-1111111111111111111111111';
+            if ((isset($params['PswrD']) && $params['PswrD'] != "")) {           
+                $PswrD = $params['PswrD'];               
+            }
+    
+        $result = $client-> EncryptPassword( array('key' => '193+pMXyM+m9NA8OykD8ZrqY+0noc+t3zz8x8t3BcvkI=',
+                            'password' => $PswrD, 'array' => array(1,2)) );
+         
+       $key = $result->EncryptPasswordResult ; 
+     
+       return array("found" => true,  "resultSet" => $key);
             
-            if ($result->TCKimlikNoDogrulaResult) {
-                echo "TC Kimlik Numarası Geçerli";
+            if ($result->EncryptPasswordResult) {
+             //   echo "TC Kimlik Numarası Gecerli";
             } else {
-                echo "TC Kimlik Numarası Hatalı";
+             //   echo "TC Kimlik Numarası Hatalı";
             }
         } catch (Exception $ex) {
-            echo $ex->faultstring;
+              $ex->faultstring;
+        }
+    }
+
+        /** 
+     * @author Okan CIRAN
+     * @ wsdl den EncryptPassword  !!
+     * @version v 1.0  20.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function mobilwsdlDecryptPassword($params = array()) {
+       try {
+        $client = new \Zend\Soap\Client("http://ws.okulsis.net/MobileLogin.asmx?wsdl");
+       
+        $PswrD='-1111111111111111111111111';
+            if ((isset($params['PswrD']) && $params['PswrD'] != "")) {           
+                $PswrD = $params['PswrD'];               
+            }
+    
+        $result = $client-> DecryptPassword( array('key' => '193+pMXyM+m9NA8OykD8ZrqY+0noc+t3zz8x8t3BcvkI=',
+                            'password' => $PswrD, 'array' => array(1,2)) );
+         
+       $key = $result->DecryptPasswordResult ; 
+     
+       return array("found" => true,  "resultSet" => $key);
+            
+            if ($result->EncryptPasswordResult) {
+             //   echo "TC Kimlik Numarası Gecerli";
+            } else {
+             //   echo "TC Kimlik Numarası Hatalı";
+            }
+        } catch (Exception $ex) {
+              $ex->faultstring;
         }
     }
 
