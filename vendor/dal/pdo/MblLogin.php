@@ -257,7 +257,7 @@ class MblLogin extends \DAL\DalSlim {
      */
     public function gnlKullaniciFindForLoginByTcKimlikNo($params = array()) {
         try {
-           $cid = -1;
+            $cid = -1;
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
@@ -273,22 +273,44 @@ class MblLogin extends \DAL\DalSlim {
             $dbnameValue = NULL;
             $mebKodu = $this->gnlKullaniciMebKoduFindByTcKimlikNo(array('tc' => $params['tc']));
             if ((isset($mebKodu['resultSet'][0]['MEBKodu']) && $mebKodu['resultSet'][0]['MEBKodu'] != "")) {                                    
-                        $mebKoduValue = $mebKodu['resultSet'][0]['MEBKodu'];
-                        $dbnameValue = $mebKodu['resultSet'][0]['name'].'.';
-                    }  
-            if ((isset($params['sifre']) && $params['sifre'] != "")) {                                    
-                        $sifre = $params['sifre'];
-                        if ($params['sifre'] =='12345')
-                                {$sifre ='1YTr63O9Mdeg54DZefZg16g==';}
-                        
-                    }  
+                    $mebKoduValue = $mebKodu['resultSet'][0]['MEBKodu'];
+                    $dbnameValue = $mebKodu['resultSet'][0]['name'].'.';
+            }  
+                    
+            if ((isset($params['sifre']) && $params['sifre'] != "")) {            
+                $wsdlValue = NULL; 
+                $wsdl =  MobilSettings::mobilwsdlEncryptPassword(array('PswrD' => $params['sifre'])); 
+                if ((isset($wsdl['resultSet'] ) && $wsdl['resultSet']  != "")) {                                    
+                    $wsdlValue = $wsdl['resultSet'] ; 
+                }   
+                    
+                $sifre =$wsdlValue ;  
+                
+               // $deviceid = NULL;
+                if ((isset($params['DeviceID']) && $params['DeviceID'] != "")) {
+                   // $deviceid = $params['DeviceID']; 
+                    $MobilSettingsaddDevice = $this->slimApp-> getBLLManager()->get('mobilSettingsBLL');  
+                    $MobilSettingsaddDeviceArray= $MobilSettingsaddDevice->addDevice($params);
+                
+                    if ($MobilSettingsaddDeviceArray['errorInfo'][0] != "00000" &&
+                            $MobilSettingsaddDeviceArray['errorInfo'][1] != NULL &&
+                            $MobilSettingsaddDeviceArray['errorInfo'][2] != NULL)
+                        throw new \PDOException($MobilSettingsaddDeviceArray['errorInfo']);
+  
+                }    
+                
+            }
+            /////////////////////////////////////////////////
             $tc = '011111111110';
             if ((isset($params['tc']) && $params['tc'] != "")) {
                 $tc = $params['tc'];
             } 
-                 
+            if ($sifre == NULL){
+                $tc = '00000000000';
+                $sifre = '00000000000';
+            }
             $sql = "    
-            DECLARE  @KisiID uniqueidentifier ; 
+            DECLARE @KisiID uniqueidentifier ; 
 
             EXEC ".$dbnameValue."[dbo].[PRC_GNL_Kullanici_Find_For_Login_ByTcKimlikNo]
 		@KisiID = @KisiID OUTPUT,
@@ -316,7 +338,7 @@ class MblLogin extends \DAL\DalSlim {
              * 
              */
             $statement = $pdo->prepare($sql);            
-         //  echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute();
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -1326,6 +1348,9 @@ class MblLogin extends \DAL\DalSlim {
             /*
              * // <Table><Ogrenci><OgrenciID>c6bc540a-1c6e-4ee9-a7f6-3d76eb9027eb</OgrenciID><DevamsizlikKodID>0</DevamsizlikKodID><Aciklama/></Ogrenci><Ogrenci><OgrenciID>4d6ea4f9-8ad9-410e-97f9-930b6b8fe41a</OgrenciID><DevamsizlikKodID>0</DevamsizlikKodID><Aciklama/></Ogrenci><Ogrenci><OgrenciID>c82cc86a-6dde-4213-82a2-812344275720</OgrenciID><DevamsizlikKodID>0</DevamsizlikKodID><Aciklama/></Ogrenci><Ogrenci><OgrenciID>8eae147f-0798-4a77-af17-16972fc10382</OgrenciID><DevamsizlikKodID>0</DevamsizlikKodID><Aciklama/></Ogrenci><Ogrenci><OgrenciID>cf7223bc-4b0c-49c5-bf49-922a4d7f252d</OgrenciID><DevamsizlikKodID>0</DevamsizlikKodID><Aciklama/></Ogrenci></Table>
              $xml = new SimpleXMLElement('<xml/>');
+<tr><td>09:00 - 09:40</td><td>Dersiniz Yok</td><td></td></tr>
+</tbody><tbody><tr><td>09:50 - 10:30</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>10:40 - 11:20</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>11:30 - 12:10</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>12:20 - 13:00</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>13:50 - 14:30</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>14:40 - 15:20</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>15:30 - 16:10</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>16:20 - 16:40</td><td>Dersiniz Yok</td><td></td></tr>
+İleti gönderin
 
             for ($i = 1; $i <= 8; ++$i) {
                 $track = $xml->addChild('track');

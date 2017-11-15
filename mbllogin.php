@@ -96,6 +96,11 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
         $stripper->offsetSet('sifre', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
                 $app, $_GET['sifre']));
     }
+    $vDeviceID = NULL;     
+    if (isset($_GET['deviceID'])) {
+        $stripper->offsetSet('deviceID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['deviceID']));
+    }
    
     $stripper->strip();
     if ($stripper->offsetExists('tc')) {
@@ -104,12 +109,15 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
     if ($stripper->offsetExists('sifre')) {
         $vsifre = $stripper->offsetGet('sifre')->getFilterValue();
     }
-    
+    if ($stripper->offsetExists('deviceID')) {
+        $vDeviceID = $stripper->offsetGet('deviceID')->getFilterValue();
+    }
    
     $resDataInsert = $BLL->gnlKullaniciFindForLoginByTcKimlikNo(array( 
         'url' => $_GET['url'], 
         'tc' => $vtc,  
         'sifre' => $vsifre, 
+        'DeviceID' => $vDeviceID, 
         
         ));
     $app->response()->header("Content-Type", "application/json");

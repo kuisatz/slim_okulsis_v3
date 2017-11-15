@@ -122,11 +122,10 @@ class MobilSettings extends \BLL\BLLSlim{
      * @param array | null $params
         * pk zorunlu 
      * @return array
-     */
-    public function gnlKisiOkulListesix($params = array()) {
+     */ 
+    public function addDevice($params = array()) {
         $DAL = $this->slimApp->getDALManager()->get('mobilSettingsPDO');
-        $resultSet = $DAL->gnlKisiOkulListesi($params);  
-        return $resultSet['resultSet'];
+        return $DAL->addDevice($params);
     }
     /**
      * Function to get datagrid row count on user interface layer

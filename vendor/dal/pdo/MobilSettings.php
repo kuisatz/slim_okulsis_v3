@@ -170,7 +170,7 @@ class MobilSettings extends \DAL\DalSlim {
        try {
         $client = new \Zend\Soap\Client("http://ws.okulsis.net/MobileLogin.asmx?wsdl");
        
-        $PswrD='-1111111111111111111111111';
+        $PswrD='CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             if ((isset($params['PswrD']) && $params['PswrD'] != "")) {           
                 $PswrD = $params['PswrD'];               
             }
@@ -204,7 +204,7 @@ class MobilSettings extends \DAL\DalSlim {
        try {
         $client = new \Zend\Soap\Client("http://ws.okulsis.net/MobileLogin.asmx?wsdl");
        
-        $PswrD='-1111111111111111111111111';
+        $PswrD='CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             if ((isset($params['PswrD']) && $params['PswrD'] != "")) {           
                 $PswrD = $params['PswrD'];               
             }
@@ -228,46 +228,52 @@ class MobilSettings extends \DAL\DalSlim {
 
     /** 
      * @author Okan CIRAN
-     * @ login olan userin menusunu dondurur  !!
+     * @ tc nin device id sini kaydeder. !!
      * @version v 1.0  27.10.2017
      * @param array | null $args
      * @return array
      * @throws \PDOException
      */
-    public function mobilMenu1($params = array()) {
+    public function addDevice($params = array()) {
         try {
-            $pdo = $this->slimApp->getServiceManager()->get('pgConnectFactory'); 
-            $parent=0;
-            if ((isset($params['ParentID']) && $params['ParentID'] != "")) {           
-                $parent = $params['ParentID'];               
+            $pdo = $this->slimApp->getServiceManager()->get('pgConnectFactoryMobil'); 
+            $pdo->beginTransaction();    
+            $DeviceID= '';
+            if ((isset($params['DeviceID']) && $params['DeviceID'] != "")) {           
+                $DeviceID = $params['DeviceID'];               
             }
+            $tc= '';
+            if ((isset($params['tc']) && $params['tc'] != "")) {           
+                $tc = $params['tc'];               
+            } 
             
-            $sql = "   
-                   SELECT [ID]
-                        ,[MenuID]
-                        ,[ParentID]
-                        ,[MenuAdi]
-                        ,[Aciklama]
-                        ,[URL]
-                        ,[RolID]
-                        ,[SubDivision] 
-                        ,[ImageURL] 
-                        ,[divid] 
-                    FROM [dbo].[GNL_Mobil_Menuleri]
-                    where active = 0 AND deleted = 0 AND 
-                        [RolID] = ".intval($params['RolID'])."  
-                       /* AND [ParentID] = ".intval($parent)." */
-                    order by MenuID
+            $sql = " 
+                SET NOCOUNT ON;
+                declare @tcid bigint ; 
+                SELECT @tcid= [id] FROM [dbo].[Mobile_tc] mtc
+                WHERE mtc.active =0 and mtc.deleted =0 and 
+                    mtc.[banTarihi] is null and mtc.[tc] = ".$tc.";  
+  
+                INSERT INTO [BILSANET_MOBILE].[dbo].[Mobile_device] ([tcID] ,[deviceID])
+                SELECT TOP 1 @tcid , '".$DeviceID."' as deviceID
+                FROM  [BILSANET_MOBILE].[dbo].[Mobile_device] md
+                WHERE  
+                    NOT EXISTS (SELECT mdx.* FROM [BILSANET_MOBILE].[dbo].[Mobile_device] mdx
+                                WHERE mdx.[deviceID]= '".$DeviceID."'  AND 
+                                    mdx.[tcID] = @tcid ) 
+
+                SET NOCOUNT OFF;
                  "; 
             $statement = $pdo->prepare($sql);            
-     //   echo debugPDO($sql, $params);
-            $statement->execute();
-            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+     // echo debugPDO($sql, $params);
+            $result = $statement->execute(); 
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
-            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+            $pdo->commit();
+            return array("found" => true, "errorInfo" => $errorInfo,  "resultSet" => $result ); 
         } catch (\PDOException $e /* Exception $e */) {    
+            $pdo->rollback();
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }

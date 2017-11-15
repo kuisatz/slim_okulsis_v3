@@ -106,16 +106,14 @@ class MblLogin extends \BLL\BLLSlim{
         return $resultSet['resultSet'];
     }
 
-    public function gnlKullaniciMebKoduFindByTcKimlikNo($params = array()) {
- 
+    public function gnlKullaniciMebKoduFindByTcKimlikNo($params = array()) { 
         $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
         $resultSet = $DAL->gnlKullaniciMebKoduFindByTcKimlikNo($params);  
         return $resultSet['resultSet'];
     }
  
     
-    public function gnlKullaniciFindForLoginByTcKimlikNo($params = array()) {
-
+    public function gnlKullaniciFindForLoginByTcKimlikNo($params = array()) { 
     $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
     $resultSet = $DAL->gnlKullaniciFindForLoginByTcKimlikNo($params);  
     return $resultSet['resultSet'];
