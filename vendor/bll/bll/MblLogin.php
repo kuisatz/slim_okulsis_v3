@@ -485,19 +485,107 @@ class MblLogin extends \BLL\BLLSlim{
     $RolID = -11;
     if ((isset($params['RolID']) && $params['RolID'] != "")) {
         $RolID = $params['RolID'];
-    }    
-    IF ($RolID == 7) {
-        $resultSet = $DAL->dashboarddataOgretmen($params);  
-    }; 
-    IF ($RolID == 8) {
+    }   
+    switch ($RolID) {
+    case 4:
+        $resultSet = $DAL->dashboarddataYonetici($params);    
+        break;
+    case 5:
+        $resultSet = $DAL->dashboarddataYonetici($params);  
+        break;
+    case 6:
+        $resultSet = $DAL->dashboarddataYonetici($params);  
+        break;
+    case 7:
+        $resultSet = $DAL->dashboarddataOgretmen($params); 
+        break;
+    case 8:
+        $resultSet = $DAL->dashboarddataOgrenci($params);   
+        break;
+    case 9:
+         $resultSet = $DAL->dashboarddataYakini($params);    
+        break;
+    case 10:
         $resultSet = $DAL->dashboarddataOgrenci($params);  
-    }; 
-    IF ($RolID == 9) {
-        $resultSet = $DAL->dashboarddataYakini($params);  
-    }; 
+        break;
+    case 17:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 18:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 19:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 20:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 21:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 22:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 23:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 28:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 29:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    case 31:
+        $resultSet = $DAL->dashboarddataOgrenci($params);  
+        break;
+    
+    }
+    
     
     return $resultSet['resultSet'];
     } 
     
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function dashboardIconCounts($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->dashboardIconCounts($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * DAta insert function
+     * @param array | null $params
+     * @return array
+     */
+    public function sendMesajDefault($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+        return $DAL->sendMesajDefault($params);
+    }
+    
+     
+    /**
+     * DAta insert function
+     * @param array | null $params
+     * @return array
+     */
+    public function sendMesajDefaultMesajKutusuSave($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+        return $DAL->sendMesajDefaultMesajKutusuSave($params);
+    }
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function gidenMesajListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->gidenMesajListesi($params);  
+    return $resultSet['resultSet'];
+    } 
 }
 

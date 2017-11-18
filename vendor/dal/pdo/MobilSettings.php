@@ -126,7 +126,7 @@ class MobilSettings extends \DAL\DalSlim {
                     -1 AS id , 
                     NULL AS [proxy],
                     NULL AS [logo],
-                    'LÜTFEN SEÇİNİZ !' AS [abbrevation],
+                    'LÜTFEN KURUM SEÇİNİZ !' AS [abbrevation],
                     NULL AS [schoolName] ,
                     NULL AS combologo
                      
