@@ -587,5 +587,688 @@ class MblLogin extends \BLL\BLLSlim{
     $resultSet = $DAL->gidenMesajListesi($params);  
     return $resultSet['resultSet'];
     } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function muhYapilacakTahsilatlarA($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->muhYapilacakTahsilatlarA($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+      
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function muhYapilacakTahsilatlarB($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->muhYapilacakTahsilatlarB($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function muhYapilacakTahsilatlarC($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->muhYapilacakTahsilatlarC($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function odevTipleri($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->odevTipleri($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * DAta insert function
+     * @param array | null $params
+     * @return array
+     */
+    public function odevAtama($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+        return $DAL->odevAtama($params);
+    }
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function ogrenciKarnesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogrenciKarnesi($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+     /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjGonderilecekRoller($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->msjGonderilecekRoller($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+     /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjIcinOkulListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->msjIcinOkulListesi($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjIcinOkuldakiSinifListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjIcinSinifOgrenciVeliListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjIcinPersonelListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->msjIcinPersonelListesi($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjIcinOgretmenListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->msjIcinOgretmenListesi($params);  
+    return $resultSet['resultSet'];
+    }  
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjcombo1($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    
+    $RolID = -11;
+    if ((isset($params['RolID']) && $params['RolID'] != "")) {
+        $RolID = $params['RolID'];
+    }   
+    switch ($RolID) {
+    case 4:
+        $resultSet = $DAL->msjGonderilecekRoller($params);    
+        break;
+    case 5:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 6:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 7:
+        $resultSet = $DAL->msjGonderilecekRoller($params); 
+        break;
+    case 8:
+        $resultSet = $DAL->msjGonderilecekRoller($params);   
+        break;
+    case 9:
+         $resultSet = $DAL->msjGonderilecekRoller($params);    
+        break;
+    case 10:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 17:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 18:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 19:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 20:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 21:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 22:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 23:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 28:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 29:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    case 31:
+        $resultSet = $DAL->msjGonderilecekRoller($params);  
+        break;
+    
+    }
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjcombo2($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    
+    $RolID = -11;
+    if ((isset($params['RolID']) && $params['RolID'] != "")) {
+        $RolID = $params['RolID'];
+    }   
+    $SendrolID = -22;
+    if ((isset($params['SendrolID']) && $params['SendrolID'] != "")) {
+        $SendrolID = $params['SendrolID'];
+    }  
+    switch ($RolID) {
+    case 4:
+         switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 10:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 17:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 22:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 23:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 28:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         }  
+        break;
+    case 5:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 10:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 17:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 22:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 23:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 28:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         } 
+        break;
+    case 6:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 10:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 17:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 22:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 23:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 28:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         } 
+        break;
+    case 7:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 20:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 31:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         } 
+        break;
+    case 8:
+         switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinOgretmenListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+         } 
+            
+        break;
+    case 9:
+         switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinOgretmenListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         }   
+        break;
+    case 10:
+        switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         }  
+        break;
+    case 17:
+        switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 17:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         } 
+        break;
+    case 18:
+       switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 17:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+         }   
+        break;
+    case 19:
+        switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 17:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+         }   
+        break;
+    case 20:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         }   
+        break;
+    case 21:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            
+         }  
+        break; 
+    case 28:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 28:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         }  
+        break;
+    case 29:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 28:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         }  
+        break;
+    case 31:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinOkulListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+            case 31:$resultSet = $DAL->msjIcinOkulListesi($params);break; 
+         } 
+        break;
+    
+    }
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjcombo3($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    
+    $RolID = -11;
+    if ((isset($params['RolID']) && $params['RolID'] != "")) {
+        $RolID = $params['RolID'];
+    }   
+    $SendrolID = -22;
+    if ((isset($params['SendrolID']) && $params['SendrolID'] != "")) {
+        $SendrolID = $params['SendrolID'];
+    }  
+    switch ($RolID) {
+    case 4:
+    
+         switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 10:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 17:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 22:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 23:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 28:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         } 
+        
+        break;
+    case 5:
+       switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 10:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 17:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 22:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 23:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 28:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         } 
+        break;
+    case 6:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 10:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 17:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 22:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 23:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 28:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 31:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }   
+        break;
+    case 7:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 31:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+         } 
+        break;
+    case 8:
+     //   $resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);   
+        break;
+    case 9:  
+            switch ($SendrolID) { 
+            case 31:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }    
+        break;
+    case 10:
+        switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break; 
+         }  
+        break;
+    case 17:
+         switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+            case 17:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }   
+        break;
+    case 18:
+        switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+            case 17:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }    
+        break;
+    case 19:
+         switch ($SendrolID) { 
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+            case 17:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 18:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 19:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }     
+        break;
+    case 20:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }    
+        break;
+    case 21:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break;  
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break; 
+            case 20:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 21:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }     
+        break; 
+    case 28:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 28:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }   
+        break;
+    case 29:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 28:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 29:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }   
+        break;
+    case 31:
+        switch ($SendrolID) {
+            case 4:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 5:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 6:$resultSet = $DAL->msjIcinPersonelListesi($params);break;
+            case 7:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+            case 8:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinOkuldakiSinifListesi($params);break; 
+            case 31:$resultSet = $DAL->msjIcinPersonelListesi($params);break; 
+         }  
+        break;
+    
+    }
+    return $resultSet['resultSet'];
+    } 
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function msjcombo4($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    
+    $RolID = -11;
+    if ((isset($params['RolID']) && $params['RolID'] != "")) {
+        $RolID = $params['RolID'];
+    }   
+    $SendrolID = -22;
+    if ((isset($params['SendrolID']) && $params['SendrolID'] != "")) {
+        $SendrolID = $params['SendrolID'];
+    }  
+    switch ($RolID) {
+    case 4:
+    
+         switch ($SendrolID) { 
+            case 8:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+         } 
+        
+        break;
+    case 5:
+       switch ($SendrolID) { 
+            case 8:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+         } 
+        break;
+    case 6:
+        switch ($SendrolID) { 
+            case 8:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+         }   
+        break;
+    case 7:
+        switch ($SendrolID) { 
+            case 8:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+         } 
+        break;
+    case 8:
+            
+        break;
+    case 9:  
+        break;
+    case 10:
+        switch ($SendrolID) {  
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+         }  
+        break;
+    case 17: 
+        break;
+    case 18:
+            
+        break;
+    case 19:
+            
+        break;
+    case 20:
+        switch ($SendrolID) { 
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;  
+         }    
+        break;
+    case 21:
+        switch ($SendrolID) { 
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;  
+         }     
+        break; 
+    case 28: 
+        break;
+    case 29: 
+        break;
+    case 31:
+        switch ($SendrolID) { 
+            case 8:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break; 
+            case 9:$resultSet = $DAL->msjIcinSinifOgrenciVeliListesi($params);break;  
+         }  
+        break;
+    
+    }
+    return $resultSet['resultSet'];
+    } 
+    
+    
+     /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function mesajTipleri($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->mesajTipleri($params);  
+    return $resultSet['resultSet'];
+    } 
+    
 }
 
