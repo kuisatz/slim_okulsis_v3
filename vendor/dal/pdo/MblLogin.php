@@ -275,10 +275,11 @@ class MblLogin extends \DAL\DalSlim {
                     
             if ((isset($params['sifre']) && $params['sifre'] != "")) {            
                 $wsdlValue = NULL; 
-                $wsdl =  MobilSettings::mobilwsdlEncryptPassword(array('PswrD' => $params['sifre'])); 
+                $wsdl =  MobilSettings::mobilwsdlEncryptPassword(array('PswrD' => $params['sifre']));  
                 if ((isset($wsdl['resultSet'] ) && $wsdl['resultSet']  != "")) {                                    
                     $wsdlValue = $wsdl['resultSet'] ; 
                 }   
+                
                     
                 $sifre =$wsdlValue ;  
                 
@@ -612,6 +613,7 @@ class MblLogin extends \DAL\DalSlim {
                         EgitimYilID int, 
                         EgitimYili varchar(100),
                         DonemID int,
+                        KurumID [uniqueidentifier],
                         dbnamex  nvarchar(200)
                     ) ;
                 declare @dbnamex  nvarchar(200)  ;
@@ -643,7 +645,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET @sqlx = '
                 insert into ##okimobilseconddata".$tc."  ( [OkulKullaniciID] ,
                             [OkulID],  [KisiID],  [RolID],[RolAdi],OkulAdi,
-                            [MEBKodu],  [ePosta],  DersYiliID,  EgitimYilID,   EgitimYili,   DonemID , dbnamex )
+                            [MEBKodu],  [ePosta],  DersYiliID,  EgitimYilID,   EgitimYili,   DonemID ,KurumID, dbnamex )
                 SELECT  
                     sss.[OkulKullaniciID] ,
                     sss.[OkulID],
@@ -657,6 +659,7 @@ class MblLogin extends \DAL\DalSlim {
                     DY.EgitimYilID, 
                     EY.EgitimYili,
                     DY.DonemID ,
+                    oo.KurumID , 
                     '''+@dbnamex+''' as dbnamex
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
@@ -688,6 +691,7 @@ class MblLogin extends \DAL\DalSlim {
                     '' AS EgitimYilID, 
                     '' AS EgitimYili,
                     0 AS DonemID ,
+                    null as KurumID, 
                     null AS dbnamex 
 
                 UNION  	  
@@ -704,6 +708,7 @@ class MblLogin extends \DAL\DalSlim {
                     EgitimYilID, 
                     EgitimYili,
                     DonemID ,
+                    KurumID , 
                     dbnamex 
                 from  ##okimobilseconddata".$tc." ; 
 
@@ -715,7 +720,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-           // echo debugPDO($sql, $params);
+       //  echo debugPDO($sql, $params);
             $statement->execute();
             
            
@@ -1812,6 +1817,74 @@ class MblLogin extends \DAL\DalSlim {
        
     /** 
      * @author Okan CIRAN
+     * @ ogretmenin şube listesi   !! notlar kısmında kullanılıyor
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogretmensubelistesi($params = array()) {
+        try {
+           $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }      
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+            
+            $ogretmenID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OgretmenID']) && $params['OgretmenID'] != "")) {
+                $ogretmenID = $params['OgretmenID'];
+            }
+              
+            $sql = "  
+            SET NOCOUNT ON;    
+            SELECT * FROM ( 
+                SELECT     
+                    null AS SinifID, 
+                    'LÜTFEN ŞUBE SEÇİNİZ...' AS Aciklama ,
+                    null AS SeviyeID 
+            UNION   
+                SELECT	DISTINCT   
+                        ss.SinifID ,
+                        ss.SinifKodu AS Aciklama ,
+                        ss.SeviyeID
+                FROM GNL_Siniflar  ss
+                INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON ss.SinifID = so.SinifID  
+                INNER JOIN ".$dbnamex."GNL_DersHavuzlari dh ON so.DersHavuzuID = dh.DersHavuzuID
+                WHERE 
+                    so.OgretmenID = '".$ogretmenID."' 
+                     AND ss.Sanal = 0  
+                 ) AS fdsa
+                ORDER BY SeviyeID, Aciklama;
+ 
+            SET NOCOUNT OFF;   
+                 "; 
+            $statement = $pdo->prepare($sql);   
+      // echo debugPDO($sql, $params);
+            $statement->execute();
+           
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+   
+    /** 
+     * @author Okan CIRAN
      * @ login olan kurum yöneticisinin sectiği subedeki ögrencilistesi  !! notlar kısmında kullanılıyor
      * @version v 1.0  10.10.2017
      * @param array | null $args
@@ -2196,6 +2269,7 @@ class MblLogin extends \DAL\DalSlim {
                         SinavBitisTarihi , 
                         SinavTurAdi  ,
                         SinavKodu ,
+                         SinavID ,  
                         SinavAciklamasi  
                     /*
                         SinavTurID ,	
@@ -2219,8 +2293,7 @@ class MblLogin extends \DAL\DalSlim {
                         SeviyeKodu  ,
                         SinavTanimID , 
                         isNotAktarildi  ,
-                        OgretmenID  ,
-                        SinavID ,  
+                        OgretmenID  , 
                         OkulID , 
                         OkulOgretmenID 
                     */
@@ -2838,63 +2911,73 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['KisiID']) && $params['KisiID'] != "")) {
                 $KisiID = $params['KisiID'];
             }
+            $ReceiveKisiID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['ReceiveKisiID']) && $params['ReceiveKisiID'] != "")) {
+                $ReceiveKisiID = $params['ReceiveKisiID'];
+            }
             $Konu = '-2';
             if ((isset($params['Konu']) && $params['Konu'] != "")) {
                 $Konu = $params['Konu'];
             }
-            $Mesaj = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            $MesajTipID = '1';
+            if ((isset($params['MesajTipID']) && $params['MesajTipID'] != "")) {
+                $MesajTipID = $params['MesajTipID'];
+            }
+            $Mesaj = '';
             if ((isset($params['Mesaj']) && $params['Mesaj'] != "")) {
                 $Mesaj = $params['Mesaj'];
             }
             
             $sql = "  
             SET NOCOUNT ON;   
-      /*      IF OBJECT_ID('tempdb..#gonderilenmesaj') IS NOT NULL DROP TABLE #gonderilenmesaj; */
-			DECLARE @MesajID1 uniqueidentifier, 
-                            @MesajIDNewBie uniqueidentifier, 
-                            @MesajTarihi datetime ,
-                            @p2 xml ,
-                            @KisiID1 nvarchar(50); 
-			set @MesajTarihi = getdate();
-			set @MesajIDNewBie = NEWID(); 
-                      
+     
+            DECLARE @MesajID1 uniqueidentifier, 
+                @MesajIDNewBie uniqueidentifier, 
+                @MesajTarihi datetime ,
+                @p2 xml ,
+                @KisiID1 nvarchar(50), 
+                @MesajTipID1 int; 
+            set @MesajTarihi = getdate();
+            set @MesajIDNewBie = NEWID();  
 
-             SET NOCOUNT ON;   
+            SET NOCOUNT ON;   
     
-			DECLARE 
-                            @MesajID uniqueidentifier,  
-                            @KisiID1 nvarchar(50); 
+            DECLARE 
+                @MesajID uniqueidentifier,  
+                @ReceiveKisiID nvarchar(50); 
 		 
             set @KisiID1 = '" . $KisiID . "';
-            set @MesajID1 = '" . $MesajID . "';
-
-			exec ".$dbnamex."PRC_MSJ_MesajKutusu_Save @KisiID=@KisiID1,
-			@MesajID=@MesajID1 ; 
-  
+            set @ReceiveKisiID = '" . $ReceiveKisiID . "';
+            set @MesajTipID1 = " . $MesajTipID . ";
+                
+            set @MesajID1 = @MesajIDNewBie ;
+ 
         
             SET NOCOUNT OFF; 
 							 
             exec  ".$dbnamex."PRC_MSJ_Mesaj_Save 
-					@MesajID = @MesajIDNewBie OUTPUT,
-					@MesajOncelikID = 1,
-					@Konu= N'" . $Konu . "',
-					@Mesaj=N'" . $Mesaj . "',
-					@Tarih= @MesajTarihi,
-					@KisiID= @KisiID1,
-					@SinavID=NULL,
-					@MesajTipID= 1;   
+                            @MesajID = @MesajIDNewBie OUTPUT,
+                            @MesajOncelikID = 1,
+                            @Konu= N'" . $Konu . "',
+                            @Mesaj=N'" . $Mesaj . "',
+                            @Tarih= @MesajTarihi,
+                            @KisiID= @KisiID1,
+                            @SinavID=NULL,
+                            @MesajTipID= @MesajTipID1;   
+                            
+            exec ".$dbnamex."PRC_MSJ_MesajKutusu_Save @KisiID=@KisiID1,
+            @MesajID=@MesajID1 ;  
                                         
-            set @p2=convert(xml,N'<Table><MessageBoxes><KisiID>'+@KisiID1+'</KisiID></MessageBoxes></Table>')
+            set @p2=convert(xml,N'<Table><MessageBoxes><KisiID>'+@ReceiveKisiID+'</KisiID></MessageBoxes></Table>')
             
             exec ".$dbnamex."PRC_MSJ_MesajKutusu_SaveXML 
                         @MesajID=@MesajIDNewBie,
-                        @Data=@p2;
-  
-          /*  IF OBJECT_ID('tempdb..#gonderilenmesaj') IS NOT NULL DROP TABLE #gonderilenmesaj; */
+                        @Data=@p2; 
+          
             SET NOCOUNT OFF;    
                 ";
             $statement = $pdo->prepare($sql); 
-            // echo debugPDO($sql, $params);
+         //   echo debugPDO($sql, $params);
             $result = $statement->execute();
             $insertID =1;
             $errorInfo = $statement->errorInfo(); 
@@ -5055,7 +5138,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ sınav ögrencilerini listeler... 
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5674,7 +5757,7 @@ class MblLogin extends \DAL\DalSlim {
    
                  "; 
             $statement = $pdo->prepare($sql);   
-      echo debugPDO($sql, $params);
+   //   echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -6216,17 +6299,19 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['XmlData']) && $params['XmlData'] != "")) {
                 $XmlData = $params['XmlData'];
                 $dataValue =  json_decode($XmlData, true);
+                
              //   print_r( "////////////"); 
-                //  print_r($dataValue  ); 
+            //   print_r($dataValue  ); 
                 //  echo( "\\\\\\console\\\\\\"); 
                     foreach ($dataValue as $std) {                      
-                        if ($std[0] != null) {
-                     //   if ($std[1] == 1) { $devamsizlikKodID = 2 ;}
-                  //      if ($std[2] == 1) { $devamsizlikKodID = 0 ;}
+                        if ($std  != null) {
+                        //   print_r($std ); 
+                        //   if ($std[1] == 1) { $devamsizlikKodID = 2 ;}
+                        //   if ($std[2] == 1) { $devamsizlikKodID = 0 ;}
                      
                           //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
                       //  echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
-                         $SendXmlData =$SendXmlData.'<ID VALUE="'.$std[0].'"/>' ; 
+                         $SendXmlData =$SendXmlData.'<ID VALUE="'.$std.'"/>' ;  
                         }
                     }
                   
@@ -6292,7 +6377,7 @@ class MblLogin extends \DAL\DalSlim {
                 ";  
             
             $statement = $pdo->prepare($sql); 
-      //  echo debugPDO($sql, $params);
+      // echo debugPDO($sql, $params);
             $result = $statement->execute(); 
             $errorInfo = $statement->errorInfo();
              
@@ -6839,18 +6924,19 @@ class MblLogin extends \DAL\DalSlim {
                     $addSQLTum =" gos.SinifID = '".$SinifID."' and  ";} 
             } 
             $SendrolID= 0; 
-            $addSQL =NULL;
-            $orderSQL ='';
+            $addSQL ='SELECT distinct OgrenciID as ID, ogrenciadsoyad  AS aciklama , 0 AS kontrol from ( ';
+            $orderSQL =' ORDER BY ogrenciadsoyad'; 
             if ((isset($params['SendrolID']) && $params['SendrolID'] != "")) {
                 $SendrolID = $params['SendrolID']; 
                 IF ($SendrolID == 8){
                     $addSQL ='SELECT distinct OgrenciID as ID, ogrenciadsoyad  AS aciklama , 0 AS kontrol from ( ';
                     $orderSQL =' ORDER BY ogrenciadsoyad'; 
-                 } ELSE 
+                 } ;
+                 IF ($SendrolID == 9) 
                  {
                     $addSQL ='SELECT distinct YakinID as ID, veliadsoyad AS aciklama , 0 AS kontrol from ( ';
                     $orderSQL =' ORDER BY veliadsoyad'; 
-                 } 
+                 } ;
             } 
             $RolID= 0; 
             if ((isset($params['RolID']) && $params['RolID'] != "")) {
@@ -6877,7 +6963,7 @@ class MblLogin extends \DAL\DalSlim {
                 VELI.YakinID ,
                 UPPER(CONCAT(k.Adi,' ',k.Soyadi)) AS veliadsoyad ,
                 0 as kontrol                
-            FROM  Bilsanet1.dbo.GNL_OkulKullanicilari OKL  
+            FROM  ".$dbnamex."GNL_OkulKullanicilari OKL  
             INNER JOIN ".$dbnamex."GNL_OkulKullaniciRolleri OKR ON OKR.OkulKullaniciID = OKL.OkulKullaniciID 
             INNER JOIN ".$dbnamex."GNL_Roller R ON R.RolID = OKR.RolID
             inner join ".$dbnamex."[GNL_Okullar] oo ON oo.[OkulID] = okl.[OkulID] 
@@ -6896,7 +6982,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-      // echo debugPDO($sql, $params);
+    //    echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -7028,10 +7114,10 @@ class MblLogin extends \DAL\DalSlim {
                 OKL.KisiID as ID , 
                 upper(concat (ki.Adi,' ',ki.Soyadi)) as aciklama, 
                 0 as kontrol
-            FROM  Bilsanet1.dbo.GNL_OkulKullanicilari OKL  
+            FROM  ".$dbnamex."GNL_OkulKullanicilari OKL  
             INNER JOIN ".$dbnamex."GNL_OkulKullaniciRolleri OKR ON OKR.OkulKullaniciID = OKL.OkulKullaniciID 
             INNER JOIN ".$dbnamex."GNL_Roller R ON R.RolID = OKR.RolID
-            INNER JOIN ".$dbnamex."[GNL_Okullar] oo ON oo.[OkulID] = okl.[OkulID] 
+            INNER JOIN ".$dbnamex."[GNL_Okullar] oo ON oo.[OkulID] = okl.OkulID 
             INNER JOIN ".$dbnamex."[GNL_Kisiler] ki on ki.KisiID = OKL.KisiID 
             INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.OkulID = OKL.OkulID  and DY.AktifMi =1  
              where  
@@ -7083,9 +7169,8 @@ class MblLogin extends \DAL\DalSlim {
             $RolID= 0;
             $addSQLWhere =NULL;
             if ((isset($params['RolID']) && $params['RolID'] != "")) {
-                $RolID = $params['RolID']; 
-                IF ($RolID == 8 ) {  $addSQLWhere = " WHERE MesajTipID < 2 ";   }
-                IF ($RolID == 9 ) {  $addSQLWhere = " WHERE MesajTipID < 2 ";   }
+                $RolID = $params['RolID'];  
+                IF (($RolID == 8 ) ||  ($RolID == 9 )) {  $addSQLWhere = " WHERE MesajTipID < 2 ";   }
             } 
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
          
@@ -7118,5 +7203,194 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
     
-   
+    /** 
+     * @author Okan CIRAN
+     * @ mesaj için okul listesi 
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogretmenSinavDersleriListesi($params = array()) {
+        try {
+           $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }    
+             
+            $SinavID= 0;
+            if ((isset($params['SinavID']) && $params['SinavID'] != "")) {
+                $SinavID = $params['SinavID'];
+            } 
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+                 $dbnamex = 'BILSANET_A.dbo.';
+            $sql = "   
+                SET NOCOUNT ON;  
+                IF OBJECT_ID('tempdb..#okiogrsinavderslistesi') IS NOT NULL DROP TABLE #okiogrsinavderslistesi; 
+
+                declare  @SinavID1 UNIQUEIDENTIFIER; 
+
+                set @SinavID1 = '".$SinavID."' ; /* 'F50FFA1C-2532-48C6-955C-6604092A8189';-- 'E8A62887-2769-41A3-A1C4-D6F455040677'; */ 
+
+                SELECT 
+                    DISTINCT SinavDersID  
+                INTO #okiogrsinavderslistesi 
+                FROM ".$dbnamex."SNV_SinavSorulari 
+                WHERE 
+                    SinavID = @SinavID1;
+
+                SELECT
+                    SNV.SinavID,
+                    BS.BolumSabitID,
+                    BS.SinavTurID,
+                    BS.BolumKodu,
+                    BS.BolumAdi,
+                    BK.BolumKategoriID,
+                    BK.BolumKategoriAdi,
+                    SDS.SinavDersSabitID,
+                    SDS.Sira, 
+                    DS.DersSabitID, 
+                    DS.DersSabitAdi as DersAdi, 
+                    DS.DersSabitAdi as DersAciklama,
+                    SD.SinavDersID,
+                    SD.SinavKategoriID ,
+                    ISNULL(CASE WHEN SD.SinavDersID IS NULL THEN SDS.SoruSayisi ELSE SD.DersSoruSayisi+(ISNULL(CASE WHEN SD.AcikUcluSoruSayisi IS NULL THEN 0 ELSE SD.AcikUcluSoruSayisi END,0)) END,0) AS DersSoruSayisi
+                FROM ".$dbnamex."SNV_Sinavlar SNV
+                INNER JOIN ".$dbnamex."SNV_BolumSabitleri BS ON BS.SinavTurID = SNV.SinavTurID
+                INNER JOIN ".$dbnamex."SNV_BolumKategorileri BK ON BK.BolumSabitID = BS.BolumSabitID
+                INNER JOIN ".$dbnamex."SNV_SinavDersSabitleri SDS ON SDS.BolumKategoriID = BK.BolumKategoriID 
+                INNER JOIN ".$dbnamex."GNL_DersSabitleri DS ON DS.DersSabitID = SDS.DersSabitID
+                INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = SNV.SinavID AND SK.BolumKategoriID = BK.BolumKategoriID
+                INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavKategoriID = SK.SinavKategoriID AND SD.SinavDersSabitID = SDS.SinavDersSabitID
+                INNER JOIN #okiogrsinavderslistesi TSD ON TSD.SinavDersID = SD.SinavDersID  
+                WHERE 
+                    SNV.SinavID = @SinavID1
+                ORDER BY 
+                    BK.BolumKategoriID,SDS.Sira ;  
+		 
+                IF OBJECT_ID('tempdb..#okiogrsinavderslistesi') IS NOT NULL DROP TABLE #okiogrsinavderslistesi; 
+                SET NOCOUNT OFF;  
+ 
+                 "; 
+            $statement = $pdo->prepare($sql);   
+     //  echo debugPDO($sql, $params);
+            $statement->execute(); 
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+    /** 
+     * @author Okan CIRAN
+     * @ mesaj için okul listesi 
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogretmenSinavaGirenSubeler($params = array()) {
+        try {
+           $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }    
+             
+            $SinavID= 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavID']) && $params['SinavID'] != "")) {
+                $SinavID = $params['SinavID'];
+            } 
+            $KisiID =  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OgretmenID']) && $params['OgretmenID'] != "")) {
+                $KisiID = $params['OgretmenID'];
+            } 
+            $OkulID =  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
+                $OkulID = $params['OkulID'];
+            } 
+            
+           $dbnamex = 'BILSANET_A.dbo.';
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+             
+            $sql = "   
+                SET NOCOUNT ON;  
+                
+                SELECT    
+                    GIl.IlAdi,
+                    GIlce.IlceAdi,
+                    GNLO.OkulAdi,
+                    GNLO.MEBKodu,
+                    SNVO.SinavOkulID,
+                    GNLO.OkulID,
+                    isnull(SinifKodu, '-') SinifKodu,
+                    CASE WHEN SinifKodu is null THEN 0 ELSE Count(*) END as OgrenciSayisi,
+                    (select count(SinavOkulID) FROM ".$dbnamex."SNV_SinavOgrencileri S2 WHERE S2.SinavOkulID=SNVO.SinavOkulID) as OkulOgrenciSayisi,
+                    ISNULL((select TOP 1 CAST(DersYiliID AS NVARCHAR(36))
+						 FROM ".$dbnamex."SNV_SinavOgrencileri S3
+						INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON S3.OgrenciSeviyeID = OS.OgrenciSeviyeID
+						INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
+						WHERE 
+                                                    SNF.SinifKodu = SOGR.SinifKodu 
+                                                    COLLATE Turkish_CI_AS
+                                                    AND S3.SinavOkulID = SNVO.SinavOkulID),'-') as DersYiliID,
+                    ISNULL((select TOP 1 CAST(SNF.SinifID AS NVARCHAR(36)) FROM ".$dbnamex."SNV_SinavOgrencileri S3
+						INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON S3.OgrenciSeviyeID = OS.OgrenciSeviyeID
+						INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
+						WHERE SNF.SinifKodu = SOGR.SinifKodu COLLATE Turkish_CI_AS
+                                                    AND S3.SinavOkulID = SNVO.SinavOkulID),'-') as SinifID
+
+                FROM ".$dbnamex."SNV_SinavOkullari SNVO  
+                INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SNVO.OkulID AND OK.KisiID = '".$KisiID."'    /* 'CF822218-8FD1-4B95-A4C0-9A3113332B4F'--@KisiID -- ogretmen  */
+                            AND SNVO.OkulID = '".$OkulID."' /* 'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' */ 
+                INNER JOIN ".$dbnamex."GNL_Okullar GNLO ON GNLO.OkulID=SNVO.OkulID 
+                LEFT JOIN ".$dbnamex."GNL_Adresler GA ON (GA.AdresID = GNLO.AdresID) 
+                LEFT JOIN ".$dbnamex."GNL_Ilceler GIlce ON (GIlce.IlceID = GA.IlceID) 
+                LEFT JOIN ".$dbnamex."GNL_Iller GIl ON (GIl.IlID = GIlce.IlID) 
+                LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavOkulID=SNVO.SinavOkulID 
+                 WHERE SNVO.SinavID= '".$SinavID."'  /* 'C6C84DB4-BA8C-40EB-AD36-9CFBF6DEF89B' */ 
+                GROUP BY GIl.IlAdi,GIlce.IlceAdi,GNLO.OkulAdi,GNLO.MEBKodu,SNVO.SinavOkulID,GNLO.OkulID,SinifKodu  
+                ORDER BY GIl.IlAdi,GIlce.IlceAdi,GNLO.OkulAdi,SinifKodu
+
+                SET NOCOUNT OFF;  
+ 
+                 "; 
+            $statement = $pdo->prepare($sql);   
+     //  echo debugPDO($sql, $params);
+            $statement->execute(); 
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+    
+    
 }

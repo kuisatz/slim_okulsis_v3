@@ -454,7 +454,7 @@ and open the template in the editor. Ğİ
                     url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
                     data: { 
                         url: 'ogretmenDersProgrami_mbllogin',
-                        kisiId: '1250E188-B635-4418-ABB4-98E8886C707D',
+                        kisiId: '17A68CAA-1A13-460A-BEAA-FB483AC82F7B',
                         OkulID: '7E755C68-ABC1-492B-9D82-3B39B831A962',
                         dersYiliID:'9D7A115C-5E96-4F6E-B31D-E5710BDA1C97',
                         
@@ -663,7 +663,7 @@ and open the template in the editor. Ğİ
                     url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
                     data: { 
                         url: 'Kysubeogrencilistesi_mbllogin', 
-                        sinifID:'F4201B97-B073-4DD7-8891-8091C3DC82CF', 
+                        sinifID:'E49609C9-F09B-444B-9F76-3DC99E91929D' , // 'F4201B97-B073-4DD7-8891-8091C3DC82CF', 
                        
                        cid  : 1,
                     },
@@ -1075,7 +1075,9 @@ and open the template in the editor. Ğİ
                         url: 'SendMesajDefault_mbllogin ',
                         konu : 'Deneme konu 1',
                         mesaj : 'Deneme konu 1 mesaj mesaj mesaj',
-                        kisiId : '5F7F8763-F9BD-40E8-8F0E-532E136EB483' ,  
+                        kisiId : '5F7F8763-F9BD-40E8-8F0E-532E136EB483' ,
+                        receiveKisiID : '1CB6B10F-E70F-4C87-8341-30BEBDDD8543',
+                        mesajTipID  : 1,
                         cid  : 1,
                     },
                     method: 'GET',
@@ -1214,7 +1216,11 @@ and open the template in the editor. Ğİ
                         notIleDegerlendirilsin : 0,
                         donemNotunaEtkiEtsin : 0 ,  
                         cid  : 1,
-                        XmlData:'[["5E2D953C-0A7D-4A63-9368-01690DC7FE51"],["AEEFE2B7-6653-4776-9343-031155AF6181"]]',
+                     //   XmlData:'[["5E2D953C-0A7D-4A63-9368-01690DC7FE51"],["AEEFE2B7-6653-4776-9343-031155AF6181"]]',
+                        
+                        XmlData:' ["FA56401D-B693-4292-A726-8784BBB6FF30","6A4DCCE5-7CC7-40D3-B513-386B0297EB89","73A80155-7121-48F8-BF71-F7DECF5EF859","6DEC1936-661F-4819-BEEF-FCE46CCDF1F5","B8609CB0-873F-4940-BB56-FEDFF1DDA650"]'
+ 
+
                
                     },
                     method: 'GET',
@@ -1309,10 +1315,10 @@ and open the template in the editor. Ğİ
                     url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
                     data: { 
                         url: 'MsjIcinSinifOgrenciVeliListesi_mbllogin',  
-                        sinifID:'E49609C9-F09B-444B-9F76-3DC99E91929D',  
-                        kisiId : '9750DC1D-7F56-4380-98CB-F5345E553C1C' ,
-                        sendrolID  : 8, 
-                        rolID  : 9, 
+                        sinifID:'F4201B97-B073-4DD7-8891-8091C3DC82CF' , // 'E49609C9-F09B-444B-9F76-3DC99E91929D',  
+                   //     kisiId : '9750DC1D-7F56-4380-98CB-F5345E553C1C' ,
+                   //     sendrolID  : 5, 
+                        rolID  : 7, 
                         cid  : 1,
                     },
                     method: 'GET',
@@ -1455,9 +1461,57 @@ and open the template in the editor. Ğİ
                     }
                 }); 
                 
+                  $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgretmenSinavDersleriListesi_mbllogin', 
+                        sinavID : 'F50FFA1C-2532-48C6-955C-6604092A8189' , 
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 
+                  
+                $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgretmenSinavaGirenSubeler_mbllogin', 
+                        sinavID : 'C6C84DB4-BA8C-40EB-AD36-9CFBF6DEF89B' , 
+                        okulID  : 'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD', 
+                        ogretmenID :  'CF822218-8FD1-4B95-A4C0-9A3113332B4F', 
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 
-                
+                 $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'fillComboBoxTsql_syslanguage',   
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 
                 ////////////////////////
                 

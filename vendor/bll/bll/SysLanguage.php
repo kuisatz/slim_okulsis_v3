@@ -89,6 +89,12 @@ class SysLanguage extends \BLL\BLLSlim{
         $resultSet = $DAL->fillComboBox($params);  
         return $resultSet['resultSet'];
     }
+     
+    public function fillComboBoxTsql($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('sysLanguagePDO');
+        $resultSet = $DAL->fillComboBoxTsql($params);  
+        return $resultSet['resultSet'];
+    }
     
     public function getLanguageId($params = array()) {
         $DAL = $this->slimApp->getDALManager()->get('sysLanguagePDO');
