@@ -172,9 +172,11 @@ $app->get("/fillComboBoxTsql_syslanguage/", function () use ($app ) {
         foreach ($resCombobox as $menu) {
             $menus[] = array(
                 "id" => $menu["id"],
-                "language" => $menu["language"],
-                "language_eng" => $menu["language_eng"],
+                "language" => html_entity_decode($menu["language"]),
+                "language_eng" => html_entity_decode($menu["language_eng"]),
                 "language_main_code" => $menu["language_main_code"],
+                "url" => $menu["url"],
+                
             );
         }
     } else if ($componentType == 'ddslick') {

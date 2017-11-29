@@ -1302,5 +1302,60 @@ class MblLogin extends \BLL\BLLSlim{
     $resultSet = $DAL->ogretmenSinavaGirenSubeler($params);  
     return $resultSet['resultSet'];
     } 
+            
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function kyOgretmenOdevListeleri($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->kyOgretmenOdevListeleri($params);  
+    return $resultSet['resultSet'];
+    } 
+     
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function ogrenciVeliIcinOgretmenListesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogrenciVeliIcinOgretmenListesi($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function ogrencininAldigiNotlar($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogrencininAldigiNotlar($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+     /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function ogrencilerinAldigiNotlarSinavBazli($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogrencilerinAldigiNotlarSinavBazli($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+      /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function ogretmenSinavSorulariKDK($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogretmenSinavSorulariKDK($params);  
+    return $resultSet['resultSet'];
+    } 
 }
 

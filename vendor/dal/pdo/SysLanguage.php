@@ -535,7 +535,8 @@ class SysLanguage extends \DAL\DalSlim {
                     a.id, 	
                     a.language, 
                     a.language_eng,		
-                    a.language_main_code                                 
+                    a.language_main_code,
+                    a.url
                 FROM [BILSANET_MOBILE].[dbo].sys_language  a       
                 WHERE  
                     a.deleted = 0 and a.active =0    
