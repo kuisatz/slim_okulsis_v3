@@ -1742,39 +1742,57 @@ class MblLogin extends \DAL\DalSlim {
                     DevamsizlikPeriyodID int ,  
                     Tarih datetime ,   
                     Aciklama varchar(100),  
-                    rownum int    
+                    OgrenciseviyeID [uniqueidentifier],
+                    OzurluDevamsiz1 numeric(10,2), 
+                    OzursuzDevamsiz1 numeric(10,2),
+                    OzurluDevamsiz2 numeric(10,2),
+                    OzursuzDevamsiz2 numeric(10,2),
+                    rownum int     
                 ) ;
  
                 INSERT INTO #ogrenciIdDevamsizlikTarih  (OgrenciDevamsizlikID, 
                              DersYiliID, OgrenciID,
                              DevamsizlikKodID,  DevamsizlikPeriyodID,  
-                             Tarih,  Aciklama,rownum )
+                             Tarih,  Aciklama,
+                            OgrenciseviyeID,OzurluDevamsiz1,OzursuzDevamsiz1,OzurluDevamsiz2,OzursuzDevamsiz2,
+                            rownum )
 
                 SELECT 
-                             OgrenciDevamsizlikID, 
-                             DersYiliID,  
-                             OgrenciID,
-                             DevamsizlikKodID, 
-                             DevamsizlikPeriyodID,  
-                             Tarih, 
-                             Aciklama, 
-                             ROW_NUMBER() OVER(ORDER BY Tarih) AS rownum 
-                 FROM ".$dbnamex."GNL_OgrenciDevamsizliklari 
-                     WHERE 
-                             DersYiliID = '".$dersYiliID."' AND 
-                             OgrenciID ='".$kisiId."'; 
-                
+                    a.OgrenciDevamsizlikID, 
+                    a.DersYiliID,  
+                    a.OgrenciID,
+                    a.DevamsizlikKodID, 
+                    a.DevamsizlikPeriyodID,  
+                    a.Tarih, 
+                    a.Aciklama, 
+                    b.OgrenciseviyeID ,
+                    cast(c.OzurluDevamsiz1 as numeric(10,2)) as OzurluDevamsiz1,
+                    cast(c.OzursuzDevamsiz1 as numeric(10,2)) as OzursuzDevamsiz1,
+                    cast(c.OzurluDevamsiz2 as numeric(10,2)) as OzurluDevamsiz2,
+                    cast(c.OzursuzDevamsiz2 as numeric(10,2)) as OzursuzDevamsiz2 , 
+                    ROW_NUMBER() OVER(ORDER BY Tarih) AS rownum  
+                FROM ".$dbnamex."GNL_OgrenciDevamsizliklari  a 
+                inner join ".$dbnamex."GNL_OgrenciSeviyeleri b on b.OgrenciID = a.OgrenciID
+                inner join ".$dbnamex."GNL_OgrenciSeviyeleri c on c.OgrenciSeviyeID = b.OgrenciSeviyeID
+                WHERE 
+                    a.DersYiliID = '".$dersYiliID."' AND 
+                    a.OgrenciID ='".$kisiId."'; 
+
                 SELECT 
                     tt.OgrenciDevamsizlikID, 
                     tt.DersYiliID,  
-                    tt.OgrenciID,
-                    
+                    tt.OgrenciID, 
                     tt.DevamsizlikPeriyodID,  
                     cast(tt.Tarih as date) as Tarih, 
                     tt.Aciklama, 
                     tt.rownum ,
                     concat(cast(tt.DevamsizlikKodID as varchar(2)),' - ', dd.DevamsizlikAdi) as DevamsizlikAdi,
-                    cast(cast(dd.GunKarsiligi as numeric(10,2)) as varchar(5)) as GunKarsiligi
+                    cast(cast(dd.GunKarsiligi as numeric(10,2)) as varchar(5)) as GunKarsiligi,
+                    tt.OgrenciseviyeID,
+                    tt.OzurluDevamsiz1,
+                    tt.OzursuzDevamsiz1,
+                    tt.OzurluDevamsiz2,
+                    tt.OzursuzDevamsiz2   
                 FROM #ogrenciIdDevamsizlikTarih tt
                 LEFT JOIN ".$dbnamex."[GNL_DevamsizlikKodlari] dd on dd.DevamsizlikKodID = tt.DevamsizlikKodID;
  
@@ -1782,7 +1800,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-           //  echo debugPDO($sql, $params);
+           // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -3170,7 +3188,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
 
                 ";
-            print_r($sql) ; 
+        //    print_r($sql) ; 
             $statement = $pdo->prepare($sql); 
        //    $result = $statement->execute();
              $insertID =1;
@@ -3690,7 +3708,8 @@ class MblLogin extends \DAL\DalSlim {
                 D.DersAdi,
                 OT.Tanim,
                 OT.Tarih,
-                OT.TeslimTarihi 
+                OT.TeslimTarihi,
+                OT.Aciklama
             FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
             INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
             INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
@@ -3708,7 +3727,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-     //   echo debugPDO($sql, $params);
+       // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -4621,7 +4640,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ borclu sozlesmeleri
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -4842,7 +4861,7 @@ class MblLogin extends \DAL\DalSlim {
          
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ tahsilat bilgisi
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5032,7 +5051,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ tahsilat özet
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5161,7 +5180,7 @@ class MblLogin extends \DAL\DalSlim {
    
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ tahsil edilemeyenler
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5265,7 +5284,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ borclu odeme planı 
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5459,7 +5478,7 @@ class MblLogin extends \DAL\DalSlim {
  
     /** 
      * @author Okan CIRAN
-     * @ sınıf seviyelerini listeler... 
+     * @ devamsızlık listesi 
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5630,7 +5649,7 @@ class MblLogin extends \DAL\DalSlim {
    
     /** 
      * @author Okan CIRAN
-     * @ dashboard   !!
+     * @ ogrenci için dashboard   !!
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -5821,7 +5840,7 @@ class MblLogin extends \DAL\DalSlim {
      
     /** 
      * @author Okan CIRAN
-     * @ dashboard   !!
+     * @ ogretmen için dashboard   !!
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -6021,7 +6040,7 @@ class MblLogin extends \DAL\DalSlim {
       
     /** 
      * @author Okan CIRAN
-     * @ dashboard   !!
+     * @ veli için dashboard   !!
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -6245,7 +6264,7 @@ class MblLogin extends \DAL\DalSlim {
      
     /** 
      * @author Okan CIRAN
-     * @ dashboard   !!
+     * @ yönetici için dashboard   !!
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -6424,7 +6443,7 @@ class MblLogin extends \DAL\DalSlim {
      
     /** 
      * @author Okan CIRAN
-     * @ login olan kurum yöneticileri için şube listesi   !! notlar kısmında kullanılıyor
+     * @ odev tipleri
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -6656,7 +6675,7 @@ class MblLogin extends \DAL\DalSlim {
   
     /** 
      * @author Okan CIRAN
-     * @ öğrenci, yakını ders programi listesi... 
+     * @ öğrenci karnesi 
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
@@ -7084,7 +7103,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ mesaj için okuldaki sınıf listesi 
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7175,7 +7194,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ mesaj için ögrenci ya da veli listesi 
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7281,7 +7300,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ mesaj için ögretmen listesi 
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7359,7 +7378,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ mesaj için personel listesi 
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7502,7 +7521,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ sınavdaki derslerin listesi
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7598,7 +7617,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ ögretmenin yaptıgı sına girenögrenciler listesi
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7684,7 +7703,7 @@ class MblLogin extends \DAL\DalSlim {
  
                  "; 
             $statement = $pdo->prepare($sql);   
-     echo debugPDO($sql, $params);
+ //    echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -7698,7 +7717,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ yönetici içinögretmen ödev listesi
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7826,7 +7845,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ders ogretmen listesi 
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7893,7 +7912,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ ogrencinin aldıgı notlar
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -7972,7 +7991,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-       echo debugPDO($sql, $params);
+     //  echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8104,7 +8123,7 @@ class MblLogin extends \DAL\DalSlim {
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
              $dbnamex = 'BILSANET_A.dbo.';
-            $sql = "   
+            $sql = "    
                     SET NOCOUNT ON;  
 
                     declare @SinavDersID1 UNIQUEIDENTIFIER; 
@@ -8147,5 +8166,537 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
+    
+    /** 
+     * @author Okan CIRAN  -- kullanılmıyor
+     * @ ogrenci odev detayını actıysa odev i okudu olarak isaretliyoruz.
+     * @version v 1.0  23.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */ 
+    public function ogrenciOdeviGordu($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }     
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            $pdo->beginTransaction();
+
+            $OgrenciOdevID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OgrenciOdevID']) && $params['OgrenciOdevID'] != "")) {
+                $OgrenciOdevID = $params['OgrenciOdevID'];
+            }  
+            
+            $sql = "  
+            SET NOCOUNT ON;  
+ 
+  		exec ".$dbnamex."PRC_ODV_OgrenciOdevleri_SetGordu 
+                        @OgrenciOdevID='".$OgrenciOdevID."'; 
+	 
+            SET NOCOUNT OFF;   
+                "; 
+            $statement = $pdo->prepare($sql); 
+       //    $result = $statement->execute();
+             $insertID =1;
+            $errorInfo = $statement->errorInfo(); 
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]); 
+            $pdo->commit();
+            return array("found" => true, "errorInfo" => $errorInfo, "lastInsertId" => $insertID);
+        } catch (\PDOException $e /* Exception $e */) {
+            $pdo->rollback();
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+    /** 
+     * @author Okan CIRAN  -- kullanılmıyor
+     * @ ogretmen ogrencinin odevini onaylıyor
+     * @version v 1.0  23.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */ 
+    public function ogretmenOgrenciOdevOnay($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }     
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            $pdo->beginTransaction();
+
+            $OgrenciOdevID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OgrenciOdevID']) && $params['OgrenciOdevID'] != "")) {
+                $OgrenciOdevID = $params['OgrenciOdevID'];
+            }  
+            $OdevOnayID= 0;
+            if ((isset($params['OdevOnayID']) && $params['OdevOnayID'] != "")) {
+                $OdevOnayID = $params['OdevOnayID'];
+            } 
+            
+            $sql = "  
+            SET NOCOUNT ON;  
+ 
+  		exec ".$dbnamex."PRC_ODV_OgrenciOdevleri_SetGordu 
+                        @OgrenciOdevID='".$OgrenciOdevID."'; 
+                            okii..
+
+                exec ".$dbnamex."PRC_ODV_OgrenciOdevleri_DegerlendirmeSave 
+                        @OgrenciOdevID='".$OgrenciOdevID."',
+                        @OgretmenDegerlendirme='&nbsp;',
+                        @OdevOnayID=".$OdevOnayID."; 
+	 
+            SET NOCOUNT OFF;   
+                "; 
+            $statement = $pdo->prepare($sql); 
+       //    $result = $statement->execute();
+             $insertID =1;
+            $errorInfo = $statement->errorInfo(); 
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]); 
+            $pdo->commit();
+            return array("found" => true, "errorInfo" => $errorInfo, "lastInsertId" => $insertID);
+        } catch (\PDOException $e /* Exception $e */) {
+            $pdo->rollback();
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+    /** 
+     * @author Okan CIRAN
+     * @ mesaj için okul listesi 
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function odevOnayTipleri($params = array()) {
+        try {
+           $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }    
+             
+            $SinavDersID=  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavDersID']) && $params['SinavDersID'] != "")) {
+                $SinavDersID = $params['SinavDersID'];
+            } 
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            } 
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+          
+            $sql = "   
+                    SET NOCOUNT ON;  
+ 
+
+                    SELECT  
+                        [OdevOnayID],
+                        [OdevOnayı] as OdevOnayi
+                    FROM ".$dbnamex."[ODV_OdevOnayTipleri] 
+                    ORDER BY 
+                           OdevOnayı; 
+
+                SET NOCOUNT OFF;  
+                 "; 
+            $statement = $pdo->prepare($sql);   
+    //   echo debugPDO($sql, $params);
+            $statement->execute(); 
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
    
+     /** 
+     * @author Okan CIRAN
+     * @ toplu Ogrenci Cevap
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function topluOgrenciCevap($params = array()) {
+        try {
+           $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }    
+             
+            $SinavOkulID=  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavOkulID']) && $params['SinavOkulID'] != "")) {
+                $SinavOkulID = $params['SinavOkulID'];
+            } 
+            $SinifKodu=  'CCCCC';
+            if ((isset($params['SinifKodu']) && $params['SinifKodu'] != "")) {
+                $SinifKodu = $params['SinifKodu'];
+            } 
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            } 
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+            $dbnamex = 'BILSANET_A.dbo.';
+            $sql = "    
+                SET NOCOUNT ON;   
+                    
+                declare 
+                @sinavOkulID AS UNIQUEIDENTIFIER ,
+                @SinifKodu AS NVARCHAR(20) = NULL ,
+                @MyFields AS NVARCHAR(MAX) ,
+                @NumarayaGoreSirala AS BIT = 1; 
+                DECLARE @SQL NVARCHAR(MAX);
+
+                set @sinavOkulID = '".$SinavOkulID."' ; 
+                set @SinifKodu ='".$SinifKodu."';
+
+                SELECT  
+                    ROW_NUMBER() OVER(ORDER BY SOGR.OgrenciNumarasi) AS SiraNo, 
+                    SOGR.SinavKitapcikID,
+                    SK.KitapcikTurID,
+                    SK.KitapcikAciklamasi,
+                    SOGR.SinifKodu,
+                    SNF.SinifID,
+                    SOGR.SinavOgrenciID,
+                    SOGR.SinavSinifID, 
+                    SOGR.OgrenciSeviyeID,
+                    OS.OgrenciID,
+                    SOGR.SinavOkulID,
+                    SOGR.TelafiSinavinaGirecekMi,
+                    OOB.Numarasi AS OgrenciNumarasi,
+                    K.KisiID,
+                    K.Adi,
+                    K.Soyadi,
+                    K.Adi + ' ' + K.Soyadi AS AdiSoyadi,
+                    ( SELECT STUFF(( SELECT ', ' + CONVERT(VARCHAR, KISI.Adi) + ' '
+                                      + CONVERT(VARCHAR, KISI.Soyadi)
+                                   FROM ".$dbnamex."GNL_Siniflar SNFO 
+                                   INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri SO ON SO.SinifID=SNFO.SinifID 
+                                   INNER JOIN ".$dbnamex."GNL_Kisiler KISI ON KISI.KisiID=SO.OgretmenID                                               
+                                   WHERE 
+                                        SO.DersHavuzuID=SNV.YaziliStsSinavDersiDersHavuzuID AND 
+                                        SO.OgretmenTurID=4 AND  
+                                        SNFO.SinifID =SNF.SinifID 
+                                 FOR
+                                   XML PATH('')
+                                 ), 1, 1, '')
+                                           ) AS OgretmenAdiSoyadi,
+                    K.TCKimlikNo,
+                    '' AS isOgrenciDisaridan, 
+                    0 AS TOPLAM_PUAN_1,
+                    0 AS TOPLAM_PUAN_2,
+                    0 AS NOTU,
+                    0 AS TPS
+               FROM ".$dbnamex."SNV_SinavOgrencileri SOGR
+               INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON SOGR.OgrenciSeviyeID = OS.OgrenciSeviyeID
+               INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
+               INNER JOIN ".$dbnamex."GNL_DersYillari DY ON SNF.DersYiliID = DY.DersYiliID
+               INNER JOIN ".$dbnamex."GNL_OgrenciOkulBilgileri OOB ON DY.OkulID = OOB.OkulID AND OOB.OgrenciID = OS.OgrenciID
+               INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK ON SOGR.SinavKitapcikID = SK.SinavKitapcikID
+               INNER JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = OS.OgrenciID
+               INNER JOIN ".$dbnamex."SNV_Sinavlar SNV ON SNV.SinavID=SK.SinavID
+               WHERE SOGR.SinavOkulID= @sinavOkulID  
+               AND SOGR.SinifKodu= @SinifKodu  
+               ORDER BY K.Adi,K.Soyadi; 
+
+                SET NOCOUNT OFF;  
+                 "; 
+            $statement = $pdo->prepare($sql);   
+    //   echo debugPDO($sql, $params);
+            $statement->execute(); 
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+  
+    /** 
+     * @author Okan CIRAN  -- kullanılmıyor
+     * @ öğrencilerin sınav kitapçıkları kaydediliyor.
+     * @version v 1.0  23.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */ 
+    public function ogrenciSinavitapcikKaydet($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }     
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            $pdo->beginTransaction();
+
+            $SinavOgrenciId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavOgrenciId']) && $params['SinavOgrenciId'] != "")) {
+                $SinavOgrenciId = $params['SinavOgrenciId'];
+            }  
+            $KitapcikTurID= 0;
+            if ((isset($params['KitapcikTurID']) && $params['KitapcikTurID'] != "")) {
+                $KitapcikTurID = $params['KitapcikTurID'];
+            } 
+            
+            $sql = "  
+            SET NOCOUNT ON;  
+
+                UPDATE SO 
+                SET SO.SinavKitapcikID = sk1.SinavKitapcikID
+                FROM ".$dbnamex."SNV_SinavOgrencileri SO
+                INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK ON SK.SinavKitapcikID = SO.SinavKitapcikID
+                INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK1 ON SK1.SinavID = SK.SinavID AND SK1.KitapcikTurID = '".$KitapcikTurID."'
+                WHERE 
+                    SO.SinavOgrenciID= '".$SinavOgrenciId."';
+	 
+            SET NOCOUNT OFF;   
+                "; 
+            $statement = $pdo->prepare($sql); 
+       //    $result = $statement->execute();
+             $insertID =1;
+            $errorInfo = $statement->errorInfo(); 
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]); 
+            $pdo->commit();
+            return array("found" => true, "errorInfo" => $errorInfo, "lastInsertId" => $insertID);
+        } catch (\PDOException $e /* Exception $e */) {
+            $pdo->rollback();
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+    /** 
+     * @author Okan CIRAN
+     * @ klasik sınav sonuclarını kaydeder.
+     * @version v 1.0  25.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogrenciSinaviSonuclariKaydet($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }      
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+             
+            $SendXmlData = '';
+            $p2= '';
+            if ((isset($params['XmlData']) && $params['XmlData'] != "")) {
+                $p2 = $params['XmlData'];
+                
+                /*  
+                N'<Nodes>
+                    <Dugum SinavOgrenciSoruCevapID="4725b5de-a348-4130-9d84-1530b22fd558" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="2aa51fca-8a54-4bb0-a7e9-4336b7df387c" isDogru="True" AldigiPuan="12.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="99d19645-f6ea-4e19-93a6-b5b6a4a1a997" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="7fa152e1-bdb7-4068-b267-3829b1caec55" isDogru="True" AldigiPuan="12.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="b262a9e5-d6de-4b75-9370-1eed45a2ae74" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="4c32d1be-6849-4bd4-b534-10c14f635c13" isDogru="True" AldigiPuan="10.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="fd517314-006d-4045-82f3-5fcf38919ecd" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="ea9cb3da-7995-440e-99c8-2b0dd17ef506" isDogru="True" AldigiPuan="9.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="ea7c7f90-7e31-4693-a093-f153d2b235e3" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="3c278ff8-3155-4887-b1c6-8b884857d9c3" isDogru="True" AldigiPuan="10.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="4fbe812e-4eb9-4ba2-9e8b-8b85a51ac0ea" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="71fe7675-b484-4b34-9a3c-3e91d5f7960e" isDogru="True" AldigiPuan="6.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="4d8a5ece-db6b-4c9b-a021-8a84d93a586b" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="612e55a1-1545-43d7-9e47-aab5646294f4" isDogru="True" AldigiPuan="5.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="05459fa7-2ea8-4b1c-9887-cf74fdd45cca" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="5051ddb8-56c4-4545-abf6-5c5ed7116887" isDogru="True" AldigiPuan="8.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="19061f0b-d9bb-40bd-b093-e00a12a5f68f" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="9a71d34b-4a15-45e6-ab83-41e329efdf46" isDogru="True" AldigiPuan="6.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="3009efa4-30c0-41bd-ab8c-f178ab9822db" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="456f19d1-3233-4c20-a57e-8f76790f13f2" isDogru="True" AldigiPuan="6.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="e54cdfc9-d3c7-4289-b284-9bd86c04d9f7" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="5c9a2530-1d22-4b32-984a-a620eba8c84b" isDogru="True" AldigiPuan="6.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="c3e611a6-c64a-43f6-8084-084989576ce2" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="2a5cc3ca-83ef-409d-9d13-77aa0ce12387" isDogru="True" AldigiPuan="5.00"/>
+                    <Dugum SinavOgrenciSoruCevapID="3f9526fd-0b20-4365-9ba7-1c92f7e209c9" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="8a159ee3-7663-4d8d-a9e8-04aee4d74684" isDogru="True" AldigiPuan="5.00"/>	 
+                </Nodes>
+                  
+                 */
+            $XmlData = ' '; 
+            $dataValue = NULL;
+            $devamsizlikKodID = NULL;
+            if ((isset($params['XmlData']) && $params['XmlData'] != "")) {
+                $XmlData = $params['XmlData'];
+                $dataValue =  json_decode($XmlData, true);
+                
+             //   print_r( "////////////"); 
+            //   print_r($dataValue  ); 
+                //  echo( "\\\\\\console\\\\\\"); 
+                    foreach ($dataValue as $std) {                      
+                        if ($std  != null) {
+                        //   print_r($std ); 
+                        //   if ($std[1] == 1) { $devamsizlikKodID = 2 ;}
+                        //   if ($std[2] == 1) { $devamsizlikKodID = 0 ;}
+                     
+                          //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
+                      //  echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
+                         $SendXmlData =$SendXmlData.'<ID VALUE="'.$std.'"/>' ;  
+                        }
+                    }
+                  
+               $SendXmlData = '<Nodes>'.$SendXmlData.'</Nodes>';
+            }  
+                
+            } 
+            $sql = "  
+            SET NOCOUNT ON;   
+            
+            DECLARE @p1 xml;  
+            
+            set @p1=convert(xml,N"; 
+           
+            $sql = $sql. "'".$SendXmlData."')
+         
+            exec PRC_SNV_SinavOgrenciSoruCevaplari_Save_DersCevaplari @XMLData=@p1
+
+            SET NOCOUNT OFF; 
+                ";  
+            
+            $statement = $pdo->prepare($sql); 
+      // echo debugPDO($sql, $params);
+            $result = $statement->execute(); 
+            $errorInfo = $statement->errorInfo();
+             
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+  
+      /** 
+     * @author Okan CIRAN
+     * @ ogretmen klasik sınav sonuclarını onaylar.
+     * @version v 1.0  25.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */ 
+    public function ogrenciSinaviSonuclariOnay($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }     
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            $pdo->beginTransaction();
+
+            $SinavID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavID']) && $params['SinavID'] != "")) {
+                $SinavID = $params['SinavID'];
+            }  
+            $SinifID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinifID']) && $params['SinifID'] != "")) {
+                $SinifID = $params['SinifID'];
+            }  
+            $Onay= 0;
+            if ((isset($params['Onay']) && $params['Onay'] != "")) {
+                $Onay = $params['Onay'];
+            } 
+            
+            $sql = "  
+            SET NOCOUNT ON;  
+            declare 
+                @SinavID uniqueidentifier,
+                @SinifID nvarchar(36),
+                @Onay bit ; 
+            set @SinavID = '".$SinavID ."';
+            set @SinifID= '".$SinifID."';
+            set @Onay='".$Onay."' ; 
+
+            UPDATE ".$dbnamex."SNV_YaziliSinavSinifOnaylari 
+            SET Onay = @Onay 
+            WHERE SinavID = @SinavID AND 
+            SinifID = @SinifID; 
+	 
+            SET NOCOUNT OFF;   
+                "; 
+            $statement = $pdo->prepare($sql); 
+       //    $result = $statement->execute();
+             $insertID =1;
+            $errorInfo = $statement->errorInfo(); 
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]); 
+            $pdo->commit();
+            return array("found" => true, "errorInfo" => $errorInfo, "lastInsertId" => $insertID);
+        } catch (\PDOException $e /* Exception $e */) {
+            $pdo->rollback();
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+  
 }

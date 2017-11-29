@@ -1604,6 +1604,93 @@ and open the template in the editor. Ğİ
                     }
                 }); 
                 
+                  $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgrenciOdeviGordu_mbllogin', 
+                        ogrenciOdevID : '9ADC8A51-36C3-4924-8090-F1B081EC3824' , 
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
+                
+                  $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OdevOnayTipleri_mbllogin',  
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
+                
+                 $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'TopluOgrenciCevap_mbllogin',  
+                        sinavOkulID : 'F700A96B-4628-41E5-A261-D7834983CF4D' , 
+                        sinifKodu : '5KAR1' , 
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
+                
+                $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgrenciSinavitapcikKaydet_mbllogin',  
+                        sinavOgrenciId : 'F7557F49-E16C-4E53-9F6D-DBDE6210A9C3' , 
+                        kitapcikTurID : 2 , 
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
+                
+                  $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgrenciSinaviSonuclariOnay_mbllogin',  
+                        sinavID : 'F7557F49-E16C-4E53-9F6D-DBDE6210A9C3' , 
+                        sinifID : 'F7557F49-E16C-4E53-9F6D-DBDE6210A9C3' , 
+                        onay : 1 , 
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 ////////////////////////
                 
                 

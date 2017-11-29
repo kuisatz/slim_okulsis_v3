@@ -1347,7 +1347,7 @@ class MblLogin extends \BLL\BLLSlim{
     return $resultSet['resultSet'];
     } 
     
-      /**
+    /**
      * Function to get datagrid row count on user interface layer
      * @param array | null $params 
      * @return array
@@ -1357,5 +1357,58 @@ class MblLogin extends \BLL\BLLSlim{
     $resultSet = $DAL->ogretmenSinavSorulariKDK($params);  
     return $resultSet['resultSet'];
     } 
+    
+    /**
+     * DAta insert function
+     * @param array | null $params
+     * @return array
+     */
+    public function ogrenciOdeviGordu($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+        return $DAL->ogrenciOdeviGordu($params);
+    }
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function odevOnayTipleri($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->odevOnayTipleri($params);  
+    return $resultSet['resultSet'];
+    } 
+            
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function topluOgrenciCevap($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->topluOgrenciCevap($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * DAta insert function
+     * @param array | null $params
+     * @return array
+     */
+    public function ogrenciSinavitapcikKaydet($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+        return $DAL->ogrenciSinavitapcikKaydet($params);
+    }
+    
+     /**
+     * DAta insert function
+     * @param array | null $params
+     * @return array
+     */
+    public function ogrenciSinaviSonuclariOnay($params = array()) {
+        $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+        return $DAL->ogrenciSinaviSonuclariOnay($params);
+    }
+    
 }
 
