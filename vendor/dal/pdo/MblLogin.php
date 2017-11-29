@@ -280,10 +280,10 @@ class MblLogin extends \DAL\DalSlim {
                     $wsdlValue = $wsdl['resultSet'] ; 
                 }   
                 
-                 $languageIdValue = 647;
-                if (isset($params['language_code']) && $params['language_code'] != "") {
-                    $languageCode = $params['language_code'];
-                }      
+                $languageIdValue = 647;
+                if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                    $languageIdValue = $params['LanguageID'];
+                }
                 $sifre =$wsdlValue ;  
                 
                // $deviceid = NULL;
@@ -621,7 +621,8 @@ class MblLogin extends \DAL\DalSlim {
                         EgitimYili varchar(100),
                         DonemID int,
                         KurumID [uniqueidentifier],
-                        dbnamex  nvarchar(200)
+                        dbnamex  nvarchar(200),
+                        database_id int
                     ) ;
                 declare @dbnamex  nvarchar(200)  ;
                 declare @KisiID  uniqueidentifier;
@@ -652,7 +653,8 @@ class MblLogin extends \DAL\DalSlim {
                 SET @sqlx = '
                 insert into ##okimobilseconddata".$tc."  ( [OkulKullaniciID] ,
                             [OkulID],  [KisiID],  [RolID],[RolAdi],OkulAdi,
-                            [MEBKodu],  [ePosta],  DersYiliID,  EgitimYilID,   EgitimYili,   DonemID ,KurumID, dbnamex )
+                            [MEBKodu],  [ePosta],  DersYiliID,  EgitimYilID,   
+                            EgitimYili,   DonemID ,KurumID, dbnamex, database_id )
                 SELECT  
                     sss.[OkulKullaniciID] ,
                     sss.[OkulID],
@@ -667,7 +669,8 @@ class MblLogin extends \DAL\DalSlim {
                     EY.EgitimYili,
                     DY.DonemID ,
                     oo.KurumID , 
-                    '''+@dbnamex+''' as dbnamex
+                    '''+@dbnamex+''' as dbnamex,
+                    '+cast(@database_id as nvarchar(5))+' as database_id
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                 inner join ['+@dbnamex+'].[dbo].GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 
@@ -699,7 +702,9 @@ class MblLogin extends \DAL\DalSlim {
                     '' AS EgitimYili,
                     0 AS DonemID ,
                     null as KurumID, 
-                    null AS dbnamex 
+                    null AS dbnamex ,
+                    0 as database_id,
+                    null as proxy
 
                 UNION  	  
                 select  
@@ -716,10 +721,13 @@ class MblLogin extends \DAL\DalSlim {
                     a.EgitimYili,
                     a.DonemID ,
                     a.KurumID , 
-                    a.dbnamex 
-                from  ##okimobilseconddata".$tc."  a
+                    a.dbnamex ,
+                    a.database_id,
+                    mss.proxy
+                FROM  ##okimobilseconddata".$tc."  a
+                LEFT JOIN BILSANET_MOBILE.[dbo].[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = a.OkulID and golx.language_id = lx.id  
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = a.OkulID and golx.language_id = lx.id  
 
                 IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; 
                 IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";  
@@ -729,7 +737,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-        //echo debugPDO($sql, $params);
+     //  echo debugPDO($sql, $params);
             $statement->execute();
             
            
@@ -2344,12 +2352,22 @@ class MblLogin extends \DAL\DalSlim {
                                                     @KisiID =  '".$KisiID."' ; 
 
                     select  
+                        null AS Donem  , 
+                        null AS SinavTarihi ,
+                        null AS SinavBitisTarihi , 
+                        null AS SinavTurAdi  ,
+                        null AS SinavKodu ,
+                        null AS SinavID ,  
+                        'LÜTFEN SINAV SEÇİNİZ.' AS SinavAciklamasi  
+
+                    UNION 
+                    select  
                         gd.[Donem] , 
                         SinavTarihi ,
                         SinavBitisTarihi , 
                         SinavTurAdi  ,
                         SinavKodu ,
-                         SinavID ,  
+                        SinavID ,  
                         SinavAciklamasi  
                     /*
                         SinavTurID ,	
@@ -5788,7 +5806,7 @@ class MblLogin extends \DAL\DalSlim {
    
                  "; 
             $statement = $pdo->prepare($sql);   
-     // echo debugPDO($sql, $params);
+      echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -7666,7 +7684,7 @@ class MblLogin extends \DAL\DalSlim {
  
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8118,7 +8136,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-       // echo debugPDO($sql, $params);
+    //   echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();

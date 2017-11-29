@@ -195,7 +195,8 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "EgitimYili" =>  ($menu["EgitimYili"]), 
             "DonemID" =>  ($menu["DonemID"]), 
             "KurumID" =>  ($menu["KurumID"]), 
-            "dbn" =>  ($menu["dbnamex"]),  
+            "proxy" =>  ($menu["proxy"]),  
+            
         );
     }
     
