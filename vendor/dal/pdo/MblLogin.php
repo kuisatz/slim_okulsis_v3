@@ -1394,20 +1394,34 @@ class MblLogin extends \DAL\DalSlim {
             $devamsizlikKodID = NULL;
             if ((isset($params['XmlData']) && $params['XmlData'] != "")) {
                 $XmlData = $params['XmlData'];
+             //    var_dump($XmlData   ); 
                 $dataValue =  json_decode($XmlData, true);
-             //   print_r( "////////////"); 
-                //  print_r($dataValue  ); 
-                //  echo( "\\\\\\console\\\\\\"); 
+               //   print_r( "////////////"); 
+              //   var_dump($dataValue[0]['id'] , $dataValue[0]["yok"]  , $dataValue[0]["gec"]); 
+             //   var_dump($dataValue   ); 
+              //    echo($dataValue[0]['id']   ); 
+             //     print_r( $dataValue[0]["yok"] ); 
+             // print_r( "////////////"); 
+           //   $ii =0 ; 
+                 //  echo( "\\\\\\console\\\\\\"); 
                     foreach ($dataValue as $std) {
-                      
-                        if ($std[0] != null) {
-
-                        if ($std[1] == 1) { $devamsizlikKodID = 2 ;}
-                        if ($std[2] == 1) { $devamsizlikKodID = 0 ;}
-                     
-                          //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
-                      //  echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
-                         $SendXmlData =$SendXmlData.'<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ; 
+                    
+                        if ($std  != null) {
+  // print_r("<<<<<<<"); 
+  //   print_r($std ['id'] );  
+  //    print_r(">>>>>>> "); 
+    //  $ii +=1;
+      $devamsizlikKodID = -1 ; 
+   //   print_r($std ['yok']);
+                       
+                        if ($std ['gec']  == 1) { $devamsizlikKodID = 1 ;}
+                        if ($std ['yok']  == 1) { $devamsizlikKodID = 2 ;}
+    //   print_r("<<<<<<<"); 
+   //  print_r($devamsizlikKodID);  
+  //   print_r(">>>>>>> ");            
+        //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
+         //    IF ($devamsizlikKodID >-1)  {  echo( '<Ogrenci><OgrenciID>'.$std ['id'].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); }
+              IF ($devamsizlikKodID >-1)  { $SendXmlData =$SendXmlData.'<Ogrenci><OgrenciID>'.$std ['id'].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ; }
                         }
                     }
                   
@@ -1422,7 +1436,12 @@ class MblLogin extends \DAL\DalSlim {
                 </tbody><tbody><tr><td>09:50 - 10:30</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>10:40 - 11:20</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>11:30 - 12:10</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>12:20 - 13:00</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>13:50 - 14:30</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>14:40 - 15:20</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>15:30 - 16:10</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>16:20 - 16:40</td><td>Dersiniz Yok</td><td></td></tr>
               
              */
-           
+          //    echo($SendXmlData); 
+              /*
+            <Table><Ogrenci><OgrenciID>AEEFE2B7-6653-4776-9343-031155AF6181</OgrenciID><DevamsizlikKodID>2</DevamsizlikKodID><Aciklama/></Ogrenci><Ogrenci><OgrenciID>FA56401D-B693-4292-A726-8784BBB6FF30</OgrenciID><DevamsizlikKodID>2</DevamsizlikKodID><Aciklama/></Ogrenci></Table>
+              */
+               
+              
             $XmlData = $SendXmlData;
          //   print_r($XmlData); 
       //     print_r( '11'); 
@@ -1766,10 +1785,10 @@ class MblLogin extends \DAL\DalSlim {
                     a.Tarih, 
                     a.Aciklama, 
                     b.OgrenciseviyeID ,
-                    cast(c.OzurluDevamsiz1 as numeric(10,2)) as OzurluDevamsiz1,
-                    cast(c.OzursuzDevamsiz1 as numeric(10,2)) as OzursuzDevamsiz1,
-                    cast(c.OzurluDevamsiz2 as numeric(10,2)) as OzurluDevamsiz2,
-                    cast(c.OzursuzDevamsiz2 as numeric(10,2)) as OzursuzDevamsiz2 , 
+                    cast(cast(c.OzurluDevamsiz1 as numeric(10,2)) as nvarchar(10)) as OzurluDevamsiz1,
+                    cast(cast(c.OzursuzDevamsiz1 as numeric(10,2)) as nvarchar(10)) as OzursuzDevamsiz1,
+                    cast(cast(c.OzurluDevamsiz2 as numeric(10,2)) as nvarchar(10)) as OzurluDevamsiz2,
+                    cast(cast(c.OzursuzDevamsiz2 as numeric(10,2)) as nvarchar(10)) as OzursuzDevamsiz2 , 
                     ROW_NUMBER() OVER(ORDER BY Tarih) AS rownum  
                 FROM ".$dbnamex."GNL_OgrenciDevamsizliklari  a 
                 inner join ".$dbnamex."GNL_OgrenciSeviyeleri b on b.OgrenciID = a.OgrenciID
@@ -2143,7 +2162,8 @@ class MblLogin extends \DAL\DalSlim {
              
             $sql = "  
             SET NOCOUNT ON; 
-            SELECT  OgrenciID ,
+            SELECT  
+                OgrenciID ,
                 OgrenciSeviyeID ,
                 DersHavuzuID ,
                 Numarasi ,
@@ -2153,15 +2173,15 @@ class MblLogin extends \DAL\DalSlim {
                 DersKodu ,
                 DersAdi ,
                 DonemID ,
-                Donem1_DonemNotu ,
-                Donem2_DonemNotu ,
+                cast(Donem1_DonemNotu as numeric(10,2)) as Donem1_DonemNotu ,
+                cast(Donem2_DonemNotu as numeric(10,2)) as Donem2_DonemNotu ,
                 PuanOrtalamasi ,
                 Donem1_PuanOrtalamasi ,
                 Donem2_PuanOrtalamasi ,
                 Donem1_DonemNotu AS AktifDonemNotu ,
                 YetistirmeKursuNotu ,
-                YilSonuNotu ,
-                YilSonuPuani , 
+                isnull(YilSonuNotu,0) as YilSonuNotu ,
+                isnull(YilSonuPuani,0) as YilSonuPuani, 
                 YilsonuToplamAgirligi , 
                 OdevAldi ,
                 ProjeAldi ,
@@ -2172,7 +2192,7 @@ class MblLogin extends \DAL\DalSlim {
                 KanaatNotu ,
                 Sira ,
                 EgitimYilID ,
-                HaftalikDersSaati ,
+                isnull(HaftalikDersSaati ,0) as HaftalikDersSaati,
                 Perf1OdevAldi ,
                 Perf2OdevAldi ,
                 Perf3OdevAldi ,
@@ -2257,7 +2277,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-        // echo debugPDO($sql, $params);
+        echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -5682,7 +5702,7 @@ class MblLogin extends \DAL\DalSlim {
                 $languageIdValue = $params['LanguageID'];
             } 
              
-            $sql = "   
+            $sql = "    
                 SET NOCOUNT ON
 
                 set datefirst 1; 
@@ -5699,14 +5719,21 @@ class MblLogin extends \DAL\DalSlim {
                 set @SinifID = 'F4201B97-B073-4DD7-8891-8091C3DC82CF'; 
                 set @OgrenciSeviyeID ='C8611CCD-E3B1-42DB-B83E-013E419BB4B7';
                 */ 
-                set @KisiID =  '".$KisiID."';  /* 'D74EAF39-2225-4F1C-AC9E-22F73BA8D4C8' ;  */  
-                 IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
-                 IF OBJECT_ID('tempdb..#xxx') IS NOT NULL DROP TABLE #xxx;  
+                set @KisiID = '".$KisiID."';  /* 'D74EAF39-2225-4F1C-AC9E-22F73BA8D4C8' ;  */  
+                IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
+                IF OBJECT_ID('tempdb..#xxx') IS NOT NULL DROP TABLE #xxx;  
+                IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
 
                 CREATE TABLE #DersProgrami(DersSirasi smallint,
                                             HaftaGunu smallint,
-                                            SinifDersID nvarchar(4000))
-                
+                                            SinifDersID nvarchar(4000));
+                Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
+                    into #dersller 
+                FROM ".$dbnamex."GNL_SinifDersleri sd1    
+                LEFT JOIN ".$dbnamex."GNL_Siniflar s1 on s1.SinifID = sd1.SinifID
+                LEFT JOIN ".$dbnamex."GNL_DersHavuzlari  dh ON sd1.DersHavuzuID = dh.DersHavuzuID 
+                LEFT JOIN ".$dbnamex."GNL_Dersler  dd ON dh.DersID = dd.DersID 
+
                  SELECT top 1 
                         @DersYiliID = DY.DersYiliID ,
                         @SubeGrupID = S.SubeGrupID , 
@@ -5718,10 +5745,10 @@ class MblLogin extends \DAL\DalSlim {
                             dy.EgitimYilID, */  
                 FROM  ".$dbnamex."GNL_OgrenciSeviyeleri OS
                 INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
-                INNER JOIN  ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
-                INNER JOIN  ".$dbnamex."GNL_Okullar OK ON OK.OkulID = DY.OkulID
-                INNER JOIN  ".$dbnamex."GNL_OgrenciOkulBilgileri OOB ON OOB.OkulID = OK.OkulID AND OOB.OgrenciID = OS.OgrenciID
-                INNER JOIN  ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgrenciID
+                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
+                INNER JOIN ".$dbnamex."GNL_Okullar OK ON OK.OkulID = DY.OkulID
+                INNER JOIN ".$dbnamex."GNL_OgrenciOkulBilgileri OOB ON OOB.OkulID = OK.OkulID AND OOB.OgrenciID = OS.OgrenciID
+                INNER JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgrenciID
                 WHERE     
                     Os.OgrenciID =@KisiID
                 ORDER BY dy.EgitimYilID desc; 
@@ -5733,7 +5760,7 @@ class MblLogin extends \DAL\DalSlim {
                 DECLARE db_cursor CURSOR FOR  
                     SELECT DersSirasi,HaftaGunu,SinifDersID FROM ".$dbnamex."GNL_DersProgramlari
                     WHERE SinifDersID IN 
-                        (SELECT SinifDersID FROM ".$dbnamex."GNL_SinifDersleri 
+                        (SELECT SinifDersID FROM Bilsanet1.dbo.GNL_SinifDersleri 
                         WHERE SinifID = @SinifID AND DersHavuzuID IN (SELECT DersHavuzuID FROM ".$dbnamex."GNL_OgrenciDersleri WHERE OgrenciSeviyeID=@OgrenciSeviyeID))
                         AND DonemID = @DonemID ORDER BY HaftaGunu,DersSirasi,SinifDersID
                 OPEN db_cursor   
@@ -5753,7 +5780,7 @@ class MblLogin extends \DAL\DalSlim {
                 SELECT	
                     DS.BaslangicSaati,
                     DS.BitisSaati,
-                    dbo.GetFormattedTime(DS.BaslangicSaati, 1) + ' - ' + dbo.GetFormattedTime(DS.BitisSaati, 1) AS DersSaati,
+                    ".$dbnamex."GetFormattedTime(DS.BaslangicSaati, 1) + ' - ' + ".$dbnamex."GetFormattedTime(DS.BitisSaati, 1) AS DersSaati,
                     DS.DersSirasi,
                     DP1.SinifDersID AS Gun1_SinifDersID,
                     DP2.SinifDersID AS Gun2_SinifDersID,
@@ -5772,47 +5799,55 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT JOIN #DersProgrami AS DP5 ON (DP5.HaftaGunu=5 AND DP5.DersSirasi = DS.DersSirasi)  
                 LEFT JOIN #DersProgrami AS DP6 ON (DP6.HaftaGunu=6 AND DP6.DersSirasi = DS.DersSirasi)  
                 LEFT JOIN #DersProgrami AS DP7 ON (DP7.HaftaGunu=7 AND DP7.DersSirasi = DS.DersSirasi)  
-
                 WHERE DY.DersYiliID = @DersYiliID AND DS.SubeGrupID = @SubeGrupID
                 ORDER BY DS.DersSirasi; 
 
-                SELECT ssdddsdsd.* , concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , '' as ogrenci  
-                    , 'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4
+                SELECT  
+                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') ,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi,				  
+                    concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , '' as ogrenci , 
+                    'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4 ,'Ders' as Alan5 
                 FROM ( 
-                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'Dersiniz Yok') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID,zzz1.DersAdi
                     FROM #xxx rrr
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID 
+                    LEFT JOIN #dersller zzz1 on zzz1.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati  , ISNULL(g2.SinifAdi,'Dersiniz Yok') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID,zzz2.DersAdi
                     FROM #xxx rrr 	 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd2 on ddd2.[SinifDersID] = rrr.Gun2_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID  
+                    LEFT JOIN #dersller zzz2 on zzz2.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati ,  ISNULL(g3.SinifAdi,'Dersiniz Yok')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati,  ISNULL(g3.SinifAdi,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID,zzz3.DersAdi
                     FROM #xxx rrr  
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd3 on ddd3.[SinifDersID] = rrr.Gun3_SinifDersID  
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g3 on g3.SinifID = ddd3.SinifID  
+                    LEFT JOIN #dersller zzz3 on zzz3.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'Dersiniz Yok') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID,zzz4.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd4 on ddd4.[SinifDersID] = rrr.Gun4_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID  
+                    LEFT JOIN #dersller zzz4 on zzz4.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g5.SinifAdi,'Dersiniz Yok')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID,zzz5.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd5 on ddd5.[SinifDersID] = rrr.Gun5_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID  
+                    LEFT JOIN #dersller zzz5 on zzz5.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g6.SinifAdi,'Dersiniz Yok')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID,zzz6.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd6 on ddd6.[SinifDersID] = rrr.Gun6_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID 
+                    LEFT JOIN #dersller zzz6 on zzz6.SinifDersID =  rrr.Gun1_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g7.SinifAdi,'Dersiniz Yok') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID
+                    SELECT rrr.DersSaati , ISNULL(g7.SinifAdi,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID,zzz7.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd7 on ddd7.[SinifDersID] = rrr.Gun7_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID 
+                    LEFT JOIN #dersller zzz7 on zzz7.SinifDersID =  rrr.Gun1_SinifDersID
                 ) as ssdddsdsd
                 LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ssdd ON ssdd.SinifDersID =ssdddsdsd.SinifDersID  
                 LEFT JOIN ".$dbnamex."[GNL_SinifOgretmenleri] soso ON soso.SinifID =ssdd.SinifID  
@@ -5822,10 +5857,13 @@ class MblLogin extends \DAL\DalSlim {
 
                 IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
                 IF OBJECT_ID('tempdb..#xxx') IS NOT NULL DROP TABLE #xxx; 
+                IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
+    
+              SET NOCOUNT OFF
    
                  "; 
             $statement = $pdo->prepare($sql);   
-      echo debugPDO($sql, $params);
+  //  echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -5874,9 +5912,8 @@ class MblLogin extends \DAL\DalSlim {
             } 
             
             $sql = "  
-                SET NOCOUNT ON
-
-                declare  
+                SET NOCOUNT ON  
+                DECLARE  
                         @SinifID UNIQUEIDENTIFIER,
                         @DonemID INT=1, 
                         @DersYiliID uniqueidentifier ,  
@@ -5884,11 +5921,18 @@ class MblLogin extends \DAL\DalSlim {
                         @KisiID uniqueidentifier ,
                         @SubeGrupID int;
 
-                set @KisiID = '".$KisiID."'  /* '17A68CAA-1A13-460A-BEAA-FB483AC82F7B'   '3F1A5A43-0581-4793-BB6C-AC0775EA68C5'  */ 
+                set @KisiID =  '".$KisiID."';   /* '17A68CAA-1A13-460A-BEAA-FB483AC82F7B' --  '3F1A5A43-0581-4793-BB6C-AC0775EA68C5'  */ 
                 set datefirst 1; 
                 IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
                 IF OBJECT_ID('tempdb..#xxx') IS NOT NULL DROP TABLE #xxx;  
-
+                IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
+                Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
+                    into #dersller 
+                FROM ".$dbnamex."GNL_SinifDersleri sd1    
+                LEFT JOIN ".$dbnamex."GNL_Siniflar s1 on s1.SinifID = sd1.SinifID
+                LEFT JOIN ".$dbnamex."GNL_DersHavuzlari  dh ON sd1.DersHavuzuID = dh.DersHavuzuID 
+                LEFT JOIN ".$dbnamex."GNL_Dersler  dd ON dh.DersID = dd.DersID 
+ 
                 CREATE TABLE #DersProgrami(DersSirasi smallint,
                                             HaftaGunu smallint,
                                             SinifDersID nvarchar(4000));  
@@ -5901,11 +5945,11 @@ class MblLogin extends \DAL\DalSlim {
                     OK.KurumID,
                     OOB.OgrenciOkulBilgiID, 
                     dy.EgitimYilID, */  
-                FROM  ".$dbnamex."[GNL_SinifOgretmenleri] OS
+                FROM ".$dbnamex."[GNL_SinifOgretmenleri] OS
                 INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
-                INNER JOIN  ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
-                INNER JOIN  ".$dbnamex."GNL_Okullar OK ON OK.OkulID = DY.OkulID 
-                INNER JOIN  ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgretmenID 
+                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
+                INNER JOIN ".$dbnamex."GNL_Okullar OK ON OK.OkulID = DY.OkulID 
+                INNER JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgretmenID 
                 LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ssdd ON os.SinifID =ssdd.SinifID   
                 WHERE     
                     os.OgretmenID =@KisiID
@@ -5933,8 +5977,8 @@ class MblLogin extends \DAL\DalSlim {
 
                 DECLARE db_cursor CURSOR FOR  
                 SELECT DersSirasi,HaftaGunu,SinifDersID FROM ".$dbnamex."GNL_DersProgramlari
-                                WHERE SinifDersID IN (SELECT SinifDersID FROM ".$dbnamex."GNL_SinifDersleri WHERE SinifID = @SinifID)
-                                AND DonemID = @DonemID ORDER BY HaftaGunu,DersSirasi,SinifDersID
+                WHERE SinifDersID IN (SELECT SinifDersID FROM ".$dbnamex."GNL_SinifDersleri WHERE SinifID = @SinifID)
+                    AND DonemID = @DonemID ORDER BY HaftaGunu,DersSirasi,SinifDersID
                 OPEN db_cursor   
                 FETCH NEXT FROM db_cursor INTO @DersSirasi, @HaftaGunu, @SinifDersID
                 WHILE @@FETCH_STATUS = 0   
@@ -5952,7 +5996,7 @@ class MblLogin extends \DAL\DalSlim {
                 SELECT 
                     DS.BaslangicSaati,
                     DS.BitisSaati,
-                    dbo.GetFormattedTime(DS.BaslangicSaati, 1) + ' - ' + dbo.GetFormattedTime(DS.BitisSaati, 1) AS DersSaati,
+                    ".$dbnamex."GetFormattedTime(DS.BaslangicSaati, 1) + ' - ' + ".$dbnamex."GetFormattedTime(DS.BitisSaati, 1) AS DersSaati,
                     DS.DersSirasi,
                     DP1.SinifDersID AS Gun1_SinifDersID,
                     DP2.SinifDersID AS Gun2_SinifDersID,
@@ -5961,7 +6005,7 @@ class MblLogin extends \DAL\DalSlim {
                     DP5.SinifDersID AS Gun5_SinifDersID,
                     DP6.SinifDersID AS Gun6_SinifDersID,
                     DP7.SinifDersID AS Gun7_SinifDersID
-                     into #xxx
+                    into #xxx
                 FROM ".$dbnamex."GNL_DersSaatleri AS DS
                 INNER JOIN ".$dbnamex."GNL_DersYillari AS DY ON DY.DersYiliID = DS.DersYiliID 
                 LEFT JOIN #DersProgrami AS DP1 ON (DP1.HaftaGunu=1 AND DP1.DersSirasi = DS.DersSirasi)  
@@ -5974,58 +6018,68 @@ class MblLogin extends \DAL\DalSlim {
                 WHERE DY.DersYiliID = @DersYiliID AND DS.SubeGrupID = @SubeGrupID
                 ORDER BY DS.DersSirasi
 
-                SELECT ssdddsdsd.* , concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , '' as ogrenci
-                  , 'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4
+                SELECT  
+                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') ,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi,				  
+                    concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , '' as ogrenci , 
+                    'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4 ,'Ders' as Alan5 
+
                 FROM ( 
-                    SELECT rrr.DersSaati , ISNULL(g1.SinifAdi,'Dersiniz Yok') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID,zzz1.DersAdi
                     FROM #xxx rrr
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID  
+                    LEFT JOIN #dersller zzz1 on zzz1.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati  , ISNULL(g2.SinifAdi,'Dersiniz Yok') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID,zzz2.DersAdi
                     FROM #xxx rrr 	 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd2 on ddd2.[SinifDersID] = rrr.Gun2_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID  
+                    LEFT JOIN #dersller zzz2 on zzz2.SinifDersID =  rrr.Gun2_SinifDersID
                 union 
-                    SELECT rrr.DersSaati ,  ISNULL(g3.SinifAdi,'Dersiniz Yok')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g3.SinifAdi,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID,zzz3.DersAdi
                     FROM #xxx rrr  
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd3 on ddd3.[SinifDersID] = rrr.Gun3_SinifDersID  
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g3 on g3.SinifID = ddd3.SinifID  
+                    LEFT JOIN #dersller zzz3 on zzz3.SinifDersID =  rrr.Gun3_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'Dersiniz Yok') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID,zzz4.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd4 on ddd4.[SinifDersID] = rrr.Gun4_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID 
+                    LEFT JOIN #dersller zzz4 on zzz4.SinifDersID =  rrr.Gun4_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati ,   ISNULL(g5.SinifAdi,'Dersiniz Yok')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID,zzz5.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd5 on ddd5.[SinifDersID] = rrr.Gun5_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID 
+                    LEFT JOIN #dersller zzz5 on zzz5.SinifDersID =  rrr.Gun5_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g6.SinifAdi,'Dersiniz Yok')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID,zzz6.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd6 on ddd6.[SinifDersID] = rrr.Gun6_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID 
+                    LEFT JOIN #dersller zzz6 on zzz6.SinifDersID =  rrr.Gun6_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g7.SinifAdi,'Dersiniz Yok') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID
+                    SELECT rrr.DersSaati, ISNULL(g7.SinifAdi,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID,zzz7.DersAdi
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd7 on ddd7.[SinifDersID] = rrr.Gun7_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID 
+                    LEFT JOIN #dersller zzz7 on zzz7.SinifDersID =  rrr.Gun7_SinifDersID
                 ) as ssdddsdsd
                 LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ssdd ON ssdd.SinifDersID =ssdddsdsd.SinifDersID  
                 LEFT JOIN ".$dbnamex."[GNL_SinifOgretmenleri] soso ON soso.SinifID =ssdd.SinifID  
                 LEFT JOIN ".$dbnamex."GNL_Kisiler kkk ON kkk.KisiID =soso.OgretmenID 
-                 WHERE   dayy =  DATEPART(dw,getdate())  
+                 WHERE dayy =  DATEPART(dw,getdate())  
                 /* and SinifAdi is not null */
 
                 IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
                 IF OBJECT_ID('tempdb..#xxx') IS NOT NULL DROP TABLE #xxx; 
- 
+                IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
                 SET NOCOUNT OFF 
-   
+     
                  "; 
             $statement = $pdo->prepare($sql);   
-   //   echo debugPDO($sql, $params);
+      // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -6076,7 +6130,7 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "   
             SET NOCOUNT ON
 
-            set datefirst 5; 
+            set datefirst 1; 
             declare  
                 @SinifID UNIQUEIDENTIFIER,
                 @DonemID INT=1,
@@ -6093,8 +6147,13 @@ class MblLogin extends \DAL\DalSlim {
                 set @KisiID = '".$KisiID."';  /* 'A552D233-1842-4DA1-8B3B-33FE3358E3F3' ;  */  
                 IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
                 IF OBJECT_ID('tempdb..#DersProgramiSonuc') IS NOT NULL DROP TABLE #DersProgramiSonuc;  
-                IF OBJECT_ID('tempdb..#DersProgramiSonuc') IS NOT NULL DROP TABLE #DersProgramiSonuc;  
-
+                IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
+                Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
+                    into #dersller 
+                FROM ".$dbnamex."GNL_SinifDersleri sd1    
+                LEFT JOIN ".$dbnamex."GNL_Siniflar s1 on s1.SinifID = sd1.SinifID
+                LEFT JOIN ".$dbnamex."GNL_DersHavuzlari  dh ON sd1.DersHavuzuID = dh.DersHavuzuID 
+                LEFT JOIN ".$dbnamex."GNL_Dersler  dd ON dh.DersID = dd.DersID 
                 CREATE TABLE #DersProgrami(DersSirasi smallint,
                                             HaftaGunu smallint,
                                             SinifDersID nvarchar(4000),
@@ -6104,16 +6163,15 @@ class MblLogin extends \DAL\DalSlim {
                     BitisSaati varchar(20),
                     DersSaati varchar(20),
                     DersSirasi int,
-                    Gun1_SinifDersID uniqueidentifier,
-                    Gun2_SinifDersID uniqueidentifier,
-                    Gun3_SinifDersID uniqueidentifier,
-                    Gun4_SinifDersID uniqueidentifier,
-                    Gun5_SinifDersID uniqueidentifier,
-                    Gun6_SinifDersID uniqueidentifier,
-                    Gun7_SinifDersID uniqueidentifier,
-                    OgrenciseviyeID uniqueidentifier);  
-
-			   
+                    Gun1_SinifDersID nvarchar(40),
+                    Gun2_SinifDersID nvarchar(40),
+                    Gun3_SinifDersID nvarchar(40),
+                    Gun4_SinifDersID nvarchar(40),
+                    Gun5_SinifDersID nvarchar(40),
+                    Gun6_SinifDersID nvarchar(40),
+                    Gun7_SinifDersID nvarchar(40),
+                    OgrenciseviyeID nvarchar(40));  
+  
                 DECLARE @DersSirasi smallint;
                 DECLARE @HaftaGunu smallint;
                 DECLARE @SinifDersID uniqueidentifier;
@@ -6125,12 +6183,12 @@ class MblLogin extends \DAL\DalSlim {
                             OS.OgrenciseviyeID, 
                             OS.SinifID   
                         FROM ".$dbnamex."[GNL_OgrenciYakinlari] oy
-                        INNER JOIN  ".$dbnamex."GNL_OgrenciSeviyeleri OS on  oy.OgrenciID =  Os.OgrenciID
-                        INNER JOIN  ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgrenciID 
-                        INNER JOIN  ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
-                        INNER JOIN  ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
-                        INNER JOIN  ".$dbnamex."GNL_Okullar OK ON OK.OkulID = DY.OkulID
-                        INNER JOIN  ".$dbnamex."GNL_OgrenciOkulBilgileri OOB ON OOB.OkulID = OK.OkulID AND OOB.OgrenciID = OS.OgrenciID 
+                        INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS on  oy.OgrenciID =  Os.OgrenciID
+                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgrenciID 
+                        INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
+                        INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
+                        INNER JOIN ".$dbnamex."GNL_Okullar OK ON OK.OkulID = DY.OkulID
+                        INNER JOIN ".$dbnamex."GNL_OgrenciOkulBilgileri OOB ON OOB.OkulID = OK.OkulID AND OOB.OgrenciID = OS.OgrenciID 
                         WHERE     
                            oy.YakinID =@KisiID
                         ORDER BY dy.EgitimYilID desc;  
@@ -6141,7 +6199,7 @@ class MblLogin extends \DAL\DalSlim {
                 BEGIN   
 
                     DECLARE db_cursor1 CURSOR FOR  
-                        SELECT DersSirasi,HaftaGunu,SinifDersID FROM GNL_DersProgramlari
+                        SELECT DersSirasi,HaftaGunu,SinifDersID FROM ".$dbnamex."GNL_DersProgramlari
                         WHERE SinifDersID IN 
                             (SELECT SinifDersID FROM ".$dbnamex."GNL_SinifDersleri 
                             WHERE SinifID = @SinifID AND DersHavuzuID IN (SELECT DersHavuzuID FROM ".$dbnamex."GNL_OgrenciDersleri WHERE OgrenciSeviyeID=@OgrenciSeviyeID))
@@ -6166,7 +6224,7 @@ class MblLogin extends \DAL\DalSlim {
                     SELECT 
                         DS.BaslangicSaati,
                         DS.BitisSaati,
-                        dbo.GetFormattedTime(DS.BaslangicSaati, 1) + ' - ' + dbo.GetFormattedTime(DS.BitisSaati, 1) AS DersSaati,
+                        ".$dbnamex."GetFormattedTime(DS.BaslangicSaati, 1) + ' - ' + ".$dbnamex."GetFormattedTime(DS.BitisSaati, 1) AS DersSaati,
                         DS.DersSirasi,
                         DP1.SinifDersID AS Gun1_SinifDersID,
                         DP2.SinifDersID AS Gun2_SinifDersID,
@@ -6196,43 +6254,52 @@ class MblLogin extends \DAL\DalSlim {
                 DEALLOCATE db_cursor  
 
 	  
-                SELECT ssdddsdsd.* , concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , concat(k.Adi ,' ',k.Soyadi) as ogrenci 
-                  , 'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4
+                SELECT
+                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') as SinifDersID,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi,				  
+                    concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , concat(k.Adi ,' ',k.Soyadi) as ogrenci ,
+                   'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4,'Ders' as Alan5  
                 FROM ( 
-                    SELECT rrr.DersSaati , ISNULL(g1.SinifAdi,'Dersiniz Yok') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz1.DersAdi
                     FROM #DersProgramiSonuc rrr
-                        LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
-                        LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID
+                    LEFT JOIN #dersller zzz1 on zzz1.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati  , ISNULL(g2.SinifAdi,'Dersiniz Yok') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz2.DersAdi
                     FROM #DersProgramiSonuc rrr 	 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd2 on ddd2.[SinifDersID] = rrr.Gun2_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID 
+                    LEFT JOIN #dersller zzz2 on zzz2.SinifDersID =  rrr.Gun2_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati ,  ISNULL(g3.SinifAdi,'Dersiniz Yok')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g3.SinifAdi,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz3.DersAdi
                     FROM #DersProgramiSonuc rrr  
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd3 on ddd3.[SinifDersID] = rrr.Gun3_SinifDersID  
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g3 on g3.SinifID = ddd3.SinifID  
+                    LEFT JOIN #dersller zzz3 on zzz3.SinifDersID =  rrr.Gun3_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'Dersiniz Yok') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi,zzz4.DersAdi
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd4 on ddd4.[SinifDersID] = rrr.Gun4_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID 
+                    LEFT JOIN #dersller zzz4 on zzz4.SinifDersID =  rrr.Gun4_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati ,   ISNULL(g5.SinifAdi,'Dersiniz Yok')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz5.DersAdi
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd5 on ddd5.[SinifDersID] = rrr.Gun5_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID 
+                    LEFT JOIN #dersller zzz5 on zzz5.SinifDersID =  rrr.Gun5_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g6.SinifAdi,'Dersiniz Yok')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz6.DersAdi
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd6 on ddd6.[SinifDersID] = rrr.Gun6_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID  
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID
+                    LEFT JOIN #dersller zzz6 on zzz6.SinifDersID =  rrr.Gun6_SinifDersID  
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g7.SinifAdi,'Dersiniz Yok') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi
+                    SELECT rrr.DersSaati, ISNULL(g7.SinifAdi,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi,zzz7.DersAdi
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd7 on ddd7.[SinifDersID] = rrr.Gun7_SinifDersID
-                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID 
+                    LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID
+                    LEFT JOIN #dersller zzz7 on zzz7.SinifDersID =  rrr.Gun7_SinifDersID 
                 ) as ssdddsdsd
                 INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS on ssdddsdsd.OgrenciseviyeID =  Os.OgrenciseviyeID
                 INNER JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgrenciID 
@@ -6241,15 +6308,16 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT JOIN ".$dbnamex."GNL_Kisiler kkk ON kkk.KisiID =soso.OgretmenID 
                 WHERE dayy = DATEPART(dw,getdate())  
                 /* and SinifAdi is not null */
-                ORDER BY OgrenciseviyeID , DersSirasi
+                ORDER BY ogrenci , DersSirasi
 
             IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
             IF OBJECT_ID('tempdb..#DersProgramiSonuc') IS NOT NULL DROP TABLE #DersProgramiSonuc;  
-            IF OBJECT_ID('tempdb..#DersProgramiSonuc') IS NOT NULL DROP TABLE #DersProgramiSonuc;   
+            IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
             SET NOCOUNT OFF;
+          
                  "; 
             $statement = $pdo->prepare($sql);   
-    //echo debugPDO($sql, $params);
+   // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -6340,7 +6408,7 @@ class MblLogin extends \DAL\DalSlim {
                                     DATEADD(YEAR, DATEDIFF(YEAR, 0, GETDATE()) + 1,
                                             0))
  
-            SELECT distinct Gelecek AS DersSaati, YapilacakTahsilat AS SinifAdi , NULL AS ogretmen , NULL AS ogrenci
+            SELECT distinct ISNULL(Gelecek,'') AS DersSaati, ISNULL(YapilacakTahsilat,'') AS SinifAdi , '' AS ogretmen , '' AS ogrenci
              , 'Gelecek' as Alan1,'Yapilacak Tahsilat' as Alan2,'' as Alan3,'' as Alan4
             FROM  ( 		
             SELECT  /*'Günlük Toplam Tahsilat' AS Tahsilat ,*/
@@ -6428,7 +6496,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;
                  "; 
             $statement = $pdo->prepare($sql);   
-    //echo debugPDO($sql, $params);
+   //  echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -7662,7 +7730,38 @@ class MblLogin extends \DAL\DalSlim {
              
             $sql = "   
                 SET NOCOUNT ON;  
-                
+                 select * from  ( 
+                 
+                SELECT  
+                    '' as IlAdi,
+                    '' as IlceAdi,
+                    '' as OkulAdi,
+                    '' as MEBKodu,
+                    'F700A96B-4628-41E5-A261-D7834983CF4D' as SinavOkulID,
+                    'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' as  OkulID,
+                   'LÜTFEN SEÇİNİZ' SinifKodu,
+                   0 as  OgrenciSayisi ,
+				   0 as OkulOgrenciSayisi,
+				     '' as DersYiliID ,
+					' ' as  SinifID
+               
+
+                union 
+               SELECT  
+                    'izmir' as IlAdi,
+                    'Göztepe' as IlceAdi,
+                    'Özel Orantı' as OkulAdi,
+                    '12345' as MEBKodu,
+                    'F700A96B-4628-41E5-A261-D7834983CF4D' as SinavOkulID,
+                    'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' as  OkulID,
+                   '5 A ' SinifKodu,
+                   32 as  OgrenciSayisi ,
+				   155 as OkulOgrenciSayisi,
+				     '2017' as DersYiliID ,
+					'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' as  SinifID
+               
+
+                union 
                 SELECT    
                     GIl.IlAdi,
                     GIlce.IlceAdi,
@@ -7697,13 +7796,15 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavOkulID=SNVO.SinavOkulID 
                  WHERE SNVO.SinavID= '".$SinavID."'  /* 'C6C84DB4-BA8C-40EB-AD36-9CFBF6DEF89B' */ 
                 GROUP BY GIl.IlAdi,GIlce.IlceAdi,GNLO.OkulAdi,GNLO.MEBKodu,SNVO.SinavOkulID,GNLO.OkulID,SinifKodu  
-                ORDER BY GIl.IlAdi,GIlce.IlceAdi,GNLO.OkulAdi,SinifKodu
+              /*    ORDER BY GIl.IlAdi,GIlce.IlceAdi,GNLO.OkulAdi,SinifKodu */ 
+              ) as sssss
+                ORDER BY sssss.IlAdi,sssss.IlceAdi,sssss.OkulAdi,sssss.SinifKodu
 
                 SET NOCOUNT OFF;  
  
                  "; 
             $statement = $pdo->prepare($sql);   
- //    echo debugPDO($sql, $params);
+  // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8005,7 +8106,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ ogrencinin aldıgı  notlar sınav bazlı
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -8090,7 +8191,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ sinav sorulari
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -8287,7 +8388,7 @@ class MblLogin extends \DAL\DalSlim {
     
     /** 
      * @author Okan CIRAN
-     * @ mesaj için okul listesi 
+     * @ odev onay tipleri
      * @version v 1.0  10.10.2017
      * @param array | null $args
      * @return array
@@ -8346,7 +8447,7 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
    
-     /** 
+    /** 
      * @author Okan CIRAN
      * @ toplu Ogrenci Cevap
      * @version v 1.0  10.10.2017
@@ -8450,7 +8551,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-    //   echo debugPDO($sql, $params);
+   //    echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8557,7 +8658,7 @@ class MblLogin extends \DAL\DalSlim {
                 $p2 = $params['XmlData'];
                 
                 /*  
-                N'<Nodes>
+                 '<Nodes>
                     <Dugum SinavOgrenciSoruCevapID="4725b5de-a348-4130-9d84-1530b22fd558" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="2aa51fca-8a54-4bb0-a7e9-4336b7df387c" isDogru="True" AldigiPuan="12.00"/>
                     <Dugum SinavOgrenciSoruCevapID="99d19645-f6ea-4e19-93a6-b5b6a4a1a997" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="7fa152e1-bdb7-4068-b267-3829b1caec55" isDogru="True" AldigiPuan="12.00"/>
                     <Dugum SinavOgrenciSoruCevapID="b262a9e5-d6de-4b75-9370-1eed45a2ae74" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="4c32d1be-6849-4bd4-b534-10c14f635c13" isDogru="True" AldigiPuan="10.00"/>
@@ -8571,34 +8672,44 @@ class MblLogin extends \DAL\DalSlim {
                     <Dugum SinavOgrenciSoruCevapID="e54cdfc9-d3c7-4289-b284-9bd86c04d9f7" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="5c9a2530-1d22-4b32-984a-a620eba8c84b" isDogru="True" AldigiPuan="6.00"/>
                     <Dugum SinavOgrenciSoruCevapID="c3e611a6-c64a-43f6-8084-084989576ce2" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="2a5cc3ca-83ef-409d-9d13-77aa0ce12387" isDogru="True" AldigiPuan="5.00"/>
                     <Dugum SinavOgrenciSoruCevapID="3f9526fd-0b20-4365-9ba7-1c92f7e209c9" SinavOgrenciID="6e5a5e09-bb4b-4f53-a712-d1a9ff5aaa09" SinavSoruID="8a159ee3-7663-4d8d-a9e8-04aee4d74684" isDogru="True" AldigiPuan="5.00"/>	 
-                </Nodes>
+                </Nodes>'
                   
                  */
             $XmlData = ' '; 
             $dataValue = NULL;
-            $devamsizlikKodID = NULL;
+            $SinavOgrenciSoruCevapID = NULL;
+            $ogrenciid = NULL;
+            $soruid = NULL;
+            $puan = NULL;
             if ((isset($params['XmlData']) && $params['XmlData'] != "")) {
                 $XmlData = $params['XmlData'];
                 $dataValue =  json_decode($XmlData, true);
                 
              //   print_r( "////////////"); 
-            //   print_r($dataValue  ); 
-                //  echo( "\\\\\\console\\\\\\"); 
+             //   print_r($dataValue[0]['SinavOgrenciSoruCevapID'] );    print_r( "/////"); 
+            //    print_r($dataValue[0]['ogrenciid']   );    print_r( "///////"); 
+            //    print_r($dataValue[0]['soruid']  );    print_r( "////////"); 
+             //   print_r($dataValue[0]['puan']   );    print_r( "///////"); 
+              //    echo($dataValue[0]['id']   ); 
+             //     print_r( $dataValue[0]["yok"] ); 
+             // print_r( "////////////"); 
                     foreach ($dataValue as $std) {                      
                         if ($std  != null) {
                         //   print_r($std ); 
-                        //   if ($std[1] == 1) { $devamsizlikKodID = 2 ;}
-                        //   if ($std[2] == 1) { $devamsizlikKodID = 0 ;}
-                     
+                        $SinavOgrenciSoruCevapID = $std ['SinavOgrenciSoruCevapID'] ; 
+                        $ogrenciid = $std ['ogrenciid'] ; 
+                        $soruid = $std ['soruid'] ; 
+                        $puan = $std ['puan'] ;  
+                        if (( $puan != "")) {
                           //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
                       //  echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
-                         $SendXmlData =$SendXmlData.'<ID VALUE="'.$std.'"/>' ;  
-                        }
+                         $SendXmlData =$SendXmlData.'<Dugum SinavOgrenciSoruCevapID="'.$SinavOgrenciSoruCevapID.'" SinavOgrenciID="'.$ogrenciid.'" SinavSoruID="'.$soruid.'" isDogru="True" AldigiPuan="'.$puan.'"/>' ;  
+                        }}
                     }
                   
                $SendXmlData = '<Nodes>'.$SendXmlData.'</Nodes>';
             }  
-                
+               echo(  $SendXmlData);
             } 
             $sql = "  
             SET NOCOUNT ON;   
@@ -8615,8 +8726,8 @@ class MblLogin extends \DAL\DalSlim {
                 ";  
             
             $statement = $pdo->prepare($sql); 
-      // echo debugPDO($sql, $params);
-            $result = $statement->execute(); 
+       echo debugPDO($sql, $params);
+          $result = $statement->execute(); 
             $errorInfo = $statement->errorInfo();
              
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -8627,7 +8738,7 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
   
-      /** 
+    /** 
      * @author Okan CIRAN
      * @ ogretmen klasik sınav sonuclarını onaylar.
      * @version v 1.0  25.10.2017
@@ -8698,5 +8809,92 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
     
+    /** 
+     * @author Okan CIRAN
+     * @ mesaj için okul listesi 
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function sinavdaKullanilanKitaplar($params = array()) {
+        try {
+           $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }    
+             
+            $SinavOkulID=  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavOkulID']) && $params['SinavOkulID'] != "")) {
+                $SinavOkulID = $params['SinavOkulID'];
+            } 
+            $SinifKodu=  'CCCCC';
+            if ((isset($params['SinifKodu']) && $params['SinifKodu'] != "")) {
+                $SinifKodu = $params['SinifKodu'];
+            } 
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            } 
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+          
+            $sql = "   
+                SET NOCOUNT ON;   
+                    
+                declare 
+                @sinavOkulID AS UNIQUEIDENTIFIER ,
+                @SinifKodu AS NVARCHAR(20) = NULL ,
+                @MyFields AS NVARCHAR(MAX) ,
+                @NumarayaGoreSirala AS BIT = 1; 
+                DECLARE @SQL NVARCHAR(MAX);
+
+				
+                set @sinavOkulID = '".$SinavOkulID."' ; 
+                set @SinifKodu ='".$SinifKodu."';
+
+              /*  set @sinavOkulID = 'F700A96B-4628-41E5-A261-D7834983CF4D' ; 
+                 set @SinifKodu ='5KAR1'; */ 
+
+                SELECT  distinct
+                    SOGR.SinavKitapcikID,
+                    SK.KitapcikTurID,
+                    SK.KitapcikAciklamasi 
+               FROM BILSANET_A.dbo.SNV_SinavOgrencileri SOGR
+               INNER JOIN BILSANET_A.dbo.GNL_OgrenciSeviyeleri OS ON SOGR.OgrenciSeviyeID = OS.OgrenciSeviyeID
+               INNER JOIN BILSANET_A.dbo.GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
+               INNER JOIN BILSANET_A.dbo.GNL_DersYillari DY ON SNF.DersYiliID = DY.DersYiliID 
+               INNER JOIN BILSANET_A.dbo.SNV_SinavKitapciklari SK ON SOGR.SinavKitapcikID = SK.SinavKitapcikID 
+               INNER JOIN BILSANET_A.dbo.SNV_Sinavlar SNV ON SNV.SinavID=SK.SinavID
+               WHERE SOGR.SinavOkulID= @sinavOkulID  
+               AND SOGR.SinifKodu= @SinifKodu  
+               ORDER BY SK.KitapcikTurID; 
+
+                SET NOCOUNT OFF;  
+                 
+                 "; 
+            $statement = $pdo->prepare($sql);   
+    //   echo debugPDO($sql, $params);
+            $statement->execute(); 
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+   
+    ///////// numeric alanı unutma 
   
 }
