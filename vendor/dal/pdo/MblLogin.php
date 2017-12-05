@@ -177,11 +177,10 @@ class MblLogin extends \DAL\DalSlim {
             set @tc =  ".$tc."; 
             CREATE TABLE #okidbname".$tc." (database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int ); 
             CREATE TABLE ##okiMEBKodu".$tc." ( MEBKodu int ); 
-
-            
+ 
             
             DECLARE db_cursor CURSOR FOR  
-            SELECT database_id, name FROM Sys.databases sss
+            SELECT distinct sss.database_id, sss.name FROM Sys.databases sss
                 INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
                 INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
                 where 
@@ -202,10 +201,10 @@ class MblLogin extends \DAL\DalSlim {
             EXEC sp_executesql @sqlxx; 
 
             update  #okidbname".$tc." 
-                set MEBKodu = (select * from ##okiMEBKodu".$tc.")
+                set MEBKodu = (select * from ##okiMEBKodu".$tc." WHERE MEBKodu IS NOT NULL)
             where database_id =  @database_id;
             
-            delete from  ##okiMEBKodu".$tc." ; 
+            /*  delete from  ##okiMEBKodu".$tc." ; */
         
             FETCH NEXT FROM db_cursor INTO @database_id,  @name;
             END   
@@ -251,6 +250,113 @@ class MblLogin extends \DAL\DalSlim {
      * @return array
      * @throws \PDOException
      */
+    public function gnlKullaniciFindForLoginByTcKimlikNo_eskisi($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
+            }   
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            
+            $mebKoduValue = NULL;
+            $dbnameValue = NULL;
+            $mebKodu = $this->gnlKullaniciMebKoduFindByTcKimlikNo(array('tc' => $params['tc']));
+            if ((isset($mebKodu['resultSet'][0]['MEBKodu']) && $mebKodu['resultSet'][0]['MEBKodu'] != "")) {                                    
+                    $mebKoduValue = $mebKodu['resultSet'][0]['MEBKodu'];
+                    $dbnameValue = $mebKodu['resultSet'][0]['name'].'.';
+            }  
+                    
+            if ((isset($params['sifre']) && $params['sifre'] != "")) {            
+                $wsdlValue = NULL; 
+                $wsdl =  MobilSettings::mobilwsdlEncryptPassword(array('PswrD' => $params['sifre']));  
+                if ((isset($wsdl['resultSet'] ) && $wsdl['resultSet']  != "")) {                                    
+                    $wsdlValue = $wsdl['resultSet'] ; 
+                }   
+                
+                $languageIdValue = 647;
+                if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                    $languageIdValue = $params['LanguageID'];
+                }
+                $sifre =$wsdlValue ;  
+                
+               // $deviceid = NULL;
+                if ((isset($params['DeviceID']) && $params['DeviceID'] != "")) {
+                   // $deviceid = $params['DeviceID']; 
+                    $MobilSettingsaddDevice = $this->slimApp-> getBLLManager()->get('mobilSettingsBLL');  
+                    $MobilSettingsaddDeviceArray= $MobilSettingsaddDevice->addDevice($params);
+                
+                    if ($MobilSettingsaddDeviceArray['errorInfo'][0] != "00000" &&
+                            $MobilSettingsaddDeviceArray['errorInfo'][1] != NULL &&
+                            $MobilSettingsaddDeviceArray['errorInfo'][2] != NULL)
+                        throw new \PDOException($MobilSettingsaddDeviceArray['errorInfo']);
+  
+                }    
+                
+            }
+            /////////////////////////////////////////////////
+            $tc = '011111111110';
+            if ((isset($params['tc']) && $params['tc'] != "")) {
+                $tc = $params['tc'];
+            } 
+            if ($sifre == NULL){
+                $tc = '00000000000';
+                $sifre = '00000000000';
+            }
+            $sql = "    
+            DECLARE @KisiID uniqueidentifier ; 
+
+            EXEC ".$dbnameValue."[dbo].[PRC_GNL_Kullanici_Find_For_Login_ByTcKimlikNo]
+		@KisiID = @KisiID OUTPUT,
+		@MEBKodu = ".intval($mebKoduValue).",
+		@TcKimlikNo = '".$tc."',
+		@Sifre = N'".$sifre."' ;  
+            
+            SELECT 
+                @KisiID as KisiID,   
+                concat(kk.[Adi] collate SQL_Latin1_General_CP1254_CI_AS,' ' ,kk.[Soyadi] collate SQL_Latin1_General_CP1254_CI_AS ) as adsoyad,   
+                kk.[TCKimlikNo] ,
+                ff.Fotograf,
+                kk.CinsiyetID
+            FROM  ".$dbnameValue."[dbo].[GNL_Kisiler] kk 
+            LEFT JOIN ".$dbnameValue."dbo.GNL_Fotograflar ff on ff.KisiID =kk.[KisiID] 
+            where  kk.[KisiID] = @KisiID    ; 
+             ";
+            
+            /*
+             * 
+               UPDATE
+                GNL_Kullanicilar
+                SET
+                 Sifre='1YTr63O9Mdeg54DZefZg16g=='
+             * 
+             */
+            $statement = $pdo->prepare($sql);            
+        // echo debugPDO($sql, $params);
+            $statement->execute();
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+        /** 
+     * @author Okan CIRAN
+     * @ login için user id döndürür   !!
+     * @version v 1.0  25.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    
     public function gnlKullaniciFindForLoginByTcKimlikNo($params = array()) {
         try {
             $cid = -1;
