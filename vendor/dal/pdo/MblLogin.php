@@ -320,7 +320,7 @@ class MblLogin extends \DAL\DalSlim {
             
             SELECT 
                 @KisiID as KisiID,   
-                concat(kk.[Adi],' ' ,kk.[Soyadi] ) as adsoyad,   
+                concat(kk.[Adi] collate SQL_Latin1_General_CP1254_CI_AS,' ' ,kk.[Soyadi] collate SQL_Latin1_General_CP1254_CI_AS ) as adsoyad,   
                 kk.[TCKimlikNo] ,
                 ff.Fotograf,
                 kk.CinsiyetID
