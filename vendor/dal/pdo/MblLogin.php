@@ -546,12 +546,12 @@ class MblLogin extends \DAL\DalSlim {
             declare @MEBKodu int;   
 		 
             CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int );  
-            CREATE TABLE ##okidetaydata".$tc."  (dbnamex  nvarchar(200) , KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer );
+            CREATE TABLE ##okidetaydata".$tc."  (dbnamex  nvarchar(200) , KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer ,database_id int  );
 
             set @tc =    ".$tc.";  
             
             DECLARE db_cursor CURSOR FOR  
-            SELECT database_id, name FROM Sys.databases sss
+            SELECT sss.database_id, name FROM Sys.databases sss
                 INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
                 INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
                 where 
@@ -570,9 +570,9 @@ class MblLogin extends \DAL\DalSlim {
                                     (@database_id, CAST(@name AS nvarchar(200)) ,   'select '+ cast(@database_id as varchar(10))+'; exec ['+@name+'].[dbo].PRC_GNL_KullaniciMebKodu_FindByTcKimlikNo @TcKimlikNo= '+@tc  );
 
                     SET @sqlxx =   ' 
-                        INSERT into  ##okidetaydata".$tc."  (dbnamex,KisiID , KurumID, MEBKodu)
+                        INSERT into  ##okidetaydata".$tc."  (dbnamex,KisiID , KurumID, MEBKodu, database_id)
                             SELECT 
-                                    '''+@name+''', k.KisiID , k.KurumID, kr.MEBKodu   
+                                    '''+@name+''', k.KisiID , k.KurumID, kr.MEBKodu ,'+cast(@database_id as nvarchar(10))+'  
                             FROM ['+@name+'].dbo.GNL_Kullanicilar K
                             INNER JOIN ['+@name+'].dbo.GNL_Kurumlar KR ON K.KurumID = KR.KurumID
                             INNER JOIN ['+@name+'].dbo.GNL_Kisiler KS ON K.KisiID = KS.KisiID
@@ -629,11 +629,11 @@ class MblLogin extends \DAL\DalSlim {
                 declare @KurumID  uniqueidentifier; 
 
                 DECLARE db_cursor CURSOR FOR  
-                SELECT distinct dbnamex  ,  KisiID  , KurumID  , MEBKodu  FROM ##okidetaydata".$tc." 
+                SELECT distinct dbnamex  ,  KisiID  , KurumID  , MEBKodu , database_id  FROM ##okidetaydata".$tc." 
                 WHERE MEBKodu is not null ;
 
                 OPEN db_cursor   
-                FETCH NEXT FROM db_cursor INTO  @dbnamex  ,  @KisiID  , @KurumID  , @MEBKodu 
+                FETCH NEXT FROM db_cursor INTO  @dbnamex  ,  @KisiID  , @KurumID  , @MEBKodu ,@database_id
                 WHILE @@FETCH_STATUS = 0   
                 BEGIN   
 
@@ -680,7 +680,7 @@ class MblLogin extends \DAL\DalSlim {
                 /* print(@sqlx); */
                 EXEC sp_executesql @sqlx;  
 
-                FETCH NEXT FROM db_cursor INTO @dbnamex  ,  @KisiID  , @KurumID  , @MEBKodu ;
+                FETCH NEXT FROM db_cursor INTO @dbnamex  ,  @KisiID  , @KurumID  , @MEBKodu ,@database_id ;
                 END   
 
                 CLOSE db_cursor;
