@@ -415,24 +415,68 @@ class MblLogin extends \DAL\DalSlim {
                 $tc = '00000000000';
                 $sifre = '00000000000';
             }
-            $sql = "    
-            DECLARE @KisiID uniqueidentifier ; 
+            $sql = "  
+            SET NOCOUNT ON;     
+            IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
+            IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
+           
+            DECLARE @name nvarchar(200);
+            declare @database_id int, @MEBKodu int ; 
+            declare @tc nvarchar(11), @sifre nvarchar(50);
+            DECLARE @sqlx nvarchar(2000); 
+            DECLARE @sqlxx nvarchar(2000);
+            DECLARE @KurumID uniqueidentifier, @KisiID uniqueidentifier ; 
+              
+            CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int );  
+            CREATE TABLE ##okidetaydata".$tc." (KisiID uniqueidentifier, adsoyad  nvarchar(200) ,  TCKimlikNo nvarchar(11), Fotograf varbinary, CinsiyetID int );
 
-            EXEC ".$dbnameValue."[dbo].[PRC_GNL_Kullanici_Find_For_Login_ByTcKimlikNo]
-		@KisiID = @KisiID OUTPUT,
-		@MEBKodu = ".intval($mebKoduValue).",
-		@TcKimlikNo = '".$tc."',
-		@Sifre = N'".$sifre."' ;  
+            set @tc = ".$tc.";  
+            set @sifre = N'".$sifre."';
             
-            SELECT 
-                @KisiID as KisiID,   
-                concat(kk.[Adi] collate SQL_Latin1_General_CP1254_CI_AS,' ' ,kk.[Soyadi] collate SQL_Latin1_General_CP1254_CI_AS ) as adsoyad,   
-                kk.[TCKimlikNo] ,
-                ff.Fotograf,
-                kk.CinsiyetID
-            FROM  ".$dbnameValue."[dbo].[GNL_Kisiler] kk 
-            LEFT JOIN ".$dbnameValue."dbo.GNL_Fotograflar ff on ff.KisiID =kk.[KisiID] 
-            where  kk.[KisiID] = @KisiID    ; 
+            DECLARE db_cursor CURSOR FOR  
+                SELECT sss.database_id, sss.name, tcdbb.KisiID, tcdbb.KurumID FROM Sys.databases sss
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
+                WHERE 
+                    sss.state = 0 AND 
+                    tcc.[tc]= @tc AND 
+                    tcdbb.[sifre]= @sifre AND 
+                    banTarihi is null; 
+
+            OPEN db_cursor   
+            FETCH NEXT FROM db_cursor INTO  @database_id , @name ,@KisiID , @KurumID
+            WHILE @@FETCH_STATUS = 0   
+            BEGIN   
+                IF OBJECT_ID(@name+'..GNL_Kisiler' ) IS NOT NULL
+                begin 
+                    SET @sqlxx =   ' 
+                        INSERT into  ##okidetaydata".$tc." (KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID)
+                         SELECT 
+                                kk.[KisiID],   
+                                concat(kk.[Adi]  ,'' '' ,kk.[Soyadi]  ) as adsoyad,   
+                                kk.[TCKimlikNo] ,
+                                ff.Fotograf,
+                                kk.CinsiyetID
+                        FROM  ['+@name+'].[dbo].[GNL_Kisiler] kk 
+                        LEFT JOIN ['+@name+'].dbo.GNL_Fotograflar ff on ff.KisiID =kk.[KisiID] 
+                        WHERE kk.[KisiID] = '''+cast(@KisiID as nvarchar(50))+'''' ; 
+                     EXEC sp_executesql @sqlxx; 
+                END
+          
+            FETCH NEXT FROM db_cursor INTO @database_id,  @name , @KisiID , @KurumID;
+            END   
+
+            CLOSE db_cursor;
+            DEALLOCATE db_cursor ;
+   
+            SELECT TOP 1 * FROM  ##okidetaydata".$tc."
+            order by Fotograf
+
+            IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
+            IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
+
+            SET NOCOUNT OFF; 
+ 
              ";
             
             /*
@@ -444,7 +488,7 @@ class MblLogin extends \DAL\DalSlim {
              * 
              */
             $statement = $pdo->prepare($sql);            
-        // echo debugPDO($sql, $params);
+      //  echo debugPDO($sql, $params);
             $statement->execute();
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -829,7 +873,7 @@ class MblLogin extends \DAL\DalSlim {
                     a.KurumID , 
                     a.dbnamex ,
                     a.database_id,
-                    mss.proxy
+                    isnull(mss.proxy , (SELECT TOP 1 xxz.[proxy]  FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as proxy
                 FROM  ##okimobilseconddata".$tc."  a
                 LEFT JOIN BILSANET_MOBILE.[dbo].[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
@@ -843,7 +887,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute();
             
            
