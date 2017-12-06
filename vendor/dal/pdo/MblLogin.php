@@ -835,9 +835,12 @@ class MblLogin extends \DAL\DalSlim {
 
                 CLOSE db_cursor;
                 DEALLOCATE db_cursor ;
+                SET NOCOUNT OFF;
 
-
-
+       "; 
+            $statement = $pdo->prepare($sql);  
+               $statement->execute();
+ $sql = "  SET NOCOUNT ON;  
                 SELECT  
                     null AS OkulKullaniciID ,
                     null AS OkulID,
