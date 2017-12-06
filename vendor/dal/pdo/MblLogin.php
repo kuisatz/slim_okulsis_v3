@@ -854,7 +854,8 @@ class MblLogin extends \DAL\DalSlim {
                 INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
                 LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
-                WHERE ax.[main_group] = 1   and ax.[first_group]  = 1
+                WHERE a.[main_group] = 1 and a.[first_group]  = 1 and 
+                    a.language_parent_id =0 
 
                 UNION  	  
                 select  
@@ -1131,7 +1132,8 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
             LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
             LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
-            WHERE ax.[main_group] = 1   and ax.[first_group]  = 7 
+            WHERE a.[main_group] = 1 and a.[first_group]  = 7 and
+                a.language_parent_id =0 
             
             union  
 
@@ -1170,12 +1172,12 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_Dersler DRS ON DH.DersID = DRS.DersID
             
             INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
-            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =748 AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
             LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi = DRS.DersAdi) and axx.language_id= l.id  
             LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng = axx.DersAdiEng) and ax.language_id= lx.id   
             
-            LEFT JOIN  ".$dbnamex."GNL_DersSaatleri DS ON DS.DersYiliID = SNF.DersYiliID AND DS.SubeGrupID = SNF.SubeGrupID AND DS.DersSirasi = DP.DersSirasi
-            inner join #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
+            LEFT JOIN ".$dbnamex."GNL_DersSaatleri DS ON DS.DersYiliID = SNF.DersYiliID AND DS.SubeGrupID = SNF.SubeGrupID AND DS.DersSirasi = DP.DersSirasi
+            INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
             ) ORDER BY HaftaGunu, BaslangicSaati,DersSirasi, DersAdi ;  
             
             IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
@@ -1268,10 +1270,11 @@ class MblLogin extends \DAL\DalSlim {
                 null as DersID ,
                 -1 as HaftaGunu  
             FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
-            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+         /*   INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 */
             LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
             LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
-            WHERE ax.[main_group] = 1   and ax.[first_group]  = 7 
+            WHERE a.[main_group] = 1   and a.[first_group]  = 7 and 
+                a.language_parent_id =0 
 
             UNION 
  
@@ -1450,19 +1453,43 @@ class MblLogin extends \DAL\DalSlim {
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            } 
-             
+            }  
              
             $sql = "  
             SET NOCOUNT ON;   
-
-            EXEC ".$dbnamex."[PRC_VLG_VeliRandevu_FindByOgretmenID]
-		  @OgretmenID='".$kisiId."' ; 
+                SELECT  
+                    vr.VeliRandevuID, 
+                    vr.SinifOgretmenID, 
+                    vr.VeliID, 
+                    vr.BasZamani, 
+                    vr.BitZamani, 
+                    vr.Aciklama, 
+                    vr.Onay, 
+                    ogrt.Adi AS Ogretmen_Adi, 
+                    ogrt.Soyadi AS Ogretmen_Soyadi, 
+                    ogr.Adi AS Ogrenci_Adi, 
+                    ogr.Soyadi AS Ogrenci_Soyadi, 
+                    Veli.Adi AS Veli_Adi, 
+                    Veli.Soyadi AS Veli_Soyadi,
+                    d.DersAdi , 
+                    '[ ' +COALESCE(NULLIF(golx.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),gol.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) + ' ] ' + ogrt.Adi + ' ' + ogrt.Soyadi As Ders_Ogretmen 
+		FROM ".$dbnamex."VLG_VeliRandevu vr
+		INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON vr.SinifOgretmenID = so.SinifOgretmenID 
+		INNER JOIN ".$dbnamex."GNL_OgrenciYakinlari oy ON vr.VeliID = oy.OgrenciYakinID 
+		INNER JOIN ".$dbnamex."GNL_Kisiler AS ogrt ON so.OgretmenID = ogrt.KisiID 
+		INNER JOIN ".$dbnamex."GNL_Kisiler AS ogr ON oy.OgrenciID = ogr.KisiID 
+		INNER JOIN ".$dbnamex."GNL_Kisiler AS Veli ON oy.YakinID = Veli.KisiID 
+		INNER JOIN ".$dbnamex."GNL_DersHavuzlari dh ON so.DersHavuzuID = dh.DersHavuzuID 
+		INNER JOIN ".$dbnamex."GNL_Dersler d ON dh.DersID = d.DersID
+		LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0
+		LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng gol ON gol.DersAdi collate SQL_Latin1_General_CP1254_CI_AS = d.DersAdi collate SQL_Latin1_General_CP1254_CI_AS and gol.language_parent_id =0   
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng golx ON golx.language_parent_id =  gol.id1 and golx.language_id = lx.id
+	  	WHERE ogrt.KisiID = '".$kisiId."'; 
 
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-            // echo debugPDO($sql, $params);
+           //  echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -1793,7 +1820,7 @@ class MblLogin extends \DAL\DalSlim {
             INSERT #ogrenciIdBul exec ".$dbnamex."PRC_GNL_OgrenciYakinToOgrenciID_Find @YakinID='".$kisiId."' ; 
             
             SELECT * FROM ( 
-                SELECT 
+                 SELECT 
                     NULL AS OgrenciID,
                     NULL AS SinifID,
                     NULL AS DersYiliID,
@@ -1804,13 +1831,18 @@ class MblLogin extends \DAL\DalSlim {
                     NULL AS KisiID,
                     NULL AS CinsiyetID,
                     NULL AS Adi,
-                    NULL AS Soyadi,
-                    'LÜTFEN ÖĞRENCİ SEÇİNİZ...' AS Adi_Soyadi,
+                    NULL AS Soyadi, 
+                    COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS Adi_Soyadi,
                     NULL AS TCKimlikNo,
                     NULL AS ePosta, 
                     NULL AS OkulID,
                     NULL AS OgrenciSeviyeID,
                     NULL AS Fotograf
+                    FROM BILSANET_MOBILE.dbo.sys_specific_definitions a 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                    WHERE a.[main_group] = 1 and a.[first_group] = 5 AND
+                        a.language_parent_id =0 
                 UNION
                 SELECT 
                     GOS.[OgrenciID],
@@ -1836,18 +1868,17 @@ class MblLogin extends \DAL\DalSlim {
                 INNER JOIN ".$dbnamex."GNL_Siniflar SINIF ON (SINIF.SinifID = GOS.SinifID)
                 INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = SINIF.DersYiliID
                 INNER JOIN ".$dbnamex."GNL_OgrenciOkulBilgileri OOB ON OOB.OgrenciID = OGR.OgrenciID AND OOB.OkulID= DY.OkulID 
-                LEFT JOIN GNL_Fotograflar fo on fo.KisiID = GOS.OgrenciID
+                LEFT JOIN ".$dbnamex."GNL_Fotograflar fo on fo.KisiID = GOS.OgrenciID
                 WHERE 
-                        GOS.OgrenciID in (SELECT distinct OgrenciID FROM #ogrenciIdBul) 
-                AND 
-                        SINIF.DersYiliID ='".$dersYiliID."'
+                    GOS.OgrenciID in (SELECT distinct OgrenciID FROM #ogrenciIdBul) AND 
+                    SINIF.DersYiliID ='".$dersYiliID."'
             ) as assss 
             ORDER BY Numarasi; 
             IF OBJECT_ID('tempdb..#ogrenciIdBul') IS NOT NULL DROP TABLE #ogrenciIdBul; 
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-            // echo debugPDO($sql, $params);
+        //  echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -9046,5 +9077,15 @@ class MblLogin extends \DAL\DalSlim {
     }
    
     ///////// numeric alanı unutma 
-  
+  /*
+   
+    
+     yakın kişi id = 9EDA7233-6DA7-4F5B-B2A6-13C5CA257F48  2 tane ögrencisi var 
+    tum yetkileri var 62217072-47F2-4782-86CC-B399C4FE65DA 
+   * 
+   * ogrenci kişiid = DC7770F3-24D9-4D6D-AC8D-FAB708E0CBD7 , sinifid = FD046441-5FB0-4A6A-BDB6-C587549DD263, dersyiliid =F8D14B83-3CC4-4440-B86C-96B06EF04EB8 , okulid =A5C5D4E2-352D-426E-915C-AB533DADF146
+      
+     
+       
+   */
 }
