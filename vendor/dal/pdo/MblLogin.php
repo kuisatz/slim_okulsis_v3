@@ -661,7 +661,7 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
-            $dbConfigValue = 'pgConnectFactory';
+            $dbConfigValue = 'pgConnectFactoryMobil';
          /*   $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
@@ -688,26 +688,26 @@ class MblLogin extends \DAL\DalSlim {
             IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc."; 
             IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc."; 
 
-            DECLARE @name nvarchar(200);
+            DECLARE @name nvarchar(200) = ''  collate SQL_Latin1_General_CP1254_CI_AS;
             declare @database_id int;
             declare @tc bigint;
-            DECLARE @sqlx nvarchar(2000); 
-            DECLARE @sqlxx nvarchar(2000);
+            DECLARE @sqlx nvarchar(2000)= ''  collate SQL_Latin1_General_CP1254_CI_AS; 
+            DECLARE @sqlxx nvarchar(2000)= ''  collate SQL_Latin1_General_CP1254_CI_AS;
             declare @MEBKodu int;   
 		 
-            CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int );  
-            CREATE TABLE ##okidetaydata".$tc."  (dbnamex  nvarchar(200) , KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer ,database_id int  );
+            CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, sqlx nvarchar(2000)  collate SQL_Latin1_General_CP1254_CI_AS,MEBKodu int );  
+            CREATE TABLE ##okidetaydata".$tc."  (dbnamex  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer ,database_id int  );
 
             set @tc = ".$tc.";  
             
             DECLARE db_cursor CURSOR FOR  
-            SELECT sss.database_id, name FROM Sys.databases sss
+            SELECT sss.database_id, sss.name  collate SQL_Latin1_General_CP1254_CI_AS FROM Sys.databases sss
                 INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
                 INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
-                where 
+                WHERE 
                     sss.state = 0 and 
                     tcc.[tc]= @tc and 
-                    banTarihi is null  ;
+                    banTarihi is null;
       
 
             OPEN db_cursor   
@@ -748,7 +748,7 @@ class MblLogin extends \DAL\DalSlim {
                         [OkulID] [uniqueidentifier], 
                         [KisiID] [uniqueidentifier],
                         [RolID]  int,
-                        [RolAdi] varchar(100)  
+                        [RolAdi] varchar(100) collate SQL_Latin1_General_CP1254_CI_AS
                     ) ;
 
                 CREATE TABLE ##okimobilseconddata".$tc."
@@ -757,19 +757,19 @@ class MblLogin extends \DAL\DalSlim {
                         [OkulID] [uniqueidentifier], 
                         [KisiID] [uniqueidentifier],
                         [RolID]  int,
-                        [RolAdi] varchar(100), 
-                        OkulAdi varchar(200),
+                        [RolAdi] varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
+                        OkulAdi varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
                         MEBKodu bigint,
-                        ePosta varchar(100),
+                        ePosta varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                         DersYiliID [uniqueidentifier],
                         EgitimYilID int, 
-                        EgitimYili varchar(100),
+                        EgitimYili varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                         DonemID int,
                         KurumID [uniqueidentifier],
-                        dbnamex  nvarchar(200),
+                        dbnamex  nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
                         database_id int
                     ) ;
-                declare @dbnamex  nvarchar(200)  ;
+                declare @dbnamex  nvarchar(200) =''  collate SQL_Latin1_General_CP1254_CI_AS ;
                 declare @KisiID  uniqueidentifier;
                 declare @KurumID  uniqueidentifier; 
 
@@ -805,10 +805,10 @@ class MblLogin extends \DAL\DalSlim {
                     sss.[OkulID],
                     sss.[KisiID],
                     sss.[RolID], 
-                    rr.[RolAdi],
-                    upper(concat(oo.[OkulAdi], ''  ('',rr.[RolAdi],'')'' )) as OkulAdi,
+                    rr.[RolAdi] collate SQL_Latin1_General_CP1254_CI_AS,
+                    upper(concat(oo.[OkulAdi]  collate SQL_Latin1_General_CP1254_CI_AS, ''  ('',rr.[RolAdi]  collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
                     oo.[MEBKodu],
-                    oo.[ePosta],
+                    oo.[ePosta] collate SQL_Latin1_General_CP1254_CI_AS,
                     DY.DersYiliID,
                     DY.EgitimYilID, 
                     EY.EgitimYili,
@@ -857,7 +857,7 @@ class MblLogin extends \DAL\DalSlim {
                     a.OkulID,
                     a.KisiID,
                     a.RolID, 
-                    a.RolAdi,
+                    a.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,
                     COALESCE(NULLIF(COALESCE(NULLIF(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''),golx.OkulAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),a.OkulAdi)  as OkulAdi,
                     a.MEBKodu,
                     a.ePosta,
@@ -866,9 +866,9 @@ class MblLogin extends \DAL\DalSlim {
                     a.EgitimYili,
                     a.DonemID ,
                     a.KurumID , 
-                    a.dbnamex ,
+                    a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS,
                     a.database_id,
-                    isnull(mss.proxy, (SELECT TOP 1 xxz.[proxy] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy
+                    isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy
                 FROM  ##okimobilseconddata".$tc."  a
                 LEFT JOIN BILSANET_MOBILE.[dbo].[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
@@ -882,7 +882,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-       echo debugPDO($sql, $params);
+      // echo debugPDO($sql, $params);
             $statement->execute();
             
            
