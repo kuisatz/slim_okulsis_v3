@@ -811,7 +811,7 @@ class MblLogin extends \DAL\DalSlim {
                     sss.[KisiID],
                     sss.[RolID], 
                     rr.[RolAdi],
-                    upper(concat(oo.[OkulAdi], '' / ('',rr.[RolAdi],'')'' )) as OkulAdi,
+                    upper(concat(oo.[OkulAdi], ''  ('',rr.[RolAdi],'')'' )) as OkulAdi,
                     oo.[MEBKodu],
                     oo.[ePosta],
                     DY.DersYiliID,
@@ -854,7 +854,7 @@ class MblLogin extends \DAL\DalSlim {
                     null as KurumID, 
                     null AS dbnamex ,
                     0 as database_id,
-                    null as proxy
+                    null as serverproxy
 
                 UNION  	  
                 select  
@@ -873,7 +873,7 @@ class MblLogin extends \DAL\DalSlim {
                     a.KurumID , 
                     a.dbnamex ,
                     a.database_id,
-                    isnull(mss.proxy , (SELECT TOP 1 xxz.[proxy]  FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as proxy
+                    isnull(mss.proxy, (SELECT TOP 1 xxz.[proxy] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy
                 FROM  ##okimobilseconddata".$tc."  a
                 LEFT JOIN BILSANET_MOBILE.[dbo].[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
