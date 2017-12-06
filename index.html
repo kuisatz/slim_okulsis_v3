@@ -1761,6 +1761,23 @@ and open the template in the editor. Ğİ
                         console.warn('error text status-->' + textStatus);
                     }
                 }); 
+                
+                 $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'Ogretmensubelistesi_mbllogin',  
+                     ogretmenID  : 'AEEFE2B7-6653-4776-9343-031155AF6181',
+                        cid  : 1,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 ////////////////////////
                 
                    
