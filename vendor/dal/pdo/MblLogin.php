@@ -833,13 +833,13 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;
 
           SET NOCOUNT ON;  
-                SELECT  
+                SELECT     
                     null AS OkulKullaniciID ,
                     null AS OkulID,
                     null AS KisiID,
                     -1 AS RolID, 
-                     null AS  RolAdi,
-                    'LÜTFEN OKUL SEÇİNİZ...' AS OkulAdi,
+                    '' AS  RolAdi, 
+                    COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS OkulAdi,
                     '' AS MEBKodu,
                     '' AS ePosta,
                     null AS DersYiliID,
@@ -847,9 +847,14 @@ class MblLogin extends \DAL\DalSlim {
                     '' AS EgitimYili,
                     0 AS DonemID ,
                     null as KurumID, 
-                    null AS dbnamex ,
+                    '' AS dbnamex ,
                     0 as database_id,
-                    null as serverproxy
+                    '' as serverproxy  
+                FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                WHERE ax.[main_group] = 1   and ax.[first_group]  = 1
 
                 UNION  	  
                 select  
