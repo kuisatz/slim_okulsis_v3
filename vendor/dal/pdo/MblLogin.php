@@ -690,7 +690,7 @@ class MblLogin extends \DAL\DalSlim {
 
             DECLARE @name nvarchar(200);
             declare @database_id int;
-            declare @tc nvarchar(11);
+            declare @tc bigint;
             DECLARE @sqlx nvarchar(2000); 
             DECLARE @sqlxx nvarchar(2000);
             declare @MEBKodu int;   
@@ -698,7 +698,7 @@ class MblLogin extends \DAL\DalSlim {
             CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int );  
             CREATE TABLE ##okidetaydata".$tc."  (dbnamex  nvarchar(200) , KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer ,database_id int  );
 
-            set @tc =    ".$tc.";  
+            set @tc = ".$tc.";  
             
             DECLARE db_cursor CURSOR FOR  
             SELECT sss.database_id, name FROM Sys.databases sss
@@ -717,7 +717,7 @@ class MblLogin extends \DAL\DalSlim {
                 IF OBJECT_ID(@name+'..GNL_Kisiler' )  IS NOT NULL
                 begin 
                     INSERT INTO #okidbname".$tc." ( database_id , name , sqlx ) VALUES
-                                    (@database_id, CAST(@name AS nvarchar(200)) ,   'select '+ cast(@database_id as varchar(10))+'; exec ['+@name+'].[dbo].PRC_GNL_KullaniciMebKodu_FindByTcKimlikNo @TcKimlikNo= '+@tc  );
+                                    (@database_id, CAST(@name AS nvarchar(200)) ,   'select '+ cast(@database_id as varchar(10))+'; exec ['+@name+'].[dbo].PRC_GNL_KullaniciMebKodu_FindByTcKimlikNo @TcKimlikNo= '+cast(@tc as nvarchar(11))  );
 
                     SET @sqlxx =   ' 
                         INSERT into  ##okidetaydata".$tc."  (dbnamex,KisiID , KurumID, MEBKodu, database_id)
@@ -726,7 +726,7 @@ class MblLogin extends \DAL\DalSlim {
                             FROM ['+@name+'].dbo.GNL_Kullanicilar K
                             INNER JOIN ['+@name+'].dbo.GNL_Kurumlar KR ON K.KurumID = KR.KurumID
                             INNER JOIN ['+@name+'].dbo.GNL_Kisiler KS ON K.KisiID = KS.KisiID
-                            WHERE KS.TCKimlikNo =   ' +@tc ; 
+                            WHERE KS.TCKimlikNo =   ' +cast(@tc as nvarchar(11)) ; 
                                 /* print(@sqlxx); */ 
                     EXEC sp_executesql @sqlxx; 
                                 /* -- select * from #okidbname ; */ 
@@ -741,12 +741,7 @@ class MblLogin extends \DAL\DalSlim {
             CLOSE db_cursor;
             DEALLOCATE db_cursor ;
 
-            /* 
-            --   select  database_id , name , MEBKodu  from #okidbname  where MEBKodu is not null  ;  
-            --  select  * from  ##okidetaydata ; 
-            */
-		  
-    
+          
                 CREATE TABLE ##okimobilfirstdata".$tc."
                     (
                         [OkulKullaniciID]  [uniqueidentifier],
@@ -837,10 +832,7 @@ class MblLogin extends \DAL\DalSlim {
                 DEALLOCATE db_cursor ;
                 SET NOCOUNT OFF;
 
-       "; 
-            $statement = $pdo->prepare($sql);  
-               $statement->execute();
- $sql = "  SET NOCOUNT ON;  
+          SET NOCOUNT ON;  
                 SELECT  
                     null AS OkulKullaniciID ,
                     null AS OkulID,
@@ -890,7 +882,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-     // echo debugPDO($sql, $params);
+       echo debugPDO($sql, $params);
             $statement->execute();
             
            
