@@ -176,9 +176,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
                 'tcno' => $vtc,  
                 'LanguageID' => $vLanguageID,
                 'Cid' => $vCid, 
-        ));
-   // $app->response()->header("Content-Type", "application/json");
-   // $app->response()->body(json_encode($resDataInsert));
+        )); 
   
     $menus = array();
     foreach ($resDataInsert as $menu){
