@@ -3445,39 +3445,64 @@ class MblLogin extends \DAL\DalSlim {
             set @deletesql = 'DROP TABLE '+ @settable;  
             IF OBJECT_ID(@settable1) IS NOT NULL EXECUTE sp_executesql @deletesql;  
             set @selecttable1 = 'SELECT adet,tip,aciklama,url FROM '+@settable;
-            SELECT @setsql = 
+            SELECT @setsql =  
              CASE 
 		WHEN 4= @rolid THEN N' SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url FROM (
-                                                SELECT ISNULL(SUM(BS.ToplamTutar), 0) AS adet, 2 AS tip, ''Bugünkü Ödemeler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
-                                                    into '+@settable+' 
-                                                FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS
-                                                INNER JOIN ".$dbnamex."MUH_Sozlesmeler SOZ ON SOZ.SozlesmeID = BS.SozlesmeID
-                                                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = BS.DersYiliID
-                                                INNER JOIN ".$dbnamex."GNL_Okullar O ON O.OkulID = DY.OkulID
-                                                WHERE cast(BS.TaahhutnameTarihi AS date) = cast(getdate() AS date)
-                                            ) AS ssss
-                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
-                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 1 and axx.language_parent_id =0 and axx.language_id= 647   
-                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+                                            ssss.url 
+                                        into '+@settable+' 
+                                        FROM (
+                                            SELECT ISNULL(SUM(BS.ToplamTutar), 0) AS adet, 2 AS tip, ''Bugünkü Ödemeler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                                     
+                                            FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS
+                                            INNER JOIN ".$dbnamex."MUH_Sozlesmeler SOZ ON SOZ.SozlesmeID = BS.SozlesmeID
+                                            INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = BS.DersYiliID
+                                            INNER JOIN ".$dbnamex."GNL_Okullar O ON O.OkulID = DY.OkulID
+                                            WHERE cast(BS.TaahhutnameTarihi AS date) = cast(getdate() AS date)
+                                        ) AS ssss
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 1 and axx.language_parent_id =0 and axx.language_id= 647   
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
  
                                     ' 
-		WHEN 5= @rolid THEN N' SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url 
+		WHEN 5= @rolid THEN N'  SELECT adet,tip, 
+                                            COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
+                                            ssss.url 
                                         into '+@settable+'
-                                        FROM ".$dbnamex."MUH_BorcluOdemePlani BOP 
-                                        WHERE Odendi =0 AND 
+                                        FROM (
+                                            SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url                                                    
+                                            FROM ".$dbnamex."MUH_BorcluOdemePlani BOP 
+                                            WHERE Odendi =0 AND 
                                             cast(OdemeTarihi AS date) = cast(getdate() AS date) AND 
-                                            BOP.BorcluSozlesmeID in (SELECT DISTINCT BS.BorcluSozlesmeID FROM  ".$dbnamex."MUH_BorcluSozlesmeleri BS) '
-		WHEN 6= @rolid THEN N'  SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
-                                            into '+@settable+'
+                                            BOP.BorcluSozlesmeID in (SELECT DISTINCT BS.BorcluSozlesmeID FROM  ".$dbnamex."MUH_BorcluSozlesmeleri BS) 
+                                        ) AS ssss
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 3 and axx.language_parent_id =0 and axx.language_id= 647   
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+          
+                                    '
+		WHEN 6= @rolid THEN N'  SELECT adet,tip, 
+                                            COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
+                                            ssss.url 
+                                        into '+@settable+'
+                                        FROM (
+                                            SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                                 
                                             FROM ".$dbnamex."MUH_BorcluOdemePlani BOP 
                                             WHERE Odendi =0 AND 
                                                 cast(OdemeTarihi AS date) = cast(getdate() AS date) AND 
-                                                BOP.BorcluSozlesmeID in (SELECT DISTINCT BS.BorcluSozlesmeID FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS)'
-		WHEN 7= @rolid THEN N'  SELECT 
-                                            ISNULL(count(vr.VeliRandevuID), 0) AS adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
-                                            into '+@settable+'
+                                                BOP.BorcluSozlesmeID in (SELECT DISTINCT BS.BorcluSozlesmeID FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS)
+                                        ) AS ssss
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 3 and axx.language_parent_id =0 and axx.language_id= 647   
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+         
+                                    '
+		WHEN 7= @rolid THEN N'  SELECT adet,tip, 
+                                            COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
+                                            ssss.url
+                                        into '+@settable+'
+                                        FROM (    
+                                            SELECT 
+                                                ISNULL(count(vr.VeliRandevuID), 0) AS adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                             
                                             FROM ".$dbnamex."VLG_VeliRandevu vr
                                             INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON vr.SinifOgretmenID = so.SinifOgretmenID 
                                             INNER JOIN ".$dbnamex."GNL_OgrenciYakinlari oy ON vr.VeliID = oy.OgrenciYakinID 
@@ -3487,48 +3512,81 @@ class MblLogin extends \DAL\DalSlim {
                                             INNER JOIN ".$dbnamex."GNL_DersHavuzlari dh ON so.DersHavuzuID = dh.DersHavuzuID 
                                             INNER JOIN ".$dbnamex."GNL_Dersler dr ON dh.DersID = dr.DersID
                                             WHERE Ogr.KisiID ='''+@KisiID+''' AND 
-                                                cast(getdate() AS date) between cast(BasZamani AS date) AND cast(BitZamani AS date)' 
-		WHEN 8= @rolid THEN N'  SELECT top 1 adet, 2 AS tip, aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
-                                                into '+@settable+'
+                                                cast(getdate() AS date) between cast(BasZamani AS date) AND cast(BitZamani AS date)
+                                        ) AS ssss
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 4 and axx.language_parent_id =0 and axx.language_id= 647   
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+                                           
+                                    ' 
+		WHEN 8= @rolid THEN N'  SELECT top 1 adet, 2 AS tip, aciklama, url 
+                                        into '+@settable+'
+                                        FROM ( 
+                                                SELECT top 1 adet, 2 AS tip, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url ,firstgroup,
+                                                    COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama
+                                              
                                                 FROM ( 
-                                                 /*  SELECT ISNULL(count(SNV.SinavID), 0) AS adet, 1 AS sira,''Sınavlarınız'' AS aciklama 
-                                                   FROM ".$dbnamex."SNV_Sinavlar SNV 
-                                                   INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
-                                                   INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
-                                                   INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID AND OS.OgrenciID = '''+@KisiID+'''	
-                                                WHERE cast(SNV.SinavTarihi AS date) = cast(getdate() AS date)
-                                                UNION */
-                                                    SELECT ISNULL(count(OO.OgrenciOdevID), 0) AS adet, 2 AS sira, ''Ödevleriniz'' AS aciklama                                                   
+                                                    SELECT ISNULL(count(SNV.SinavID), 0) AS adet, 1 AS sira,''Sınavlarınız'' AS aciklama  , 5 as firstgroup 
+                                                    FROM ".$dbnamex."SNV_Sinavlar SNV 
+                                                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                                                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                                                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID AND OS.OgrenciID = '''+@KisiID+'''	
+                                                    WHERE cast(SNV.SinavTarihi AS date) = cast(getdate() AS date)
+                                                UNION  
+                                                    SELECT ISNULL(count(OO.OgrenciOdevID), 0) AS adet, 2 AS sira, ''Ödevleriniz'' AS aciklama   , 6 as firstgroup                                                  
                                                     FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
                                                     INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID  
                                                     WHERE OO.OgrenciID = '''+@KisiID+''' AND
                                                         OO.OgrenciGordu=0 AND 
                                                         OT.TeslimTarihi <= getdate()  
-                                                    ) AS sss 
-                                                  /*  WHERE adet > 0 */
-                                                    ORDER BY sira ASC '
+                                                      ) AS sss  
+                                                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                                LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = sss.firstgroup and axx.language_parent_id =0 and axx.language_id= 647   
+                                                LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+                                                ORDER BY sira ASC 
+                                                ) AS ssss '
 		WHEN 9= @rolid THEN N'      declare 
                                             @VeliID uniqueidentifier;  
                                             SELECT @VeliID = OgrenciYakinID FROM ".$dbnamex."GNL_OgrenciYakinlari 
                                             WHERE YakinID = '''+@KisiID+''' ;  
-                                            SELECT ISNULL(count(vr.VeliRandevuID), 0) as adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
+                                            SELECT adet,tip, 
+                                            COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
+                                            ssss.url 
                                             into '+@settable+'
-                                            FROM ".$dbnamex."VLG_VeliRandevu vr
-                                            INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON vr.SinifOgretmenID = so.SinifOgretmenID 
-                                            INNER JOIN ".$dbnamex."GNL_OgrenciYakinlari oy ON vr.VeliID = oy.OgrenciYakinID 
-                                            INNER JOIN ".$dbnamex."GNL_Kisiler AS ogr ON so.OgretmenID = ogr.KisiID 
-                                            INNER JOIN ".$dbnamex."GNL_Kisiler AS og ON oy.OgrenciID = og.KisiID 
-                                            INNER JOIN ".$dbnamex."GNL_Kisiler AS Veli ON oy.YakinID = Veli.KisiID
-                                            WHERE 
-                                               VeliID = @VeliID AND
-                                               cast(getdate() AS date) between cast(BasZamani AS date) AND cast(BitZamani AS date);
-                                            	'  
-		ELSE N' SELECT ISNULL(count(M.MesajID), 0) AS adet, 2 AS tip, ''Aktiviteler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url
-                                            into '+@settable+'
+                                            FROM (
+                                                SELECT ISNULL(count(vr.VeliRandevuID), 0) as adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                                 
+                                                FROM ".$dbnamex."VLG_VeliRandevu vr
+                                                INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON vr.SinifOgretmenID = so.SinifOgretmenID 
+                                                INNER JOIN ".$dbnamex."GNL_OgrenciYakinlari oy ON vr.VeliID = oy.OgrenciYakinID 
+                                                INNER JOIN ".$dbnamex."GNL_Kisiler AS ogr ON so.OgretmenID = ogr.KisiID 
+                                                INNER JOIN ".$dbnamex."GNL_Kisiler AS og ON oy.OgrenciID = og.KisiID 
+                                                INNER JOIN ".$dbnamex."GNL_Kisiler AS Veli ON oy.YakinID = Veli.KisiID
+                                                WHERE 
+                                                   VeliID = @VeliID AND
+                                                   cast(getdate() AS date) between cast(BasZamani AS date) AND cast(BitZamani AS date) 
+                                            ) AS ssss
+                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 4 and axx.language_parent_id =0 and axx.language_id= 647   
+                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+   	 
+                                            '  
+                ELSE N'             
+                                    SELECT adet,tip, 
+                                            COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
+                                            ssss.url 
+                                    into '+@settable+'
+                                    FROM (
+                                            SELECT ISNULL(count(M.MesajID), 0) AS adet, 2 AS tip, ''Aktiviteler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                           
                                             FROM ".$dbnamex."MSJ_Mesajlar M 
                                             INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID 
                                             INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
-                                            WHERE M.Silindi = 0 AND MK.Okundu = 1 AND MK.KisiID = '''+@KisiID+'''  ' 
+                                            WHERE M.Silindi = 0 AND MK.Okundu = 1 AND MK.KisiID = '''+@KisiID+''' 
+                                           ) AS ssss
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0 
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 7 and axx.language_parent_id =0 and axx.language_id= 647   
+                                        LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+     
+                                        ' 
 		end; 
 	 
             EXECUTE sp_executesql @setsql;
