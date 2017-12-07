@@ -420,15 +420,16 @@ class MblLogin extends \DAL\DalSlim {
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
             IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
            
-            DECLARE @name nvarchar(200);
-            declare @database_id int, @MEBKodu int ; 
-            declare @tc nvarchar(11), @sifre nvarchar(50);
-            DECLARE @sqlx nvarchar(2000); 
-            DECLARE @sqlxx nvarchar(2000);
+            DECLARE @name nvarchar(200) =''  collate SQL_Latin1_General_CP1254_CI_AS;
+            DECLARE @database_id int, @MEBKodu int ; 
+            DECLARE @tc nvarchar(11)  =''  collate SQL_Latin1_General_CP1254_CI_AS,
+                    @sifre nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS;
+            DECLARE @sqlx nvarchar(2000) =''  collate SQL_Latin1_General_CP1254_CI_AS; 
+            DECLARE @sqlxx nvarchar(2000) =''  collate SQL_Latin1_General_CP1254_CI_AS;
             DECLARE @KurumID uniqueidentifier, @KisiID uniqueidentifier ; 
               
-            CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int );  
-            CREATE TABLE ##okidetaydata".$tc." (KisiID uniqueidentifier, adsoyad  nvarchar(200) ,  TCKimlikNo nvarchar(11), Fotograf varbinary, CinsiyetID int );
+            CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS , sqlx nvarchar(2000)  collate SQL_Latin1_General_CP1254_CI_AS,MEBKodu int );  
+            CREATE TABLE ##okidetaydata".$tc." (KisiID uniqueidentifier, adsoyad  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS ,  TCKimlikNo nvarchar(11)  collate SQL_Latin1_General_CP1254_CI_AS, Fotograf varbinary, CinsiyetID int );
 
             set @tc = ".$tc.";  
             set @sifre = N'".$sifre."';
@@ -440,7 +441,7 @@ class MblLogin extends \DAL\DalSlim {
                 WHERE 
                     sss.state = 0 AND 
                     tcc.[tc]= @tc AND 
-                    tcdbb.[sifre]= @sifre AND 
+                    tcdbb.[sifre]  collate SQL_Latin1_General_CP1254_CI_AS = @sifre  collate SQL_Latin1_General_CP1254_CI_AS AND 
                     banTarihi is null; 
 
             OPEN db_cursor   
@@ -453,7 +454,7 @@ class MblLogin extends \DAL\DalSlim {
                         INSERT into  ##okidetaydata".$tc." (KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID)
                          SELECT 
                                 kk.[KisiID],   
-                                concat(kk.[Adi]  ,'' '' ,kk.[Soyadi]  ) as adsoyad,   
+                                concat(kk.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS ,'' '' ,kk.[Soyadi]  collate SQL_Latin1_General_CP1254_CI_AS ) as adsoyad,   
                                 kk.[TCKimlikNo] ,
                                 ff.Fotograf,
                                 kk.CinsiyetID
@@ -2913,7 +2914,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-     //   echo debugPDO($sql, $params);
+       //  echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -3429,13 +3430,13 @@ class MblLogin extends \DAL\DalSlim {
             
             $sql = "  
             SET NOCOUNT ON;  
-            declare @rolid int, @tc nvarchar(12), @KisiID nvarchar(50),
-             @setsql nvarchar(4000),
-             @deletesql nvarchar(500),
-             @execsql nvarchar(1000),
-             @settable nvarchar(50),
-             @settable1 nvarchar(50),
-             @selecttable1 nvarchar(100);
+            declare @rolid int, @tc nvarchar(12) =''  collate SQL_Latin1_General_CP1254_CI_AS, @KisiID nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+             @setsql nvarchar(4000) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+             @deletesql nvarchar(500) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+             @execsql nvarchar(1000) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+             @settable nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+             @settable1 nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+             @selecttable1 nvarchar(100) =''  collate SQL_Latin1_General_CP1254_CI_AS ;
             set @rolid = ".$RolID."; 
             set @KisiID = '".$KisiID."';
             select @tc = TCKimlikNo from ".$dbnamex."GNL_Kisiler where KisiID =@KisiID;  
@@ -3541,7 +3542,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;
                  "; 
             $statement = $pdo->prepare($sql);   
-         // echo debugPDO($sql, $params);
+           echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
