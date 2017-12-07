@@ -708,8 +708,7 @@ class MblLogin extends \DAL\DalSlim {
                 WHERE 
                     sss.state = 0 and 
                     tcc.[tc]= @tc and 
-                    banTarihi is null;
-      
+                    banTarihi is null; 
 
             OPEN db_cursor   
             FETCH NEXT FROM db_cursor INTO  @database_id , @name 
@@ -785,8 +784,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 SET @sqlxx =  ' 
                           INSERT ##okimobilfirstdata".$tc."  EXEC  ['+@dbnamex+'].[dbo].[PRC_GNL_Kisi_TumRoller_FindByID]  @KisiID=  ''' +  cast(@KisiID as varchar(50))+'''   '; 
-
-   
+ 
                 /* print(@sqlxx); */
                 EXEC sp_executesql @sqlxx; 
                 /* select * from #okidbname ;*/
@@ -850,7 +848,8 @@ class MblLogin extends \DAL\DalSlim {
                     null as KurumID, 
                     '' AS dbnamex ,
                     0 as database_id,
-                    '' as serverproxy  
+                    '' as serverproxy ,
+                    0 as cid
                 FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
                 INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
@@ -859,7 +858,7 @@ class MblLogin extends \DAL\DalSlim {
                     a.language_parent_id =0 
 
                 UNION  	  
-                select  
+                select  distinct
                     a.OkulKullaniciID ,
                     a.OkulID,
                     a.KisiID,
@@ -875,7 +874,8 @@ class MblLogin extends \DAL\DalSlim {
                     a.KurumID , 
                     a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS,
                     a.database_id,
-                    isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy
+                    isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
+                    mss.id as cid
                 FROM  ##okimobilseconddata".$tc."  a
                 LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
@@ -961,7 +961,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND 
                         a.RolID = ".intval($RolID)."  AND 
                         a.language_parent_id =0 AND 
-                        a.ParentID =".intval($parent)."  
+                        a.ParentID =0 
                     ORDER BY a.MenuID; 
                  ";  
             $statement = $pdo->prepare($sql);            
@@ -3431,12 +3431,12 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "  
             SET NOCOUNT ON;  
             declare @rolid int, @tc nvarchar(12) =''  collate SQL_Latin1_General_CP1254_CI_AS, @KisiID nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
-             @setsql nvarchar(4000) =''  collate SQL_Latin1_General_CP1254_CI_AS,
-             @deletesql nvarchar(500) =''  collate SQL_Latin1_General_CP1254_CI_AS,
-             @execsql nvarchar(1000) =''  collate SQL_Latin1_General_CP1254_CI_AS,
-             @settable nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
-             @settable1 nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
-             @selecttable1 nvarchar(100) =''  collate SQL_Latin1_General_CP1254_CI_AS ;
+                @setsql nvarchar(4000) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @deletesql nvarchar(500) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @execsql nvarchar(1000) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @settable nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @settable1 nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @selecttable1 nvarchar(100) =''  collate SQL_Latin1_General_CP1254_CI_AS ;
             set @rolid = ".$RolID."; 
             set @KisiID = '".$KisiID."';
             select @tc = TCKimlikNo from ".$dbnamex."GNL_Kisiler where KisiID =@KisiID;  
@@ -3447,27 +3447,36 @@ class MblLogin extends \DAL\DalSlim {
             set @selecttable1 = 'SELECT adet,tip,aciklama,url FROM '+@settable;
             SELECT @setsql = 
              CASE 
-		WHEN 4= @rolid THEN N' SELECT ISNULL(SUM(BS.ToplamTutar), 0) AS adet, 2 AS tip, ''Bugünkü Ödemeler'' AS aciklama, ''http://185.86.4.73/sorubankasi1/public/onyuz/assets/base/img/content/apps/atak/okulsis/time.png'' AS url 
-                                            into '+@settable+' 
-                                        FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS
-                                        INNER JOIN ".$dbnamex."MUH_Sozlesmeler SOZ ON SOZ.SozlesmeID = BS.SozlesmeID
-                                        INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = BS.DersYiliID
-                                        INNER JOIN ".$dbnamex."GNL_Okullar O ON O.OkulID = DY.OkulID
-                                        WHERE cast(BS.TaahhutnameTarihi AS date) = cast(getdate() AS date)' 
-		WHEN 5= @rolid THEN N' SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://185.86.4.73/sorubankasi1/public/onyuz/assets/base/img/content/apps/atak/okulsis/msg1.png'' AS url 
+		WHEN 4= @rolid THEN N' SELECT adet,tip, 
+                                            COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
+                                            ssss.url FROM (
+                                                SELECT ISNULL(SUM(BS.ToplamTutar), 0) AS adet, 2 AS tip, ''Bugünkü Ödemeler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
+                                                    into '+@settable+' 
+                                                FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS
+                                                INNER JOIN ".$dbnamex."MUH_Sozlesmeler SOZ ON SOZ.SozlesmeID = BS.SozlesmeID
+                                                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = BS.DersYiliID
+                                                INNER JOIN ".$dbnamex."GNL_Okullar O ON O.OkulID = DY.OkulID
+                                                WHERE cast(BS.TaahhutnameTarihi AS date) = cast(getdate() AS date)
+                                            ) AS ssss
+                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions axx on axx.[main_group] = 2 and axx.[first_group] = 1 and axx.language_parent_id =0 and axx.language_id= 647   
+                                            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
+ 
+                                    ' 
+		WHEN 5= @rolid THEN N' SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url 
                                         into '+@settable+'
                                         FROM ".$dbnamex."MUH_BorcluOdemePlani BOP 
                                         WHERE Odendi =0 AND 
                                             cast(OdemeTarihi AS date) = cast(getdate() AS date) AND 
                                             BOP.BorcluSozlesmeID in (SELECT DISTINCT BS.BorcluSozlesmeID FROM  ".$dbnamex."MUH_BorcluSozlesmeleri BS) '
-		WHEN 6= @rolid THEN N'  SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''../images/time.png'' AS url 
+		WHEN 6= @rolid THEN N'  SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
                                             into '+@settable+'
                                             FROM ".$dbnamex."MUH_BorcluOdemePlani BOP 
                                             WHERE Odendi =0 AND 
                                                 cast(OdemeTarihi AS date) = cast(getdate() AS date) AND 
                                                 BOP.BorcluSozlesmeID in (SELECT DISTINCT BS.BorcluSozlesmeID FROM ".$dbnamex."MUH_BorcluSozlesmeleri BS)'
 		WHEN 7= @rolid THEN N'  SELECT 
-                                            ISNULL(count(vr.VeliRandevuID), 0) AS adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''../images/time.png'' AS url 
+                                            ISNULL(count(vr.VeliRandevuID), 0) AS adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
                                             into '+@settable+'
                                             FROM ".$dbnamex."VLG_VeliRandevu vr
                                             INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON vr.SinifOgretmenID = so.SinifOgretmenID 
@@ -3479,7 +3488,7 @@ class MblLogin extends \DAL\DalSlim {
                                             INNER JOIN ".$dbnamex."GNL_Dersler dr ON dh.DersID = dr.DersID
                                             WHERE Ogr.KisiID ='''+@KisiID+''' AND 
                                                 cast(getdate() AS date) between cast(BasZamani AS date) AND cast(BitZamani AS date)' 
-		WHEN 8= @rolid THEN N'  SELECT top 1 adet, 2 AS tip, aciklama, ''../images/time.png'' AS url 
+		WHEN 8= @rolid THEN N'  SELECT top 1 adet, 2 AS tip, aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
                                                 into '+@settable+'
                                                 FROM ( 
                                                  /*  SELECT ISNULL(count(SNV.SinavID), 0) AS adet, 1 AS sira,''Sınavlarınız'' AS aciklama 
@@ -3502,7 +3511,7 @@ class MblLogin extends \DAL\DalSlim {
                                             @VeliID uniqueidentifier;  
                                             SELECT @VeliID = OgrenciYakinID FROM ".$dbnamex."GNL_OgrenciYakinlari 
                                             WHERE YakinID = '''+@KisiID+''' ;  
-                                            SELECT ISNULL(count(vr.VeliRandevuID), 0) as adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''../images/time.png'' AS url 
+                                            SELECT ISNULL(count(vr.VeliRandevuID), 0) as adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url 
                                             into '+@settable+'
                                             FROM ".$dbnamex."VLG_VeliRandevu vr
                                             INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON vr.SinifOgretmenID = so.SinifOgretmenID 
@@ -3514,7 +3523,7 @@ class MblLogin extends \DAL\DalSlim {
                                                VeliID = @VeliID AND
                                                cast(getdate() AS date) between cast(BasZamani AS date) AND cast(BitZamani AS date);
                                             	'  
-		ELSE N' SELECT ISNULL(count(M.MesajID), 0) AS adet, 2 AS tip, ''Aktiviteler'' AS aciklama, ''../images/time.png'' AS url
+		ELSE N' SELECT ISNULL(count(M.MesajID), 0) AS adet, 2 AS tip, ''Aktiviteler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url
                                             into '+@settable+'
                                             FROM ".$dbnamex."MSJ_Mesajlar M 
                                             INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID 
@@ -3528,7 +3537,7 @@ class MblLogin extends \DAL\DalSlim {
                    adet,tip,aciklama,url 
                 FROM (
                     SELECT 
-                       count(M.MesajID) AS adet, 1 AS tip, ''Mesajlarınız'' AS aciklama, ''../images/msg1.png'' AS url
+                       count(M.MesajID) AS adet, 1 AS tip, ''Mesajlarınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url
                     FROM ".$dbnamex."MSJ_Mesajlar M 
                     INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
                     INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 

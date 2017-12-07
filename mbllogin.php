@@ -143,23 +143,15 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
     if (isset($_GET['tc'])) {
         $stripper->offsetSet('tc', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                 $app, $_GET['tc']));
-    }
-    $vCid = NULL;   
-    if (isset($_GET['cid'])) {
-        $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
-                $app, $_GET['cid']));
-    }
-     $vLanguageID = NULL;
+    } 
+    $vLanguageID = NULL;
     if (isset($_GET['languageID'])) {
         $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                                                                 $app, 
                                                                 $_GET['languageID']));
     } 
     $stripper->strip();
-    if ($stripper->offsetExists('cid')) {
-        $vCid = $stripper->offsetGet('cid')->getFilterValue();
-    }
-   
+    
     if ($stripper->offsetExists('kisiId')) {
         $vkisiId = $stripper->offsetGet('kisiId')->getFilterValue();
     }
@@ -174,8 +166,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
                 'url' => $_GET['url'], 
                 'kisiId' => $vkisiId,  
                 'tcno' => $vtc,  
-                'LanguageID' => $vLanguageID,
-                'Cid' => $vCid, 
+                'LanguageID' => $vLanguageID, 
         )); 
   
     $menus = array();
@@ -193,8 +184,8 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "EgitimYili" =>  ($menu["EgitimYili"]), 
             "DonemID" =>  ($menu["DonemID"]), 
             "KurumID" =>  ($menu["KurumID"]), 
-            "proxy" =>  ($menu["serverproxy"]),  
-            
+            "proxy" =>  ($menu["serverproxy"]), 
+            "cid" =>  ($menu["cid"]), 
         );
     }
     
@@ -215,12 +206,7 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
     $headerParams = $app->request()->headers();
     
      
-    $vParent = 0;
-    if (isset($_GET['parentID'])) {
-        $stripper->offsetSet('parentID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
-                                                                $app, 
-                                                                $_GET['parentID']));
-    }
+    
     $vRolID = NULL;
     if (isset($_GET['RolID'])) {
         $stripper->offsetSet('RolID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
@@ -232,36 +218,25 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
         $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                                                                 $app, 
                                                                 $_GET['languageID']));
-    } 
+    }  
     
-    $vCid = NULL;   
-    if (isset($_GET['cid'])) {
-        $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
-                $app, $_GET['cid']));
-    }
     $stripper->strip();
-    if ($stripper->offsetExists('cid')) {
-        $vCid = $stripper->offsetGet('cid')->getFilterValue();
-    } 
+     
     if ($stripper->offsetExists('languageID')) 
-        {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }  
-    if ($stripper->offsetExists('parentID')) 
-        {$vParent = $stripper->offsetGet('parentID')->getFilterValue(); }    
+        {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
     if ($stripper->offsetExists('RolID')) 
         {$vRolID = $stripper->offsetGet('RolID')->getFilterValue(); }  
     
-    $resDataMenu = $BLL->mobilMenu(array('ParentID' => $vParent,      
-                                            'RolID' => $vRolID, 
-                                            'ParentID' => $vParent,
-                                            'LanguageID' => $vLanguageID,
-                                            'Cid' => $vCid,
+    $resDataMenu = $BLL->mobilMenu(array(      
+                                            'RolID' => $vRolID,  
+                                            'LanguageID' => $vLanguageID, 
                                            ) ); 
     $menus = array();
     foreach ($resDataMenu as $menu){
         $menus[]  = array(
             "ID" => $menu["ID"],
             "MenuID" => $menu["MenuID"],
-            "ParentID" => $menu["ParentID"],
+           /* "ParentID" => $menu["ParentID"],*/
             "MenuAdi" => html_entity_decode($menu["MenuAdi"]),
             "Aciklama" => html_entity_decode($menu["Aciklama"]),
             "URL" => $menu["URL"],
