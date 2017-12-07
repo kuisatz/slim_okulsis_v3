@@ -3609,7 +3609,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;
                  "; 
             $statement = $pdo->prepare($sql);   
-           echo debugPDO($sql, $params);
+        //   echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
