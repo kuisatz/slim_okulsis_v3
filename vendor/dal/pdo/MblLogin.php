@@ -875,7 +875,7 @@ class MblLogin extends \DAL\DalSlim {
                     a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS,
                     a.database_id,
                     isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
-                    mss.id as cid
+                     isnull( mss.id , (SELECT TOP 1 xxz.[id]  FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid
                 FROM  ##okimobilseconddata".$tc."  a
                 LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
