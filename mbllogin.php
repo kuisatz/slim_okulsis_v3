@@ -3947,7 +3947,7 @@ $app->get("/Ogretmensubelistesi_mbllogin/", function () use ($app ) {
     foreach ($resDataMenu as $menu){
         $menus[]  = array(
              "SinifID" => $menu["SinifID"],  
-             "aciklama" => html_entity_decode($menu["Aciklama"]), 
+             "Aciklama" => html_entity_decode($menu["Aciklama"]), 
         );
     }
     
