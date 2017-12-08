@@ -169,16 +169,21 @@ class MobilSetDbConfigx extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = 116;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
             
             $sql = "  
             SET NOCOUNT ON;  
                 SELECT   
-                    id,
-                    configclass , 
-                    [dbname],
+                    a.id,
+                    a.configclass , 
+                    sss.[name] as dbname,
                     (CASE WHEN (1 = 1) THEN 1 ELSE 0 END) AS control                    
-                FROM BILSANET_MOBILE.[dbo].[Mobil_Settings] 
-                WHERE id= ".$cid." ; 
+                FROM BILSANET_MOBILE.[dbo].[Mobil_Settings] a
+                INNER JOIN sys.sysdatabases sss on sss.dbid = ".$did." 
+                WHERE a.id= ".$cid." ; 
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
