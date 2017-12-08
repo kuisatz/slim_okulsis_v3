@@ -2125,7 +2125,7 @@ class MblLogin extends \DAL\DalSlim {
                         ss.SinifID ,
                         ss.SinifKodu collate SQL_Latin1_General_CP1254_CI_AS AS Aciklama ,
                         ss.SeviyeID
-                FROM GNL_Siniflar  ss
+                FROM ".$dbnamex."GNL_Siniflar  ss
                 INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON ss.SinifID = so.SinifID  
                 INNER JOIN ".$dbnamex."GNL_DersHavuzlari dh ON so.DersHavuzuID = dh.DersHavuzuID
                 WHERE 
