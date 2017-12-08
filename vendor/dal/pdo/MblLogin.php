@@ -4208,7 +4208,7 @@ class MblLogin extends \DAL\DalSlim {
             }
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID,  ));
+                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }  
@@ -7008,7 +7008,7 @@ class MblLogin extends \DAL\DalSlim {
             }
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID,  ));
+                            array( 'KisiID' =>$KisiID, 'Cid' =>$cid, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }   
@@ -7222,7 +7222,7 @@ class MblLogin extends \DAL\DalSlim {
              SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-         //echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -8284,7 +8284,7 @@ class MblLogin extends \DAL\DalSlim {
             } 
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID,  ));
+                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }  
