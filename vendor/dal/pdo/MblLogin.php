@@ -489,7 +489,7 @@ class MblLogin extends \DAL\DalSlim {
              * 
              */
             $statement = $pdo->prepare($sql);            
-      //  echo debugPDO($sql, $params);
+      // echo debugPDO($sql, $params);
             $statement->execute();
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -635,7 +635,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-   //  echo debugPDO($sql, $params);
+   // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -857,30 +857,32 @@ class MblLogin extends \DAL\DalSlim {
                 WHERE a.[main_group] = 1 and a.[first_group]  = 1 and 
                     a.language_parent_id =0 
 
-                UNION  	  
-                select  distinct
-                    a.OkulKullaniciID ,
-                    a.OkulID,
-                    a.KisiID,
-                    a.RolID, 
-                    a.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,
-                    COALESCE(NULLIF(COALESCE(NULLIF(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''),golx.OkulAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),a.OkulAdi)  as OkulAdi,
-                    a.MEBKodu,
-                    a.ePosta,
-                    a.DersYiliID,
-                    a.EgitimYilID, 
-                    a.EgitimYili,
-                    a.DonemID ,
-                    a.KurumID , 
-                    a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS,
-                    a.database_id,
-                    isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
-                     isnull( mss.id , (SELECT TOP 1 xxz.[id]  FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid
-                FROM  ##okimobilseconddata".$tc."  a
-                LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
-                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = a.OkulID and golx.language_id = lx.id  
-
+                UNION 
+                SELECT * from (
+                    SELECT  distinct
+                        a.OkulKullaniciID,
+                        a.OkulID,
+                        a.KisiID,
+                        a.RolID,
+                        a.RolAdi collate SQL_Latin1_General_CP1254_CI_AS as RolAdi,
+                        COALESCE(NULLIF(COALESCE(NULLIF(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''),golx.OkulAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),a.OkulAdi)  as OkulAdi,
+                        a.MEBKodu,
+                        a.ePosta,
+                        a.DersYiliID,
+                        a.EgitimYilID,
+                        a.EgitimYili,
+                        a.DonemID,
+                        a.KurumID,
+                        a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS as dbnamex,
+                        a.database_id,
+                        isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
+                        isnull( mss.id, (SELECT TOP 1 xxz.[id] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid
+                    FROM  ##okimobilseconddata".$tc."  a
+                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = a.OkulID and golx.language_id = lx.id  
+                    WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
+                ) as ssdds
                 IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; 
                 IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";  
                 IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
@@ -889,7 +891,7 @@ class MblLogin extends \DAL\DalSlim {
 
                  "; 
             $statement = $pdo->prepare($sql);   
-      // echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute();
             
            
@@ -1489,7 +1491,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-           //  echo debugPDO($sql, $params);
+           // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -1576,11 +1578,11 @@ class MblLogin extends \DAL\DalSlim {
                //   print_r( "////////////"); 
               //   var_dump($dataValue[0]['id'] , $dataValue[0]["yok"]  , $dataValue[0]["gec"]); 
              //   var_dump($dataValue   ); 
-              //    echo($dataValue[0]['id']   ); 
+              // echo($dataValue[0]['id']   ); 
              //     print_r( $dataValue[0]["yok"] ); 
              // print_r( "////////////"); 
            //   $ii =0 ; 
-                 //  echo( "\\\\\\console\\\\\\"); 
+                 // echo( "\\\\\\console\\\\\\"); 
                     foreach ($dataValue as $std) {
                     
                         if ($std  != null) {
@@ -1613,7 +1615,7 @@ class MblLogin extends \DAL\DalSlim {
                 </tbody><tbody><tr><td>09:50 - 10:30</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>10:40 - 11:20</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>11:30 - 12:10</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>12:20 - 13:00</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>13:50 - 14:30</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>14:40 - 15:20</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>15:30 - 16:10</td><td>Dersiniz Yok</td><td></td></tr></tbody><tbody><tr><td>16:20 - 16:40</td><td>Dersiniz Yok</td><td></td></tr>
               
              */
-          //    echo($SendXmlData); 
+          // echo($SendXmlData); 
               /*
             <Table><Ogrenci><OgrenciID>AEEFE2B7-6653-4776-9343-031155AF6181</OgrenciID><DevamsizlikKodID>2</DevamsizlikKodID><Aciklama/></Ogrenci><Ogrenci><OgrenciID>FA56401D-B693-4292-A726-8784BBB6FF30</OgrenciID><DevamsizlikKodID>2</DevamsizlikKodID><Aciklama/></Ogrenci></Table>
               */
@@ -1652,7 +1654,7 @@ class MblLogin extends \DAL\DalSlim {
                  
   ";
             $statement = $pdo->prepare($sql);
-          //   echo debugPDO($sql, $params);
+          // echo debugPDO($sql, $params);
        //     print_r( '33'); 
             $result = $statement->execute();
              $insertID =1;
@@ -1758,7 +1760,7 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);
             $statement->bindValue(':username', $params['username'], \PDO::PARAM_STR);
             $statement->bindValue(':password', $params['password'], \PDO::PARAM_STR);
-          //  echo debugPDO($sql, $parameters);
+          // echo debugPDO($sql, $parameters);
             $statement->execute();
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -1878,7 +1880,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-        //  echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -1961,7 +1963,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-        //  echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -2041,9 +2043,9 @@ class MblLogin extends \DAL\DalSlim {
                     S.Sanal,
                     S.SubeGrupID,
                     SEV.SeviyeKodu,
-                    concat( gks.Adi  collate SQL_Latin1_General_CP1254_CI_AS,' ',gks.Soyadi   collate SQL_Latin1_General_CP1254_CI_AS) As SinifOgretmeni,
-                    concat(gkm.Adi  collate SQL_Latin1_General_CP1254_CI_AS,' ',gkm.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS ) As MudurYardimcisi,
-                    concat(S.SinifAdi  collate SQL_Latin1_General_CP1254_CI_AS,' - ', gks.Adi  collate SQL_Latin1_General_CP1254_CI_AS+' '+gks.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS)  as Aciklama
+                    concat( gks.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',gks.Soyadi   collate SQL_Latin1_General_CP1254_CI_AS) As SinifOgretmeni,
+                    concat(gkm.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',gkm.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS ) As MudurYardimcisi,
+                    concat(S.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,' - ', gks.Adi  collate SQL_Latin1_General_CP1254_CI_AS+' '+gks.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS)  as Aciklama
                 FROM ".$dbnamex."GNL_Siniflar S
                 INNER JOIN ".$dbnamex."GNL_Seviyeler SEV ON S.SeviyeID = SEV.SeviyeID
                 LEFT JOIN ".$dbnamex."GNL_SinifOgretmenleri SO ON (S.SinifID = SO.SinifID AND SO.OgretmenTurID=1)
@@ -2058,7 +2060,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -2121,7 +2123,7 @@ class MblLogin extends \DAL\DalSlim {
             UNION   
                 SELECT	DISTINCT   
                         ss.SinifID ,
-                        ss.SinifKodu AS Aciklama ,
+                        ss.SinifKodu collate SQL_Latin1_General_CP1254_CI_AS AS Aciklama ,
                         ss.SeviyeID
                 FROM GNL_Siniflar  ss
                 INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON ss.SinifID = so.SinifID  
@@ -2269,7 +2271,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-     //    echo debugPDO($sql, $params);
+     //  echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -2605,7 +2607,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-       //  echo debugPDO($sql, $params);
+       // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -2914,7 +2916,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-       //  echo debugPDO($sql, $params);
+       // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -3094,7 +3096,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -3187,7 +3189,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -3301,7 +3303,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;    
                 ";
             $statement = $pdo->prepare($sql); 
-         //   echo debugPDO($sql, $params);
+         // echo debugPDO($sql, $params);
             $result = $statement->execute();
             $insertID =1;
             $errorInfo = $statement->errorInfo(); 
@@ -3609,7 +3611,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;
                  "; 
             $statement = $pdo->prepare($sql);   
-        //   echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -3706,7 +3708,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-       // echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute(); 
             
             $gelenMesajOkunduParams = array('MesajID' =>  $MesajID, 'KisiID'=>  $KisiID, ); 
@@ -3778,7 +3780,7 @@ class MblLogin extends \DAL\DalSlim {
                     SET NOCOUNT OFF;   
                            ";
             $statement = $pdo->prepare($sql); 
-      //   echo debugPDO($sql, $params);
+      // echo debugPDO($sql, $params);
             $result = $statement->execute(); 
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -3891,7 +3893,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-     //   echo debugPDO($sql, $params);
+    echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -4056,7 +4058,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-     //   echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -4357,7 +4359,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
-    //  echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -5887,7 +5889,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-    //    echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -6096,7 +6098,7 @@ class MblLogin extends \DAL\DalSlim {
    
                  "; 
             $statement = $pdo->prepare($sql);   
-  //  echo debugPDO($sql, $params);
+  // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -6729,7 +6731,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;
                  "; 
             $statement = $pdo->prepare($sql);   
-   //  echo debugPDO($sql, $params);
+   // echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -6887,7 +6889,7 @@ class MblLogin extends \DAL\DalSlim {
                 
              //   print_r( "////////////"); 
             //   print_r($dataValue  ); 
-                //  echo( "\\\\\\console\\\\\\"); 
+                // echo( "\\\\\\console\\\\\\"); 
                     foreach ($dataValue as $std) {                      
                         if ($std  != null) {
                         //   print_r($std ); 
@@ -6895,7 +6897,7 @@ class MblLogin extends \DAL\DalSlim {
                         //   if ($std[2] == 1) { $devamsizlikKodID = 0 ;}
                      
                           //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
-                      //  echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
+                      // echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
                          $SendXmlData =$SendXmlData.'<ID VALUE="'.$std.'"/>' ;  
                         }
                     }
@@ -7307,7 +7309,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-      //   echo debugPDO($sql, $params);
+      // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -7390,7 +7392,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -7587,7 +7589,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-    //    echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -7904,7 +7906,7 @@ class MblLogin extends \DAL\DalSlim {
  
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8165,7 +8167,7 @@ class MblLogin extends \DAL\DalSlim {
  
                  "; 
             $statement = $pdo->prepare($sql);   
-    //  echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8232,7 +8234,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-    //    echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8325,7 +8327,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-     //  echo debugPDO($sql, $params);
+     // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8489,7 +8491,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-    //   echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8668,7 +8670,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-    //   echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8784,7 +8786,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-   //    echo debugPDO($sql, $params);
+   // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
@@ -8923,7 +8925,7 @@ class MblLogin extends \DAL\DalSlim {
             //    print_r($dataValue[0]['ogrenciid']   );    print_r( "///////"); 
             //    print_r($dataValue[0]['soruid']  );    print_r( "////////"); 
              //   print_r($dataValue[0]['puan']   );    print_r( "///////"); 
-              //    echo($dataValue[0]['id']   ); 
+              // echo($dataValue[0]['id']   ); 
              //     print_r( $dataValue[0]["yok"] ); 
              // print_r( "////////////"); 
                     foreach ($dataValue as $std) {                      
@@ -8935,14 +8937,14 @@ class MblLogin extends \DAL\DalSlim {
                         $puan = $std ['puan'] ;  
                         if (( $puan != "")) {
                           //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
-                      //  echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
+                      // echo( '<Ogrenci><OgrenciID>'.$std[0].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); 
                          $SendXmlData =$SendXmlData.'<Dugum SinavOgrenciSoruCevapID="'.$SinavOgrenciSoruCevapID.'" SinavOgrenciID="'.$ogrenciid.'" SinavSoruID="'.$soruid.'" isDogru="True" AldigiPuan="'.$puan.'"/>' ;  
                         }}
                     }
                   
                $SendXmlData = '<Nodes>'.$SendXmlData.'</Nodes>';
             }  
-               echo(  $SendXmlData);
+          //     echo(  $SendXmlData);
             } 
             $sql = "  
             SET NOCOUNT ON;   
@@ -8959,7 +8961,7 @@ class MblLogin extends \DAL\DalSlim {
                 ";  
             
             $statement = $pdo->prepare($sql); 
-       echo debugPDO($sql, $params);
+     //  echo debugPDO($sql, $params);
           $result = $statement->execute(); 
             $errorInfo = $statement->errorInfo();
              
@@ -9116,7 +9118,7 @@ class MblLogin extends \DAL\DalSlim {
                  
                  "; 
             $statement = $pdo->prepare($sql);   
-    //   echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
