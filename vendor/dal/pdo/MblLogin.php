@@ -147,10 +147,10 @@ class MblLogin extends \DAL\DalSlim {
                 $cid = $params['Cid'];
             }  
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig($params);
-            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
-                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
-            }   
+         //   $dbConfig =  MobilSetDbConfigx::mobilDBConfig($params);
+         //   if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+        //        $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
+        //    }   
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
             
@@ -257,7 +257,7 @@ class MblLogin extends \DAL\DalSlim {
                 $cid = $params['Cid'];
             } 
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid, ));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
             }   
@@ -348,23 +348,27 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
-        /** 
+    
+    /** 
      * @author Okan CIRAN
      * @ login için user id döndürür   !!
      * @version v 1.0  25.10.2017
      * @param array | null $args
      * @return array
      * @throws \PDOException
-     */
-    
+     */    
     public function gnlKullaniciFindForLoginByTcKimlikNo($params = array()) {
         try {
             $cid = -1;
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
             }   
@@ -516,8 +520,12 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
             }   
@@ -571,7 +579,7 @@ class MblLogin extends \DAL\DalSlim {
                 $cid = $params['Cid'];
             } 
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
             }   
@@ -663,7 +671,7 @@ class MblLogin extends \DAL\DalSlim {
                 $cid = $params['Cid'];
             } 
             $dbConfigValue = 'pgConnectFactoryMobil';
-         /*   $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+         /*   $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
                 // $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['dbname'];
@@ -993,9 +1001,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1047,10 +1059,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
-            
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1215,9 +1230,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1321,9 +1340,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1437,9 +1460,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1518,9 +1545,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1717,9 +1748,10 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1786,9 +1818,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1907,9 +1943,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -1990,9 +2030,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2087,9 +2131,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2164,9 +2212,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2298,9 +2350,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2467,9 +2523,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2634,9 +2694,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2788,9 +2852,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -2942,10 +3010,14 @@ class MblLogin extends \DAL\DalSlim {
             $cid = -1;
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
-            } 
+            }
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3015,9 +3087,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3123,9 +3199,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3216,9 +3296,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3333,9 +3417,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3405,9 +3493,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3638,9 +3730,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3740,7 +3836,7 @@ class MblLogin extends \DAL\DalSlim {
             } 
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3809,9 +3905,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -3920,9 +4020,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4009,9 +4113,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4085,9 +4193,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4190,9 +4302,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4316,9 +4432,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4386,9 +4506,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4493,9 +4617,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4574,9 +4702,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4668,9 +4800,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4752,9 +4888,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -4907,9 +5047,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5128,9 +5272,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5318,9 +5466,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5447,9 +5599,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5551,9 +5707,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5653,9 +5813,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5745,9 +5909,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5844,9 +6012,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
-             $dbnamex = 'dbo.';
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
+            $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -5916,9 +6088,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -6125,9 +6301,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -6341,9 +6521,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -6579,9 +6763,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -6758,9 +6946,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -6816,9 +7008,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -6990,9 +7186,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7249,9 +7449,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7335,9 +7539,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7418,9 +7626,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7509,9 +7721,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7615,9 +7831,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7693,9 +7913,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7771,9 +7995,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7836,9 +8064,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -7932,9 +8164,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8065,9 +8301,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8193,9 +8433,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8260,9 +8504,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8353,9 +8601,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8438,9 +8690,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8517,9 +8773,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8571,9 +8831,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8635,9 +8899,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8696,9 +8964,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8812,9 +9084,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8875,9 +9151,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -8987,9 +9267,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
@@ -9058,9 +9342,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,));
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {

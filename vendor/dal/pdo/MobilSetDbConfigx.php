@@ -169,7 +169,7 @@ class MobilSetDbConfigx extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
-            $did = 116;
+            $did = 70;
             if ((isset($params['Did']) && $params['Did'] != "")) {
                 $did = $params['Did'];
             } 
