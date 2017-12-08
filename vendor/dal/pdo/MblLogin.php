@@ -2230,7 +2230,7 @@ class MblLogin extends \DAL\DalSlim {
                     ".$dbnamex."FNC_GNL_AdayKayitUcretOdendiMi(GOS.[OgrenciID],DY.DersYiliID) AS OdendiMi,  	
                     S.[SeviyeID] ,
                     ff.Fotograf,
-                    concat(KISI.[Adi], ' ', KISI.[Soyadi]) as Aciklama
+                    concat(KISI.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS  , ' ', KISI.[Soyadi]  collate SQL_Latin1_General_CP1254_CI_AS ) as Aciklama
                     /* --	GOS.[DavranisNotu1], 
                     --	GOS.[DavranisNotu2], 
                     --	GOS.[DavranisPuani],                     
@@ -2571,10 +2571,10 @@ class MblLogin extends \DAL\DalSlim {
                         gd.[Donem] , 
                         SinavTarihi ,
                         SinavBitisTarihi , 
-                        SinavTurAdi  ,
-                        SinavKodu ,
+                        SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
+                        SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         SinavID ,  
-                        SinavAciklamasi  
+                        SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  
                     /*
                         SinavTurID ,	
                         SeviyeID ,
@@ -2724,9 +2724,9 @@ class MblLogin extends \DAL\DalSlim {
                         gd.[Donem] , 
                         SinavTarihi ,
                         SinavBitisTarihi , 
-                        SinavTurAdi  ,
-                        SinavKodu ,
-                        SinavAciklamasi  
+                        SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
+                        SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
+                        SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS 
                     /*
                         SinavTurID ,	
                         SeviyeID ,
@@ -2878,9 +2878,9 @@ class MblLogin extends \DAL\DalSlim {
                         gd.[Donem], 
                         SinavTarihi,
                         SinavBitisTarihi, 
-                        SinavTurAdi,
-                        SinavKodu,
-                        SinavAciklamasi  
+                        SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS ,
+                        SinavKodu collate SQL_Latin1_General_CP1254_CI_AS ,
+                        SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS 
                     /*
                         SinavTurID ,	
                         SeviyeID ,
@@ -3075,13 +3075,13 @@ class MblLogin extends \DAL\DalSlim {
 			MK.OkunduguTarih,
 			M.Silindi,
 			M.MesajOncelikID,
-			M.Konu,
-			M.Mesaj,
+			M.Konu collate SQL_Latin1_General_CP1254_CI_AS ,
+			M.Mesaj collate SQL_Latin1_General_CP1254_CI_AS ,
 			M.Tarih,
 			M.KisiID AS SenderID,
-			K.Adi AS SenderAdi,
-			K.Soyadi AS SenderSoyadi,
-			(K.Adi + ' ' + K.Soyadi) AS SenderAdiSoyadi,
+			K.Adi  collate SQL_Latin1_General_CP1254_CI_AS AS SenderAdi,
+			K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS AS SenderSoyadi,
+			(K.Adi  collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS ) AS SenderAdiSoyadi,
 			(CASE WHEN (SELECT COUNT(1) FROM ".$dbnamex."MSJ_MesajEklentileri WHERE MesajID = M.MesajID)>0 THEN 1 ELSE 0 END) AS AttachmentFile,
 			ROW_NUMBER() OVER(ORDER BY Tarih DESC) as RowNum 
 		FROM ".$dbnamex."MSJ_Mesajlar M 
@@ -3175,11 +3175,11 @@ class MblLogin extends \DAL\DalSlim {
             SELECT  
                 MesajID, 
                 MesajOncelikID, 
-                Konu, 
+                Konu collate SQL_Latin1_General_CP1254_CI_AS , 
                 Tarih, 
                 SenderID, 
                 ReceiverIDs, 
-                ReceiverNames,
+                ReceiverNames collate SQL_Latin1_General_CP1254_CI_AS ,
                 AttachmentFile,
                 RowNum 
             FROM #okigidenmesajlar a  
@@ -3959,7 +3959,7 @@ class MblLogin extends \DAL\DalSlim {
                 OO.OgrenciTeslimTarihi,
                 OO.OgretmenDegerlendirme,
                 OO.OdevOnayID,
-                K.Adi + ' ' + K.Soyadi AS OgretmenAdi,
+                K.Adi  collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS  AS OgretmenAdi,
                 D.DersAdi,
                 OT.Tanim,
                 OT.Tarih,
@@ -4034,10 +4034,10 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
             SELECT  
                 OT.OdevTanimID ,
-                K.Adi + ' ' + K.Soyadi AS OgretmenAdi ,
+                K.Adi  collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS AS OgretmenAdi ,
                 S.SinifKodu ,
                 SV.SeviyeAdi ,
-                DH.DersKodu + ' (' + D.DersAdi + ')' AS DersBilgisi ,
+                DH.DersKodu  collate SQL_Latin1_General_CP1254_CI_AS + ' (' + D.DersAdi collate SQL_Latin1_General_CP1254_CI_AS  + ')' AS DersBilgisi ,
                 OT.Tanim ,
                 OT.Tarih ,
                 OT.TeslimTarihi

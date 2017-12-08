@@ -185,7 +185,9 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "DonemID" =>  ($menu["DonemID"]), 
             "KurumID" =>  ($menu["KurumID"]), 
             "proxy" =>  ($menu["serverproxy"]), 
-            "cid" =>  ($menu["cid"]), 
+            "cid" => ($menu["database_id"]),// ($menu["cid"]),
+       //    "did" =>  ($menu["database_id"]),
+            
         );
     }
     
