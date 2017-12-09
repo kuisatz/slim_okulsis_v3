@@ -8892,7 +8892,7 @@ class MblLogin extends \DAL\DalSlim {
                     LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID  
                     WHERE 
                             SS.SinavDersID = @SinavDersID1
-                            SO.SinavOgrenciID = 
+                            SO.SinavOgrenciID = @SinavOgrenciID
                     ORDER BY 
                             SK.BolumKategoriID, 
                             SD.SinavDersSabitID, 
