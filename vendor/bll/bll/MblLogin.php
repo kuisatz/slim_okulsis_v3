@@ -1419,7 +1419,7 @@ class MblLogin extends \BLL\BLLSlim{
         return $DAL->ogrenciSinaviSonuclariOnay($params);
     }
     
-      /**
+    /**
      * Function to get datagrid row count on user interface layer
      * @param array | null $params 
      * @return array
@@ -1427,6 +1427,17 @@ class MblLogin extends \BLL\BLLSlim{
     public function sinavdaKullanilanKitaplar($params = array()) {
     $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
     $resultSet = $DAL->sinavdaKullanilanKitaplar($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function ogrencininSinavlistesi($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogrencininSinavlistesi($params);  
     return $resultSet['resultSet'];
     } 
 }

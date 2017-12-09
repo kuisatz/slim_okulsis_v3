@@ -2840,6 +2840,147 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
+    
+       /** 
+     * @author Okan CIRAN
+     * @ login olan yakının yada ögrencinin sinav listesi !! sınavlar kısmında kullanılıyor
+     * @version v 1.0  10.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogrencininSinavlistesi($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }      
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+          
+            $OkulID =  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
+                $OkulID = $params['OkulID'];
+            }
+            $KisiID =  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['KisiID']) && $params['KisiID'] != "")) {
+                $KisiID = $params['KisiID'];
+            }   
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            }  
+            
+            $sql = "  
+                 SET NOCOUNT ON;  
+ 
+                declare  
+                    @EgitimYilID int,
+                    @OkulID uniqueidentifier,
+                    @KisiID UNIQUEIDENTIFIER
+
+                set @OkulID ='".$OkulID."';
+                set @KisiID ='".$KisiID."'
+  
+                IF OBJECT_ID('tempdb..#OgrencininKendiOkulundaGirdigiSinavlar') IS NOT NULL DROP TABLE #OgrencininKendiOkulundaGirdigiSinavlar; 
+                IF OBJECT_ID('tempdb..#OgrencininOlcmeDegerlendirmedeGirdigiSinavlar') IS NOT NULL DROP TABLE #OgrencininOlcmeDegerlendirmedeGirdigiSinavlar; 
+                 
+                set @EgitimYilID =  (SELECT max(EgitimYilID) FROM  ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = @OkulID and dyx.AktifMi =1)   ;
+                SELECT * FROM (
+                    SELECT 
+                        /* -- OS.OgrenciID ,SNV.EgitimYilID, */ 
+                        SNV.SinavID, 
+                        SNV.OkulID, 
+                        SNV.OkulOgretmenID,	
+                        SNV.SinavTurID,	
+                        concat(ST.SinavTurAdi collate SQL_Latin1_General_CP1254_CI_AS, ' ' , SVY.SeviyeKodu collate SQL_Latin1_General_CP1254_CI_AS) as sinavTurTanim,
+                        SNV.SeviyeID, 
+                        SNV.KitapcikTurID,
+                        SNV.SinavKodu,
+                        SNV.SinavAciklamasi,
+                        SNV.SinavTarihi,
+                        SNV.SinavBitisTarihi, 
+                        SNV.SinavSuresi, 
+                        SOGR.SinavOgrenciID,
+                        concat(ogt.Adi  collate SQL_Latin1_General_CP1254_CI_AS,'' ,ogt.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen
+                    INTO #OgrencininKendiOkulundaGirdigiSinavlar
+                    FROM ".$dbnamex."SNV_Sinavlar SNV
+                    INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
+                    INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
+                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID AND OS.OgrenciID = @KisiID	
+                    LEFT JOIN ".$dbnamex."OGT_OkulOgretmenleri ooo ON ooo.OkulOgretmenID = SNV.OkulOgretmenID
+                    LEFT JOIN ".$dbnamex."GNL_Kisiler ogt ON ogt.KisiID = ooo.OgretmenID
+                    WHERE 
+                        SNV.OkulID = @OkulID AND 
+                        SNV.EgitimYilID = @EgitimYilID AND 
+                        SNV.isOgrenciVeliSinavVisible  =1  
+                    
+                    UNION 
+
+                    SELECT  
+                        /* OS.OgrenciID ,SNV.EgitimYilID, */ 
+                        SNV.SinavID, 
+                        SNV.OkulID, 
+                        SNV.OkulOgretmenID,	
+                        SNV.SinavTurID,	
+                        concat(ST.SinavTurAdi collate SQL_Latin1_General_CP1254_CI_AS, ' ' , SVY.SeviyeKodu collate SQL_Latin1_General_CP1254_CI_AS) as sinavTanim,
+                        SNV.SeviyeID, 
+                        SNV.KitapcikTurID,
+                        SNV.SinavKodu,
+                        SNV.SinavAciklamasi,
+                        SNV.SinavTarihi,
+                        SNV.SinavBitisTarihi, 
+                        SNV.SinavSuresi, 
+                        SOGR.SinavOgrenciID,
+                        concat(ogt.Adi collate SQL_Latin1_General_CP1254_CI_AS ,'' ,ogt.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen
+                    INTO #OgrencininOlcmeDegerlendirmedeGirdigiSinavlar
+                    FROM ".$dbnamex."SNV_Sinavlar SNV
+                    INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID	
+                    INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
+                    INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
+                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID AND OS.OgrenciID = @KisiID	
+                    LEFT JOIN ".$dbnamex."OGT_OkulOgretmenleri ooo ON ooo.OkulOgretmenID = SNV.OkulOgretmenID
+                    LEFT JOIN ".$dbnamex."GNL_Kisiler ogt ON ogt.KisiID = ooo.OgretmenID 
+                        WHERE SO.OkulID = @OkulID 
+                        AND SNV.EgitimYilID = @EgitimYilID
+                        AND SNV.isAltKurumHidden = 0
+                        AND SNV.isOgrenciVeliSinavVisible = 1 ;  
+ 
+                ) as ssss  ORDER BY  SinavTarihi DESC  
+                
+                SET NOCOUNT OFF;  
+ 
+                 "; 
+            $statement = $pdo->prepare($sql);   
+       // echo debugPDO($sql, $params);
+            $statement->execute(); 
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+   
    
     /** 
      * @author Okan CIRAN
@@ -8395,7 +8536,7 @@ class MblLogin extends \DAL\DalSlim {
                     )
 		) AND 
 		/*  S.DersYiliID = @DersYiliID AND */ 
-                DY.EgitimYilID = (SELECT max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = dy.OkulID and dy.AktifMi =1) AND 
+                DY.EgitimYilID = (SELECT max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = dy.OkulID and dyx.AktifMi =1) AND 
 		((@SeviyeID IS NOT NULL AND S.SeviyeID = @SeviyeID) OR @SeviyeID IS NULL OR @SeviyeID = 0) AND
                 ((@SinifID IS NOT NULL AND S.SinifID = @SinifID) OR @SinifID IS NULL ) 
                        GROUP BY
@@ -8404,7 +8545,7 @@ class MblLogin extends \DAL\DalSlim {
                                K.Soyadi,
                                B.Brans
                        ORDER BY 
-                           AdiSoyadi  /*     K.Adi + ' ' + K.Soyadi */ 
+                           AdiSoyadi  /*  K.Adi + ' ' + K.Soyadi */ 
 	
                 SET NOCOUNT OFF  
  

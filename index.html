@@ -1250,24 +1250,17 @@ and open the template in the editor. Ğİ
                      //   XmlData:'[["5E2D953C-0A7D-4A63-9368-01690DC7FE51"],["AEEFE2B7-6653-4776-9343-031155AF6181"]]',
                         
                         XmlData:' ["FA56401D-B693-4292-A726-8784BBB6FF30","6A4DCCE5-7CC7-40D3-B513-386B0297EB89","73A80155-7121-48F8-BF71-F7DECF5EF859","6DEC1936-661F-4819-BEEF-FCE46CCDF1F5","B8609CB0-873F-4940-BB56-FEDFF1DDA650"]'
- 
-
-               
+  
                     },
                     method: 'GET',
                     success: function (data, textStatus, jqXHR) {
-
-
+ 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         console.warn('error text status-->' + textStatus);
                     }
                 });
-                
-                
-                
-                
-                
+                 
                    $.ajax({
                     //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
                     url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
@@ -1292,7 +1285,8 @@ and open the template in the editor. Ğİ
                     data: { 
                         url: 'MsjGonderilecekRoller_mbllogin',   
                         kurumID : 'AEEFE2B7-6653-4776-9343-031155AF6181' ,
-                        sendrolID  : 4,    
+                        sendrolID  : 4,   
+                        rolID  : 4,  
                         cid  : 1,
                     },
                     method: 'GET',
@@ -1776,6 +1770,27 @@ and open the template in the editor. Ğİ
                         console.warn('error text status-->' + textStatus);
                     }
                 }); 
+                
+                 $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                    url: 'OgrencininSinavlistesi_mbllogin',  
+                    okulID  : 'F441FF75-5C6B-4A4C-BF5A-1D5DE4D655A3',
+                    kisiID : 'EA133E95-181B-4B2F-90C8-8E75A87F4F21', 
+                    cid  : 1,
+                    did : null,
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+  
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
+                
+                
                 ////////////////////////
                 
                    

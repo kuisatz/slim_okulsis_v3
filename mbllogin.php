@@ -5321,4 +5321,80 @@ $app->get("/OgrenciSinaviSonuclariKaydet_mbllogin/", function () use ($app ) {
 ); 
 
 
+/**
+ * Okan CIRAN
+ * @since 25-10-2017 
+ */
+$app->get("/OgrencininSinavlistesi_mbllogin/", function () use ($app ) {
+    $stripper = $app->getServiceManager()->get('filterChainerCustom');
+    $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();        
+    $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $headerParams = $app->request()->headers(); 
+      
+    $vCid = NULL;   
+    if (isset($_GET['cid'])) {
+        $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['cid']));
+    }  
+    $vOkulID = NULL;     
+    if (isset($_GET['okulID'])) {
+        $stripper->offsetSet('okulID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['okulID']));
+    } 
+    $vKisiID = NULL;     
+    if (isset($_GET['kisiID'])) {
+        $stripper->offsetSet('kisiID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['kisiID']));
+    } 
+    
+    $vDid = NULL;   
+    if (isset($_GET['did'])) {
+        $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['did']));
+    }
+    $stripper->strip();
+    if ($stripper->offsetExists('did')) {
+        $vDid = $stripper->offsetGet('did')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('cid')) {
+        $vCid = $stripper->offsetGet('cid')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('okulID')) {
+        $vOkulID = $stripper->offsetGet('okulID')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('kisiID')) {
+        $vKisiID = $stripper->offsetGet('kisiID')->getFilterValue();
+    } 
+     
+    
+    $resDataMenu = $BLL->OgrencininSinavlistesi(array(  
+                                            'Cid' => $vCid,   
+                                            'OkulID' => $vOkulID,  
+                                            'KisiID' => $vKisiID,
+                                            'Did' => $vDid,
+                                           ) ); 
+    $menus = array();
+    foreach ($resDataMenu as $menu){
+        $menus[]  = array(  
+            "SinavID" =>  ($menu["SinavID"]),  
+            "OkulID" => ($menu["OkulID"]),  
+            "OkulOgretmenID" =>  ($menu["OkulOgretmenID"]),  
+            "SinavTurID" =>  ($menu["SinavTurID"]),  
+            "sinavTurTanim" => html_entity_decode($menu["sinavTurTanim"]),  
+            "SeviyeID" =>  ($menu["SeviyeID"]),  
+            "SinavKodu" => html_entity_decode($menu["SinavKodu"]),  
+            "SinavAciklamasi" => html_entity_decode($menu["SinavAciklamasi"]),  
+            "SinavTarihi" =>  ($menu["SinavTarihi"]),  
+            "SinavBitisTarihi" =>  ($menu["SinavBitisTarihi"]),  
+            "SinavSuresi" =>  ($menu["SinavSuresi"]),  
+            "SinavOgrenciID" => html_entity_decode($menu["SinavOgrenciID"]),  
+            "ogretmen" => html_entity_decode($menu["ogretmen"]), 
+        );
+    }
+    
+    $app->response()->header("Content-Type", "application/json"); 
+    $app->response()->body(json_encode($menus));
+  
+}); 
+
 $app->run();
