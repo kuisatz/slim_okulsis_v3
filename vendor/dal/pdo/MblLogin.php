@@ -8866,7 +8866,7 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "    
                     SET NOCOUNT ON;  
 
-                    declare @SinavDersID1 UNIQUEIDENTIFIER; 
+                    declare @SinavDersID1 UNIQUEIDENTIFIER ,@SinavOgrenciID UNIQUEIDENTIFIER; 
                     set @SinavDersID1 = '".$SinavDersID."';  
                     set @SinavOgrenciID = '".$SinavOgrenciID."'; 
 
@@ -8891,7 +8891,7 @@ class MblLogin extends \DAL\DalSlim {
                     LEFT JOIN ".$dbnamex."SNV_SinavOgrenciSoruCevaplari SOSC ON SOSC.SinavSoruID = SS.SinavSoruID 
                     LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID  
                     WHERE 
-                            SS.SinavDersID = @SinavDersID1
+                            SS.SinavDersID = @SinavDersID1 AND 
                             SO.SinavOgrenciID = @SinavOgrenciID
                     ORDER BY 
                             SK.BolumKategoriID, 
