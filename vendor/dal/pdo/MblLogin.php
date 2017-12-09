@@ -1672,7 +1672,7 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);
          //    print_r( '22'); 
          //     echo debugPDO($sql, $params); 
-            $result = $statement->execute();
+      //      $result = $statement->execute();
              $insertID =1;
             $errorInfo = $statement->errorInfo(); 
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -1690,7 +1690,7 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);
           // echo debugPDO($sql, $params);
        //     print_r( '33'); 
-            $result = $statement->execute();
+     //       $result = $statement->execute();
              $insertID =1;
             $errorInfo = $statement->errorInfo(); 
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -1706,7 +1706,7 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);
             // echo debugPDO($sql, $params);
        //      print_r( '44'); 
-            $result = $statement->execute();
+     //       $result = $statement->execute();
              $insertID =1;
             $errorInfo = $statement->errorInfo(); 
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -1723,7 +1723,7 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);
            // echo debugPDO($sql, $params);
             $result = $statement->execute();
-            $insertID =1;
+      //      $insertID =1;
             $errorInfo = $statement->errorInfo(); 
           
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -3532,7 +3532,7 @@ class MblLogin extends \DAL\DalSlim {
                 ";
             $statement = $pdo->prepare($sql); 
          // echo debugPDO($sql, $params);
-            $result = $statement->execute();
+        //    $result = $statement->execute();
             $insertID =1;
             $errorInfo = $statement->errorInfo(); 
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -9410,7 +9410,7 @@ class MblLogin extends \DAL\DalSlim {
             
             $statement = $pdo->prepare($sql); 
      //  echo debugPDO($sql, $params);
-          $result = $statement->execute(); 
+     //     $result = $statement->execute(); 
             $errorInfo = $statement->errorInfo();
              
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -9484,7 +9484,7 @@ class MblLogin extends \DAL\DalSlim {
                 "; 
             $statement = $pdo->prepare($sql); 
        //    $result = $statement->execute();
-             $insertID =1;
+            $insertID =1;
             $errorInfo = $statement->errorInfo(); 
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]); 
