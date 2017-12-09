@@ -367,14 +367,16 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Did']) && $params['Did'] != "")) {
                 $did = $params['Did'];
             } 
-            $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
+            $dbConfigValue = 'pgConnectFactoryMobil';
+         /*   $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
                 $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass'];
-            }   
+            }  
+          * 
+          */ 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
-            
+            /*
             $mebKoduValue = NULL;
             $dbnameValue = NULL;
             $mebKodu = $this->gnlKullaniciMebKoduFindByTcKimlikNo(array('tc' => $params['tc']));
@@ -382,7 +384,8 @@ class MblLogin extends \DAL\DalSlim {
                     $mebKoduValue = $mebKodu['resultSet'][0]['MEBKodu'];
                     $dbnameValue = $mebKodu['resultSet'][0]['name'].'.';
             }  
-                    
+            */
+            
             if ((isset($params['sifre']) && $params['sifre'] != "")) {            
                 $wsdlValue = NULL; 
                 $wsdl =  MobilSettings::mobilwsdlEncryptPassword(array('PswrD' => $params['sifre']));  
@@ -1288,7 +1291,7 @@ class MblLogin extends \DAL\DalSlim {
                 null as DersSirasi , 
                 null as DersAdi , 
                 null as DersKodu ,
-                COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS Aciklama,
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama,
                 null as DersID ,
                 -1 as HaftaGunu  
             FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
@@ -1303,9 +1306,9 @@ class MblLogin extends \DAL\DalSlim {
                 sss.BaslangicSaati , 
                 sss.BitisSaati ,
                 sss.DersSirasi , 
-                sss.DersAdi , 
+                sss.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS, 
                 sss.DersKodu ,
-                sss.Aciklama,
+                sss.Aciklama collate SQL_Latin1_General_CP1254_CI_AS,
                 sss.DersID ,
                 sss.HaftaGunu 
             FROM #ogretmenDersSaatleri sss;
@@ -1420,7 +1423,7 @@ class MblLogin extends \DAL\DalSlim {
                     tt.OgrenciID,
                     tt.Tarih,
                     tt.Numarasi  ,   
-                    UPPER(concat(tt.Adi , ' ', tt.Soyadi)) AS adsoyad ,
+                    UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) AS adsoyad ,
                     tt.CinsiyetID ,
                     tt.DevamsizlikKodID,
                     tt.Aciklama,
@@ -1894,7 +1897,7 @@ class MblLogin extends \DAL\DalSlim {
                     KISI.[CinsiyetID],
                     KISI.[Adi],
                     KISI.[Soyadi],
-                    KISI.[Adi] + ' ' + KISI.[Soyadi] AS Adi_Soyadi,
+                    KISI.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + KISI.[Soyadi]  collate SQL_Latin1_General_CP1254_CI_AS AS Adi_Soyadi,
                     KISI.[TCKimlikNo],
                     KISI.[ePosta], 
                     DY.OkulID,
@@ -3793,7 +3796,7 @@ class MblLogin extends \DAL\DalSlim {
 			M.KisiID AS SenderID,
 			K.Adi AS SenderAdi,
 			K.Soyadi AS SenderSoyadi,
-			(K.Adi + ' ' + K.Soyadi) AS SenderAdiSoyadi,
+			(K.Adi collate SQL_Latin1_General_CP1254_CI_AS + ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) AS SenderAdiSoyadi,
 			(CASE WHEN (SELECT COUNT(1) FROM ".$dbnamex."MSJ_MesajEklentileri WHERE MesajID = M.MesajID)>0 THEN 1 ELSE 0 END) AS AttachmentFile,
 			ROW_NUMBER() OVER(ORDER BY Tarih DESC) AS RowNum 
 		FROM ".$dbnamex."MSJ_Mesajlar M 
@@ -3993,7 +3996,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-    echo debugPDO($sql, $params);
+    //echo debugPDO($sql, $params);
             $statement->execute();
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
@@ -4236,13 +4239,13 @@ class MblLogin extends \DAL\DalSlim {
                         HaftaGunu smallint,
                         DersSirasi smallint,
                         SinifDersID [uniqueidentifier],
-                        DersAdi varchar(100), 
-                        DersKodu varchar(100), 
-                        SinifKodu varchar(100),
+                        DersAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS, 
+                        DersKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
+                        SinifKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                         SubeGrupID int,
                         BaslangicSaati datetime,
                         BitisSaati datetime,
-                        DersBaslangicBitisSaati  varchar(20),
+                        DersBaslangicBitisSaati  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
                         SinifOgretmenID [uniqueidentifier],
                         DersHavuzuID [uniqueidentifier],
                         SinifID [uniqueidentifier],
@@ -4358,13 +4361,13 @@ class MblLogin extends \DAL\DalSlim {
                         BitisSaati datetime,
                         DersSaati varchar(20),
                         DersSirasi smallint,
-                        Gun1_SinifDersID  varchar(50),
-                        Gun2_SinifDersID  varchar(50),
-                        Gun3_SinifDersID  varchar(50),
-                        Gun4_SinifDersID  varchar(50),
-                        Gun5_SinifDersID  varchar(50),
-                        Gun6_SinifDersID  varchar(50),
-                        Gun7_SinifDersID  varchar(50) 
+                        Gun1_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun2_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun3_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun4_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun5_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun6_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun7_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS 
                     ) ;
                     
             Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
@@ -4384,13 +4387,13 @@ class MblLogin extends \DAL\DalSlim {
                 cast(cast(BitisSaati as time) as varchar(5)) as BitisSaati,
                 DersSaati ,
                 DersSirasi,
-                isnull(sdz1.DersAdi,'') as Gun1_ders, 
-                isnull(sdz2.DersAdi,'') as Gun2_ders, 
-                isnull(sdz3.DersAdi,'') as Gun3_ders, 
-                isnull(sdz4.DersAdi,'') as Gun4_ders, 
-                isnull(sdz5.DersAdi,'') as Gun5_ders, 
-                isnull(sdz6.DersAdi,'') as Gun6_ders, 
-                isnull(sdz7.DersAdi,'') as Gun7_ders 
+                isnull(sdz1.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun1_ders, 
+                isnull(sdz2.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun2_ders, 
+                isnull(sdz3.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun3_ders, 
+                isnull(sdz4.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun4_ders, 
+                isnull(sdz5.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun5_ders, 
+                isnull(sdz6.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun6_ders, 
+                isnull(sdz7.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun7_ders 
             FROM #okiogrencidersprogramilistesi   a
             LEFT JOIN #dersller sdz1 on sdz1.SinifDersID = a.Gun1_SinifDersID 
             LEFT JOIN #dersller sdz2 on sdz2.SinifDersID = a.Gun2_SinifDersID 
@@ -4469,7 +4472,7 @@ class MblLogin extends \DAL\DalSlim {
             SELECT 
                 SN.SinifID,
                 SN.SinifKodu,
-                SN.SinifAdi ,
+                SN.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,
                 SeviyeID 
             FROM ".$dbnamex."GNL_Siniflar SN 
             WHERE SN.DersYiliID =  '".$DersYiliID."' AND 
@@ -4544,13 +4547,13 @@ class MblLogin extends \DAL\DalSlim {
                         BitisSaati datetime,
                         DersSaati varchar(20),
                         DersSirasi smallint,
-                        Gun1_SinifDersID  varchar(20),
-                        Gun2_SinifDersID  varchar(20),
-                        Gun3_SinifDersID  varchar(20),
-                        Gun4_SinifDersID  varchar(20),
-                        Gun5_SinifDersID  varchar(20),
-                        Gun6_SinifDersID  varchar(20),
-                        Gun7_SinifDersID  varchar(20) 
+                        Gun1_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun2_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun3_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun4_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun5_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun6_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Gun7_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS 
                     ) ;
                     
             Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
@@ -4569,13 +4572,13 @@ class MblLogin extends \DAL\DalSlim {
                 BitisSaati ,
                 DersSaati ,
                 DersSirasi,
-                isnull(sdz1.DersAdi,'') as Gun1_ders, 
-                isnull(sdz2.DersAdi,'') as Gun2_ders, 
-                isnull(sdz3.DersAdi,'') as Gun3_ders, 
-                isnull(sdz4.DersAdi,'') as Gun4_ders, 
-                isnull(sdz5.DersAdi,'') as Gun5_ders, 
-                isnull(sdz6.DersAdi,'') as Gun6_ders, 
-                isnull(sdz7.DersAdi,'') as Gun7_ders 
+                isnull(sdz1.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun1_ders, 
+                isnull(sdz2.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun2_ders, 
+                isnull(sdz3.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun3_ders, 
+                isnull(sdz4.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun4_ders, 
+                isnull(sdz5.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun5_ders, 
+                isnull(sdz6.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun6_ders, 
+                isnull(sdz7.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun7_ders 
             FROM #okikpdersprogramilistesi a
             LEFT JOIN #dersller sdz1 on sdz1.SinifDersID = a.Gun1_SinifDersID 
             LEFT JOIN #dersller sdz2 on sdz2.SinifDersID = a.Gun2_SinifDersID 
@@ -4651,12 +4654,12 @@ class MblLogin extends \DAL\DalSlim {
 					SinifID uniqueidentifier,  
 					DersYiliID uniqueidentifier,  
 					SeviyeID int,  
-					SinifKodu varchar(20),  
-					SinifAdi varchar(20),  
+					SinifKodu varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,  
+					SinifAdi varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,  
 					SinifMevcudu int ,
 					Sanal bit,  
 					SubeGrupID int ,  
- 					SeviyeAdi  varchar(20),  
+ 					SeviyeAdi  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,  
 					HaftalikDersSaati int  
 					) ;
 
@@ -4740,12 +4743,12 @@ class MblLogin extends \DAL\DalSlim {
 					SinifID uniqueidentifier,  
 					DersYiliID uniqueidentifier,  
 					SeviyeID int,  
-					SinifKodu varchar(20),  
-					SinifAdi varchar(20),  
+					SinifKodu varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,  
+					SinifAdi varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,  
 					SinifMevcudu int ,
 					Sanal bit,  
 					SubeGrupID int ,  
- 					SeviyeAdi  varchar(20),  
+ 					SeviyeAdi  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,  
 					HaftalikDersSaati int  
 					) ;
 
@@ -4834,13 +4837,13 @@ class MblLogin extends \DAL\DalSlim {
                     (   
                         KisiID uniqueidentifier,
                         CinsiyetID int,
-                        Adi varchar(50),
-                        Soyadi varchar(50),
-                        AdiSoyadi varchar(80), 
+                        Adi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        Soyadi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
+                        AdiSoyadi varchar(80) collate SQL_Latin1_General_CP1254_CI_AS, 
                         TCKimlikNo bigint,
-                        ePosta varchar(50),
+                        ePosta varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
                         Yasamiyor bit,
-                        EPostaSifresi varchar(50),
+                        EPostaSifresi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
                     ) ;
 
             INSERT #okignlProfil EXEC  ".$dbnamex."PRC_GNL_Kisi_Get @KisiID = '".$KisiID."'; 
@@ -4945,7 +4948,7 @@ class MblLogin extends \DAL\DalSlim {
 		SorumlulukSinavSayisi [tinyint],
 		DevamsizlikSabahOgleAyri  [bit] ,
 		YilSonuPuanYuvarlansin [bit],
-                EgitimYili [varchar](50),
+                EgitimYili [varchar](50) collate SQL_Latin1_General_CP1254_CI_AS,
 		OkulDurumPuani [decimal](18, 4),
 		YilSonuNotYuvarlansin  [bit],
 		YilSonuPuanSinavSonraYuvarlansin  [bit],
@@ -4995,12 +4998,12 @@ class MblLogin extends \DAL\DalSlim {
 		DRS.DersID,
 		(CASE WHEN ISNULL(DS.BaslangicSaati,'')<>'' AND ISNULL(DS.BitisSaati,'')<>'' THEN
 				CAST(DS.DersSirasi AS NVARCHAR(2)) + '. ' + 
-				DRS.DersAdi + ' (' + 
+				DRS.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS+ ' (' + 
 				CONVERT(VARCHAR(5),DS.BaslangicSaati,108) + '-' + CONVERT(VARCHAR(5),DS.BitisSaati,108) + ')'
 			 ELSE
-				CAST(DP.DersSirasi AS NVARCHAR(2)) + '. ' + DRS.DersAdi
+				CAST(DP.DersSirasi AS NVARCHAR(2)) + '. ' + DRS.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS
 			 END) AS Aciklama1 ,
-                concat(SNF.SinifKodu,' - ', DRS.DersAdi ) as Aciklama,   
+                concat(SNF.SinifKodu collate SQL_Latin1_General_CP1254_CI_AS,' - ', DRS.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS) as Aciklama,   
                 #tmp.DersYiliID,
                 #tmp.DonemID,
                 #tmp.EgitimYilID
@@ -5086,17 +5089,17 @@ class MblLogin extends \DAL\DalSlim {
                     OdenecekTutarKDVHaric  float,
                     OdenecekKDV float,
                     OdenecekTutarKDVDahil float,
-                    Cinsiyet  varchar(10),
+                    Cinsiyet  varchar(10) collate SQL_Latin1_General_CP1254_CI_AS,
                     DogumTarihi date,
-                    YakinTuru varchar(20) ,
-                    BorcluBanka varchar(20), 
-                    OgrenciEvTelefonu varchar(20),
-                    OgrenciCepTelefonu varchar(20) ,
-                    OgrenciEmail varchar(50) ,
+                    YakinTuru varchar(20) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluBanka varchar(20) collate SQL_Latin1_General_CP1254_CI_AS, 
+                    OgrenciEvTelefonu varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                    OgrenciCepTelefonu varchar(20) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    OgrenciEmail varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
                     BorcluSozlesmeID  UNIQUEIDENTIFIER,
                     TaahhutnameNo  int,
                     IslemNumarasi bigint,
-                    OdemeSekliAciklama varchar(50),
+                    OdemeSekliAciklama varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
                     TaahhutnameTarihi  datetime,
                     ToplamTutar  float ,
                     Pesinat float,
@@ -5125,39 +5128,39 @@ class MblLogin extends \DAL\DalSlim {
                     OdemeSekliID int,
                     OgrenciYakinID   UNIQUEIDENTIFIER,
                     OkulID  UNIQUEIDENTIFIER,
-                    SozlesmelerAciklama varchar(100) ,
+                    SozlesmelerAciklama varchar(100) collate SQL_Latin1_General_CP1254_CI_AS ,
                     Numarasi bigint,
-                    OgrenciAdi varchar(50) ,
-                    OgrenciSoyadi varchar(50)  , 
+                    OgrenciAdi varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    OgrenciSoyadi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS  , 
                     OgrenciTcKimlikNo  bigint,
-                    SinifKodu varchar(10) ,
-                    OkulAdi varchar(50) ,
-                    BorcluTcKimlikNo varchar(11) ,
-                    BorcluAdi varchar(50) ,
-                    BorcluSoyadi varchar(50) ,
-                    BorcluEmail varchar(50)  ,
-                    BorcluAdresi varchar(50) ,
-                    BorcluCepTelefonu varchar(15) ,
-                    BorcluEvTelefonu varchar(15) ,
-                    BorcluIsTelefonu varchar(15) ,
-                    BorcluFax varchar(15) ,
+                    SinifKodu varchar(10) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    OkulAdi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluTcKimlikNo varchar(11) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluAdi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluSoyadi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluEmail varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluAdresi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluCepTelefonu varchar(15) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BorcluEvTelefonu varchar(15)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    BorcluIsTelefonu varchar(15)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    BorcluFax varchar(15)  collate SQL_Latin1_General_CP1254_CI_AS,
                     TaksitSayisi int,
                     FaizOrani decimal(18,2),
                     Aktif bit,
-                    IndirimTipi varchar(50) ,
-                    IndirimTipleri varchar(50) ,
-                    VeliAdi varchar(50) ,
-                    VeliSoyadi varchar(50) ,
+                    IndirimTipi varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    IndirimTipleri varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    VeliAdi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    VeliSoyadi varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
                     BorcTurID  UNIQUEIDENTIFIER,
-                    BorcTuru_Aciklama varchar(50) ,
-                    OdemePlani_Aciklama varchar(50) ,
-                    OdemePlaniAciklama varchar(50) ,
-                    Indirimler varchar(50) ,
-                    OdemeSekli varchar(50) ,
-                    BankaHesapNo varchar(50) ,
+                    BorcTuru_Aciklama varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    OdemePlani_Aciklama varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    OdemePlaniAciklama varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    Indirimler varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    OdemeSekli varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                    BankaHesapNo varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
                     PesinatFaturaDetayID  UNIQUEIDENTIFIER,
-                    VergiDairesi varchar(50) ,
-                    VergiNo varchar(50) 
+                    VergiDairesi varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    VergiNo varchar(50)  collate SQL_Latin1_General_CP1254_CI_AS
                     ) ;
 
             INSERT #okiborclusozlesmeleri exec ".$dbnamex."PRC_MUH_BorcluSozlesmeleri_GetByDinamikIndirim
@@ -5738,24 +5741,24 @@ class MblLogin extends \DAL\DalSlim {
 
             CREATE TABLE #okiborcluodemeplani
                     (    
-                        BorcluOdemePlaniID  UNIQUEIDENTIFIER,
-                        BorcluSozlesmeID  UNIQUEIDENTIFIER,
-                        OdemeTarihi  datetime,
-                        TaksitNo  int ,
-                        TaksitTutari  float,
-                        Odendi  bit,
-                        OdemeAciklamasi  varchar(20)  ,
+                        BorcluOdemePlaniID UNIQUEIDENTIFIER,
+                        BorcluSozlesmeID UNIQUEIDENTIFIER,
+                        OdemeTarihi datetime,
+                        TaksitNo int ,
+                        TaksitTutari float,
+                        Odendi bit,
+                        OdemeAciklamasi varchar(20) collate SQL_Latin1_General_CP1254_CI_AS  ,
                         Iptal bit ,
                         FaturaDetayID UNIQUEIDENTIFIER,
                         OdenenTutar float,
-                        FaturaTarihi  datetime ,
-                        FaturaSeri  varchar(20) ,
-                        FaturaNo  int,
-                        TaksitTutariYedek  float,
-                        KDVOrani  decimal (18,2),
-                        Aciklama  varchar(50) ,
-                        OdemeSekli  varchar(20) ,
-                        Odeme_Aciklamasi  varchar(20)  
+                        FaturaTarihi datetime ,
+                        FaturaSeri varchar(20) collate SQL_Latin1_General_CP1254_CI_AS ,
+                        FaturaNo int,
+                        TaksitTutariYedek float,
+                        KDVOrani decimal (18,2),
+                        Aciklama varchar(50) collate SQL_Latin1_General_CP1254_CI_AS ,
+                        OdemeSekli varchar(20)  collate SQL_Latin1_General_CP1254_CI_AS,
+                        Odeme_Aciklamasi varchar(20)  collate SQL_Latin1_General_CP1254_CI_AS 
                     ) ;
 
             INSERT #okiborcluodemeplani exec PRC_MUH_BorcluOdemePlani_Find_ByBorcluSozlesmeID
@@ -5855,7 +5858,7 @@ class MblLogin extends \DAL\DalSlim {
                         SinavaGirecegiOkulID UNIQUEIDENTIFIER,
                         OgrenciNumarasi bigint, 
                         MekanYeriSiraNo int,
-                        SinifKodu varchar(20) , 
+                        SinifKodu varchar(20) collate SQL_Latin1_General_CP1254_CI_AS , 
                         Girmedi bit, 
                         OgrenciSeviyeID  UNIQUEIDENTIFIER					 
                     ) ;
@@ -5955,7 +5958,7 @@ class MblLogin extends \DAL\DalSlim {
 		Tarih,	 
 		Adi, 
 		Soyadi, 
-                CONCAT(adi,' ',soyadi) AS adsoyad,	
+                CONCAT(adi collate SQL_Latin1_General_CP1254_CI_AS,' ',soyadi collate SQL_Latin1_General_CP1254_CI_AS) AS adsoyad,	
 		OOB.Numarasi, 
 		SinifKodu, 
 		OgrenciDevamsizlikID,  
@@ -6137,7 +6140,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 CREATE TABLE #DersProgrami(DersSirasi smallint,
                                             HaftaGunu smallint,
-                                            SinifDersID nvarchar(4000));
+                                            SinifDersID nvarchar(4000) collate SQL_Latin1_General_CP1254_CI_AS);
                 Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
                     into #dersller 
                 FROM ".$dbnamex."GNL_SinifDersleri sd1    
@@ -6214,47 +6217,47 @@ class MblLogin extends \DAL\DalSlim {
                 ORDER BY DS.DersSirasi; 
 
                 SELECT  
-                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') ,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi,				  
-                    concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , '' as ogrenci , 
+                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi  collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') ,ISNULL(ssdddsdsd.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as DersAdi,				  
+                    concat(kkk.Adi  collate SQL_Latin1_General_CP1254_CI_AS,'',kkk.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen , '' as ogrenci , 
                     'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4 ,'Ders' as Alan5 
                 FROM ( 
-                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID,zzz1.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID,zzz1.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID 
                     LEFT JOIN #dersller zzz1 on zzz1.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID,zzz2.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID,zzz2.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 	 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd2 on ddd2.[SinifDersID] = rrr.Gun2_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID  
                     LEFT JOIN #dersller zzz2 on zzz2.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati,  ISNULL(g3.SinifAdi,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID,zzz3.DersAdi
+                    SELECT rrr.DersSaati,  ISNULL(g3.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID,zzz3.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr  
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd3 on ddd3.[SinifDersID] = rrr.Gun3_SinifDersID  
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g3 on g3.SinifID = ddd3.SinifID  
                     LEFT JOIN #dersller zzz3 on zzz3.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID,zzz4.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID,zzz4.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd4 on ddd4.[SinifDersID] = rrr.Gun4_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID  
                     LEFT JOIN #dersller zzz4 on zzz4.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID,zzz5.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID,zzz5.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd5 on ddd5.[SinifDersID] = rrr.Gun5_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID  
                     LEFT JOIN #dersller zzz5 on zzz5.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID,zzz6.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID,zzz6.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd6 on ddd6.[SinifDersID] = rrr.Gun6_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID 
                     LEFT JOIN #dersller zzz6 on zzz6.SinifDersID =  rrr.Gun1_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati , ISNULL(g7.SinifAdi,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID,zzz7.DersAdi
+                    SELECT rrr.DersSaati , ISNULL(g7.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID,zzz7.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd7 on ddd7.[SinifDersID] = rrr.Gun7_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID 
@@ -6341,7 +6344,7 @@ class MblLogin extends \DAL\DalSlim {
                 IF OBJECT_ID('tempdb..#DersProgrami') IS NOT NULL DROP TABLE #DersProgrami;   
                 IF OBJECT_ID('tempdb..#xxx') IS NOT NULL DROP TABLE #xxx;  
                 IF OBJECT_ID('tempdb..#dersller') IS NOT NULL DROP TABLE #dersller; 
-                Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi
+                Select distinct sd1.SinifDersID, sd1.DersHavuzuID, sd1.SinifID, dd.DersID,dd.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS
                     into #dersller 
                 FROM ".$dbnamex."GNL_SinifDersleri sd1    
                 LEFT JOIN ".$dbnamex."GNL_Siniflar s1 on s1.SinifID = sd1.SinifID
@@ -6350,7 +6353,7 @@ class MblLogin extends \DAL\DalSlim {
  
                 CREATE TABLE #DersProgrami(DersSirasi smallint,
                                             HaftaGunu smallint,
-                                            SinifDersID nvarchar(4000));  
+                                            SinifDersID nvarchar(4000)  collate SQL_Latin1_General_CP1254_CI_AS);  
   
                 SELECT top 1 
                     @DersYiliID = DY.DersYiliID ,
@@ -6434,48 +6437,48 @@ class MblLogin extends \DAL\DalSlim {
                 ORDER BY DS.DersSirasi
 
                 SELECT  
-                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') ,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi,				  
+                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') ,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi collate SQL_Latin1_General_CP1254_CI_AS,				  
                     concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , '' as ogrenci , 
                     'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4 ,'Ders' as Alan5 
 
                 FROM ( 
-                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID,zzz1.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID,zzz1.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID  
                     LEFT JOIN #dersller zzz1 on zzz1.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID,zzz2.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID,zzz2.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 	 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd2 on ddd2.[SinifDersID] = rrr.Gun2_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID  
                     LEFT JOIN #dersller zzz2 on zzz2.SinifDersID =  rrr.Gun2_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g3.SinifAdi,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID,zzz3.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g3.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID,zzz3.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr  
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd3 on ddd3.[SinifDersID] = rrr.Gun3_SinifDersID  
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g3 on g3.SinifID = ddd3.SinifID  
                     LEFT JOIN #dersller zzz3 on zzz3.SinifDersID =  rrr.Gun3_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID,zzz4.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID,zzz4.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd4 on ddd4.[SinifDersID] = rrr.Gun4_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID 
                     LEFT JOIN #dersller zzz4 on zzz4.SinifDersID =  rrr.Gun4_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID,zzz5.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID,zzz5.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd5 on ddd5.[SinifDersID] = rrr.Gun5_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID 
                     LEFT JOIN #dersller zzz5 on zzz5.SinifDersID =  rrr.Gun5_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID,zzz6.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID,zzz6.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd6 on ddd6.[SinifDersID] = rrr.Gun6_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID 
                     LEFT JOIN #dersller zzz6 on zzz6.SinifDersID =  rrr.Gun6_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g7.SinifAdi,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID,zzz7.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g7.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID,zzz7.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #xxx rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd7 on ddd7.[SinifDersID] = rrr.Gun7_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID 
@@ -6674,47 +6677,47 @@ class MblLogin extends \DAL\DalSlim {
 
 	  
                 SELECT
-                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') as SinifDersID,ISNULL(ssdddsdsd.DersAdi,'') as DersAdi,				  
+                    ssdddsdsd.DersSaati, ISNULL(ssdddsdsd.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 1 as dayy, ISNULL(ssdddsdsd.SinifDersID,'') as SinifDersID,ISNULL(ssdddsdsd.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as DersAdi,				  
                     concat(kkk.Adi ,'',kkk.Soyadi) as ogretmen , concat(k.Adi ,' ',k.Soyadi) as ogrenci ,
                    'Ders Saati' as Alan1,'Sınıf' as Alan2,'Öğretmen' as Alan3,'Öğrenci' as Alan4,'Ders' as Alan5  
                 FROM ( 
-                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz1.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g1.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 1 as dayy, rrr.Gun1_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz1.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd1 on ddd1.[SinifDersID] = rrr.Gun1_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g1 on g1.SinifID = ddd1.SinifID
                     LEFT JOIN #dersller zzz1 on zzz1.SinifDersID =  rrr.Gun1_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz2.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g2.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 2 as dayy, rrr.Gun2_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz2.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr 	 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd2 on ddd2.[SinifDersID] = rrr.Gun2_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g2 on g2.SinifID = ddd2.SinifID 
                     LEFT JOIN #dersller zzz2 on zzz2.SinifDersID =  rrr.Gun2_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g3.SinifAdi,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz3.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g3.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 3 as dayy, rrr.Gun3_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz3.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr  
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd3 on ddd3.[SinifDersID] = rrr.Gun3_SinifDersID  
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g3 on g3.SinifID = ddd3.SinifID  
                     LEFT JOIN #dersller zzz3 on zzz3.SinifDersID =  rrr.Gun3_SinifDersID
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi,zzz4.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g4.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi , 4 as dayy, rrr.Gun4_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi,zzz4.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd4 on ddd4.[SinifDersID] = rrr.Gun4_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g4 on g4.SinifID = ddd4.SinifID 
                     LEFT JOIN #dersller zzz4 on zzz4.SinifDersID =  rrr.Gun4_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz5.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g5.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 5 as dayy, rrr.Gun5_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz5.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd5 on ddd5.[SinifDersID] = rrr.Gun5_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g5 on g5.SinifID = ddd5.SinifID 
                     LEFT JOIN #dersller zzz5 on zzz5.SinifDersID =  rrr.Gun5_SinifDersID 
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz6.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g6.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'')  as SinifAdi, 6 as dayy, rrr.Gun6_SinifDersID as SinifDersID, OgrenciseviyeID, DersSirasi,zzz6.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd6 on ddd6.[SinifDersID] = rrr.Gun6_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g6 on g6.SinifID = ddd6.SinifID
                     LEFT JOIN #dersller zzz6 on zzz6.SinifDersID =  rrr.Gun6_SinifDersID  
                 union 
-                    SELECT rrr.DersSaati, ISNULL(g7.SinifAdi,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi,zzz7.DersAdi
+                    SELECT rrr.DersSaati, ISNULL(g7.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as SinifAdi  , 7 as dayy, rrr.Gun7_SinifDersID  as SinifDersID, OgrenciseviyeID, DersSirasi,zzz7.DersAdi collate SQL_Latin1_General_CP1254_CI_AS
                     FROM #DersProgramiSonuc rrr 
                     LEFT JOIN ".$dbnamex."[GNL_SinifDersleri] ddd7 on ddd7.[SinifDersID] = rrr.Gun7_SinifDersID
                     LEFT JOIN ".$dbnamex."[GNL_Siniflar] g7 on g7.SinifID = ddd7.SinifID
@@ -7109,7 +7112,7 @@ class MblLogin extends \DAL\DalSlim {
                    @SinifDersID1 UNIQUEIDENTIFIER,
                    @OgretmenID1 UNIQUEIDENTIFIER,
                    @Tarih1 SMALLDATETIME,
-                   @Tanim1 NVARCHAR(100),
+                   @Tanim1 NVARCHAR(100) ='' collate SQL_Latin1_General_CP1254_CI_AS,
                    @Aciklama1 NVARCHAR(max),
                    @TeslimTarihi1 SMALLDATETIME,
                    @OdevTipID1 TINYINT,
@@ -7580,7 +7583,7 @@ class MblLogin extends \DAL\DalSlim {
                 1 AS kontrol 
             UNION  
             SELECT DISTINCT    
-                UPPER(oo.OkulAdi) AS aciklama, 	
+                UPPER(oo.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 	
                 OKL.OkulID AS ID, 
                 dy.DersYiliID,
                 1 AS kontrol
@@ -7679,7 +7682,7 @@ class MblLogin extends \DAL\DalSlim {
                 SELECT
                     SN.SinifID as ID, 
                     SN.SinifKodu, 
-                    SN.SinifAdi as aciklama,
+                    SN.SinifAdi collate SQL_Latin1_General_CP1254_CI_AS as aciklama,
                     SN.SeviyeID,
                     1 as kontrol
                 FROM ".$dbnamex."GNL_Siniflar SN 
@@ -7748,12 +7751,12 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['SendrolID']) && $params['SendrolID'] != "")) {
                 $SendrolID = $params['SendrolID']; 
                 IF ($SendrolID == 8){
-                    $addSQL ='SELECT distinct OgrenciID as ID, ogrenciadsoyad  AS aciklama , 0 AS kontrol from ( ';
+                    $addSQL ='SELECT distinct OgrenciID as ID, ogrenciadsoyad  collate SQL_Latin1_General_CP1254_CI_AS AS aciklama , 0 AS kontrol from ( ';
                     $orderSQL =' ORDER BY ogrenciadsoyad'; 
                  } ;
                  IF ($SendrolID == 9) 
                  {
-                    $addSQL ='SELECT distinct YakinID as ID, veliadsoyad AS aciklama , 0 AS kontrol from ( ';
+                    $addSQL ='SELECT distinct YakinID as ID, veliadsoyad  collate SQL_Latin1_General_CP1254_CI_AS AS aciklama , 0 AS kontrol from ( ';
                     $orderSQL =' ORDER BY veliadsoyad'; 
                  } ;
             } 
@@ -7782,9 +7785,9 @@ class MblLogin extends \DAL\DalSlim {
             ".$addSQL."
             SELECT   
                 OKL.KisiID AS OgrenciID, 
-                UPPER(CONCAT(ki.Adi,' ',ki.Soyadi)) AS ogrenciadsoyad ,
+                UPPER(CONCAT(ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) AS ogrenciadsoyad ,
                 VELI.YakinID ,
-                UPPER(CONCAT(k.Adi,' ',k.Soyadi)) AS veliadsoyad ,
+                UPPER(CONCAT(k.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',k.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) AS veliadsoyad ,
                 0 as kontrol                
             FROM  ".$dbnamex."GNL_OkulKullanicilari OKL  
             INNER JOIN ".$dbnamex."GNL_OkulKullaniciRolleri OKR ON OKR.OkulKullaniciID = OKL.OkulKullaniciID 
@@ -7868,7 +7871,7 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "   
             SET NOCOUNT ON;  
             SELECT DISTINCT    
-                '[ ' + dd.DersAdi + ' ]  ' + K.Adi + ' ' + K.Soyadi AS aciklama, 
+                '[ ' + dd.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ]  ' + K.Adi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS AS aciklama, 
                  so.OgretmenID as ID, 
                  dd.DersAdi,
                  0 as kontrol    
@@ -7883,7 +7886,7 @@ class MblLogin extends \DAL\DalSlim {
             LEFT JOIN ".$dbnamex."GNL_Kisiler KV ON KV.KisiID = VELI.YakinID   
             ".$addWhereSQL."
             ORDER BY 
-                '[ ' + dd.DersAdi + ' ]  ' + K.Adi + ' ' + K.Soyadi;   
+                '[ ' + dd.DersAdi collate SQL_Latin1_General_CP1254_CI_AS + ' ]  ' + K.Adi collate SQL_Latin1_General_CP1254_CI_AS + ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS;   
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
@@ -7951,7 +7954,7 @@ class MblLogin extends \DAL\DalSlim {
            
             SELECT distinct  
                 OKL.KisiID as ID , 
-                upper(concat (ki.Adi,' ',ki.Soyadi)) as aciklama, 
+                upper(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) as aciklama, 
                 0 as kontrol
             FROM  ".$dbnamex."GNL_OkulKullanicilari OKL  
             INNER JOIN ".$dbnamex."GNL_OkulKullaniciRolleri OKR ON OKR.OkulKullaniciID = OKL.OkulKullaniciID 
@@ -7964,7 +7967,7 @@ class MblLogin extends \DAL\DalSlim {
                 ".$addSQLWhere."
                 OKR.RolID = ".$SendrolID."  
             ORDER BY 
-                upper(concat (ki.Adi,' ',ki.Soyadi) ) ;
+                upper(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) ) ;
  
             SET NOCOUNT OFF;   
                  "; 
@@ -8030,7 +8033,7 @@ class MblLogin extends \DAL\DalSlim {
             UNION
             SELECT  
                 MesajTipID
-                ,Aciklama
+                ,Aciklama collate SQL_Latin1_General_CP1254_CI_AS
             FROM ".$dbnamex."[MSJ_MesajTipleri] 
              ".$addSQLWhere."   
             ORDER BY MesajTipID;
@@ -8354,7 +8357,7 @@ class MblLogin extends \DAL\DalSlim {
                 UNION 
                 SELECT 
                         O.OgretmenID,
-                        K.Adi + ' ' + K.Soyadi AS AdiSoyadi,
+                        K.Adi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS AS AdiSoyadi,
                         B.Brans,
                         COUNT(DISTINCT OT.OdevTanimID) AS OdevSayisi,
                         COUNT(DISTINCT OO.OgrenciOdevID) AS OgrenciSayisi,
@@ -8461,7 +8464,7 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "   
             SET NOCOUNT ON;  
             SELECT DISTINCT    
-                 K.Adi + ' ' + K.Soyadi AS aciklama, 
+                 K.Adi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS AS aciklama, 
                  so.OgretmenID  , 
                  dd.DersAdi,
                  0 as kontrol    
@@ -8554,7 +8557,7 @@ class MblLogin extends \DAL\DalSlim {
             10 as Puan 
             union 
             SELECT  
-                SINAV.SinavAciklamasi ,
+                SINAV.SinavAciklamasi collate SQL_Latin1_General_CP1254_CI_AS ,
                 cast(OP.Puan as numeric(18,2)) as Puan
             FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
             INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
@@ -8643,8 +8646,8 @@ class MblLogin extends \DAL\DalSlim {
             union 
             SELECT
                 oob.Numarasi ,
-                concat(k.Adi ,' ',k.Soyadi) as adsoyad,
-                SINAV.SinavAciklamasi ,
+                concat(k.Adi collate SQL_Latin1_General_CP1254_CI_AS ,' ',k.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as adsoyad,
+                SINAV.SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS,
                 cast(OP.Puan as numeric(10,2)) as Puan
             FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
             INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
@@ -8998,8 +9001,8 @@ class MblLogin extends \DAL\DalSlim {
                     
                 declare 
                 @sinavOkulID AS UNIQUEIDENTIFIER ,
-                @SinifKodu AS NVARCHAR(20) = NULL ,
-                @MyFields AS NVARCHAR(MAX) ,
+                @SinifKodu AS NVARCHAR(20) = ''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @MyFields AS NVARCHAR(MAX)=''  collate SQL_Latin1_General_CP1254_CI_AS ,
                 @NumarayaGoreSirala AS BIT = 1; 
                 DECLARE @SQL NVARCHAR(MAX);
 
@@ -9023,9 +9026,9 @@ class MblLogin extends \DAL\DalSlim {
                     K.KisiID,
                     K.Adi,
                     K.Soyadi,
-                    K.Adi + ' ' + K.Soyadi AS AdiSoyadi,
-                    ( SELECT STUFF(( SELECT ', ' + CONVERT(VARCHAR, KISI.Adi) + ' '
-                                      + CONVERT(VARCHAR, KISI.Soyadi)
+                    K.Adi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS AS AdiSoyadi,
+                    ( SELECT STUFF(( SELECT ', ' + CONVERT(VARCHAR, KISI.Adi collate SQL_Latin1_General_CP1254_CI_AS) + ' '
+                                      + CONVERT(VARCHAR, KISI.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)
                                    FROM ".$dbnamex."GNL_Siniflar SNFO 
                                    INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri SO ON SO.SinifID=SNFO.SinifID 
                                    INNER JOIN ".$dbnamex."GNL_Kisiler KISI ON KISI.KisiID=SO.OgretmenID                                               
@@ -9376,8 +9379,8 @@ class MblLogin extends \DAL\DalSlim {
                     
                 declare 
                 @sinavOkulID AS UNIQUEIDENTIFIER ,
-                @SinifKodu AS NVARCHAR(20) = NULL ,
-                @MyFields AS NVARCHAR(MAX) ,
+                @SinifKodu AS NVARCHAR(20) = ''  collate SQL_Latin1_General_CP1254_CI_AS,
+                @MyFields AS NVARCHAR(MAX) =''  collate SQL_Latin1_General_CP1254_CI_AS,
                 @NumarayaGoreSirala AS BIT = 1; 
                 DECLARE @SQL NVARCHAR(MAX);
 
