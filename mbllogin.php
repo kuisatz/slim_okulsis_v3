@@ -4896,7 +4896,9 @@ $app->get("/OgretmenSinavSorulariKDK_mbllogin/", function () use ($app ) {
             "OgrenciSoruPuani" => ($menu["OgrenciSoruPuani"]),  
             "SoruTurID" => ($menu["SoruTurID"]),   
             "KitapcikTurID" => ($menu["KitapcikTurID"]),  
-         
+             "SinavOgrenciID" => ($menu["SinavOgrenciID"]),  
+             "SinavOgrenciSoruCevapID" => ($menu["SinavOgrenciSoruCevapID"]),  
+             
         );
     }
     
