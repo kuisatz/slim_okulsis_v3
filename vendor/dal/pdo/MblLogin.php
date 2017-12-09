@@ -8232,7 +8232,7 @@ class MblLogin extends \DAL\DalSlim {
             } 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
-            $dbnamex = 'BILSANET_A.dbo.';
+            
             $sql = "   
                 SET NOCOUNT ON;  
                 IF OBJECT_ID('tempdb..#okiogrsinavderslistesi') IS NOT NULL DROP TABLE #okiogrsinavderslistesi; 
@@ -8339,7 +8339,7 @@ class MblLogin extends \DAL\DalSlim {
                 $languageIdValue = $params['LanguageID'];
             } 
             
-          // $dbnamex = 'BILSANET_A.dbo.';
+          // 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
              
@@ -8468,7 +8468,7 @@ class MblLogin extends \DAL\DalSlim {
                 $languageIdValue = $params['LanguageID'];
             } 
             
-          // $dbnamex = 'BILSANET_A.dbo.';
+          // 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
              
@@ -8852,18 +8852,23 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['SinavDersID']) && $params['SinavDersID'] != "")) {
                 $SinavDersID = $params['SinavDersID'];
             } 
+            $SinavOgrenciID=  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['SinavOgrenciID']) && $params['SinavOgrenciID'] != "")) {
+                $SinavOgrenciID = $params['SinavOgrenciID'];
+            } 
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
             } 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
-             $dbnamex = 'BILSANET_A.dbo.';
+             
             $sql = "    
                     SET NOCOUNT ON;  
 
                     declare @SinavDersID1 UNIQUEIDENTIFIER; 
                     set @SinavDersID1 = '".$SinavDersID."';  
+                    set @SinavOgrenciID = '".$SinavOgrenciID."'; 
 
                     SELECT
                         SKS.SinavKitapcikSoruID,
@@ -8874,15 +8879,20 @@ class MblLogin extends \DAL\DalSlim {
                         NULL AS OgrenciSoruPuani,
                         SORU.SoruTurID,
                         SD.SinavDersID,
-                        SKTP.KitapcikTurID
+                        SKTP.KitapcikTurID,
+                        SO.SinavOgrenciID,
+                        SOSC.SinavOgrenciSoruCevapID 
                     FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
                     INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKTP ON SKS.SinavKitapcikID = SKTP.SinavKitapcikID
                     INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID = SKS.SinavSoruID
                     INNER JOIN ".$dbnamex."SB_Sorular SORU ON SORU.SoruID = SS.SoruID
                     INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavDersID = SS.SinavDersID 
                     INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavKategoriID = SD.SinavKategoriID
+                    LEFT JOIN ".$dbnamex."SNV_SinavOgrenciSoruCevaplari SOSC ON SOSC.SinavSoruID = SS.SinavSoruID 
+                    LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID  
                     WHERE 
                             SS.SinavDersID = @SinavDersID1
+                            SO.SinavOgrenciID = 
                     ORDER BY 
                             SK.BolumKategoriID, 
                             SD.SinavDersSabitID, 
@@ -9136,7 +9146,7 @@ class MblLogin extends \DAL\DalSlim {
             } 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
-            $dbnamex = 'BILSANET_A.dbo.';
+            
             $sql = "    
                 SET NOCOUNT ON;   
                     
