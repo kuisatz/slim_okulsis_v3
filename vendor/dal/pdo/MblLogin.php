@@ -9317,7 +9317,11 @@ class MblLogin extends \DAL\DalSlim {
                 if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
                    $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
                     }   
-            }      
+            }    
+            $KitapcikTurID= 0;
+            if ((isset($params['KitapcikTurID']) && $params['KitapcikTurID'] != "")) {
+                $KitapcikTurID = $params['KitapcikTurID'];
+            } 
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
              
@@ -9384,6 +9388,16 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;   
             
             DECLARE @p1 xml;  
+            
+            UPDATE SO 
+            SET SO.SinavKitapcikID = sk1.SinavKitapcikID
+            FROM ".$dbnamex."SNV_SinavOgrencileri SO
+            INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK ON SK.SinavKitapcikID = SO.SinavKitapcikID
+            INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK1 ON SK1.SinavID = SK.SinavID AND SK1.KitapcikTurID = '".$KitapcikTurID."'
+            WHERE 
+                SO.SinavOgrenciID= '".$ogrenciid."';
+
+
             
             set @p1=convert(xml,N"; 
            

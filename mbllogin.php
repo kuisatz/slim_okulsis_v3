@@ -5310,28 +5310,36 @@ $app->get("/OgrenciSinaviSonuclariKaydet_mbllogin/", function () use ($app ) {
                 $app, $_GET['XmlData']));
     } 
     
-   $vDid = NULL;   
+    $vDid = NULL;   
     if (isset($_GET['did'])) {
         $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                 $app, $_GET['did']));
     }
+    $vKitapcikTurID = NULL;     
+    if (isset($_GET['kitapcikTurID'])) {
+        $stripper->offsetSet('kitapcikTurID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['kitapcikTurID']));
+    } 
     $stripper->strip();
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
-    }
-     
+    } 
     if ($stripper->offsetExists('cid')) {
         $vCid = $stripper->offsetGet('cid')->getFilterValue();
     } 
     if ($stripper->offsetExists('XmlData')) {
         $vXmlData = $stripper->offsetGet('XmlData')->getFilterValue();
     } 
+    if ($stripper->offsetExists('kitapcikTurID')) {
+        $vKitapcikTurID = $stripper->offsetGet('kitapcikTurID')->getFilterValue();
+    }
      
-      $vXmlData  =$_GET['XmlData'];
+    $vXmlData  =$_GET['XmlData'];
     $resDataInsert = $BLL->OgrenciSinaviSonuclariKaydet(array(  
                                             'Cid' => $vCid,   
                                             'XmlData' => $vXmlData,
                                             'Did' => $vDid,
+                                            'KitapcikTurID' => $vKitapcikTurID,
                                            ) ); 
      
     
