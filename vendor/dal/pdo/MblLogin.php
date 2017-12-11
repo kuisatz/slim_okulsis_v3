@@ -703,8 +703,8 @@ class MblLogin extends \DAL\DalSlim {
             DECLARE @name nvarchar(200) = ''  collate SQL_Latin1_General_CP1254_CI_AS;
             declare @database_id int;
             declare @tc bigint;
-            DECLARE @sqlx nvarchar(2000)= ''  collate SQL_Latin1_General_CP1254_CI_AS; 
-            DECLARE @sqlxx nvarchar(2000)= ''  collate SQL_Latin1_General_CP1254_CI_AS;
+            DECLARE @sqlx nvarchar(4000)= ''  collate SQL_Latin1_General_CP1254_CI_AS; 
+            DECLARE @sqlxx nvarchar(4000)= ''  collate SQL_Latin1_General_CP1254_CI_AS;
             declare @MEBKodu int;   
 		 
             CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, sqlx nvarchar(2000)  collate SQL_Latin1_General_CP1254_CI_AS,MEBKodu int );  
@@ -815,8 +815,8 @@ class MblLogin extends \DAL\DalSlim {
                     sss.[OkulID],
                     sss.[KisiID],
                     sss.[RolID], 
-                    rr.[RolAdi] collate SQL_Latin1_General_CP1254_CI_AS,
-                    upper(concat(oo.[OkulAdi]  collate SQL_Latin1_General_CP1254_CI_AS, ''  ('',rr.[RolAdi]  collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
+                    COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi ,
+                    upper(concat(golx.[OkulAdi]  collate SQL_Latin1_General_CP1254_CI_AS, ''  ('',rrx.[RolAdi]  collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
                     oo.[MEBKodu],
                     oo.[ePosta] collate SQL_Latin1_General_CP1254_CI_AS,
                     DY.DersYiliID,
@@ -830,7 +830,11 @@ class MblLogin extends \DAL\DalSlim {
                 inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                 inner join ['+@dbnamex+'].[dbo].GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 
                 inner join ['+@dbnamex+'].[dbo].GNL_EgitimYillari EY ON EY.EgitimYilID = DY.EgitimYilID AND DY.AktifMi = 1
-                inner join ['+@dbnamex+'].[dbo].[GNL_Roller] rr ON rr.[RolID] =  sss.[RolID];
+                inner join ['+@dbnamex+'].[dbo].[GNL_Roller] rr ON rr.[RolID] =  sss.[RolID]
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue."  AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = sss.[OkulID] and golx.language_id = lx.id  
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id = sss.[RolID] or rrx.RolID = sss.[RolID] ) and  rrx.language_id= lx.id  
+             
                     ';
                 /* print(@sqlx); */
                 EXEC sp_executesql @sqlx;  
@@ -876,7 +880,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.KisiID,
                         a.RolID,
                         a.RolAdi collate SQL_Latin1_General_CP1254_CI_AS as RolAdi,
-                        COALESCE(NULLIF(COALESCE(NULLIF(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''),golx.OkulAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),a.OkulAdi)  as OkulAdi,
+                        a.OkulAdi,
                         a.MEBKodu,
                         a.ePosta,
                         a.DersYiliID,
@@ -889,9 +893,6 @@ class MblLogin extends \DAL\DalSlim {
                         isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
                         isnull( mss.id, (SELECT TOP 1 xxz.[id] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid
                     FROM  ##okimobilseconddata".$tc."  a
-                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
-                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-                    LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = a.OkulID and golx.language_id = lx.id  
                     WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
                 ) as ssdds
                 IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; 
