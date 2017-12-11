@@ -3269,28 +3269,8 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
             declare @startRowIndex int; 
             declare @maximumRows int ; 
-            declare @sortExpression  nvarchar(10);
-            
-            set  @startRowIndex = 1;
-            set  @maximumRows = 1000;
-
-            SELECT 
-                   MesajID,
-                   ReceiverID,
-                   Okundu,
-                   OkunduguTarih,
-                   Silindi,
-                   MesajOncelikID,
-                   Konu,
-                   Mesaj,
-                   Tarih,
-                   SenderID,
-                   SenderAdi,
-                   SenderSoyadi,
-                   SenderAdiSoyadi,
-                   AttachmentFile,
-                   RowNum 
-            FROM (
+            declare @sortExpression  nvarchar(10); 
+         
 		SELECT 
 			M.MesajID,
 			M.KisiID AS ReceiverID,
@@ -3311,9 +3291,9 @@ class MblLogin extends \DAL\DalSlim {
 		INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
 		INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
 		WHERE MK.KisiID = '".$KisiID."' 
-                ".$addsql."    
-            ) AS Parent 
-            WHERE Silindi=0 and RowNum BETWEEN @startRowIndex AND @maximumRows ORDER BY Tarih DESC;
+                ".$addsql."   
+                AND M.Silindi=0 
+                ORDER BY Tarih DESC;
 
              
             SET NOCOUNT OFF;  
