@@ -834,7 +834,8 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue."  AND lx.deleted =0 AND lx.active =0
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = sss.[OkulID] and golx.language_id = lx.id  
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id = sss.[RolID] or rrx.RolID = sss.[RolID] ) and  rrx.language_id= lx.id  
-             
+                WHERE 
+                        cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
                     ';
                 /* print(@sqlx); */
                 EXEC sp_executesql @sqlx;  
@@ -7591,7 +7592,7 @@ class MblLogin extends \DAL\DalSlim {
      */
     public function msjGonderilecekRoller($params = array()) {
         try {
-           $cid = -1;
+           $cid = -1; // okii 
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
@@ -7650,7 +7651,7 @@ class MblLogin extends \DAL\DalSlim {
                 [KurumID],
                 rr.RolAdi,
                 1 as kontrol,
-                priority
+                nn.priority
             FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] nn 
             INNER JOIN ".$dbnamex."GNL_Roller rr ON rr.RolID = nn.sendRolID
             WHERE  nn.[rolID] = ".$RolID." AND
@@ -7661,7 +7662,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-        echo debugPDO($sql, $params);
+      //  echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
