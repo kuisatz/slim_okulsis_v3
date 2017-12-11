@@ -2843,7 +2843,7 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
     
-       /** 
+    /** 
      * @author Okan CIRAN
      * @ login olan yakının yada ögrencinin sinav listesi !! sınavlar kısmında kullanılıyor
      * @version v 1.0  10.10.2017
@@ -7641,25 +7641,27 @@ class MblLogin extends \DAL\DalSlim {
                 NULL AS sendRolID, 
                 NULL AS KurumID,
                 'LÜTFEN SEÇİNİZ...!' AS RolAdi,
-                1 as kontrol
+                1 as kontrol,
+                0 as priority
                 UNION
             SELECT  
                 nn.[rolID],
                 [sendRolID], 
                 [KurumID],
                 rr.RolAdi,
-                1 as kontrol
+                1 as kontrol,
+                priority
             FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] nn 
             INNER JOIN ".$dbnamex."GNL_Roller rr ON rr.RolID = nn.sendRolID
             WHERE  nn.[rolID] = ".$RolID." AND
                    nn.[KurumID] = @KurumID  
                    ) as dddd
-            ORDER BY sendRolID;
+            ORDER BY priority , sendRolID;
  
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
-      // echo debugPDO($sql, $params);
+        echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
