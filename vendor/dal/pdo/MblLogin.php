@@ -7851,7 +7851,15 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
                 LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
                 WHERE a.[main_group] = 1 and a.[first_group]  = 10 and
-                    a.language_parent_id =0 
+                    a.language_parent_id =0 AND
+                    1 = ( SELECT count(1)  
+					FROM BILSANET_SIVASGAZI.dbo.GNL_Siniflar SN 
+					INNER JOIN BILSANET_SIVASGAZI.dbo.GNL_DersYillari DY ON DY.DersYiliID = SN.DersYiliID -- and DY.AktifMi =1  
+					WHERE 
+                                                ".$addSQLWhere."  
+						SN.Sanal = 0 AND 
+						cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
+				  )
             UNION 
                 SELECT
                     SN.SinifID as ID, 
