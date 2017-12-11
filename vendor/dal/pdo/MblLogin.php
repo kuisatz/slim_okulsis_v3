@@ -7641,23 +7641,29 @@ class MblLogin extends \DAL\DalSlim {
                 NULL AS rolID,
                 NULL AS sendRolID, 
                 NULL AS KurumID,
-                'LÜTFEN SEÇİNİZ...!' AS RolAdi,
+                COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS RolAdi,
                 1 as kontrol,
                 0 as priority
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
                 UNION
             SELECT  
                 nn.[rolID],
                 [sendRolID], 
                 [KurumID],
-                rr.RolAdi,
+                 COALESCE(NULLIF(COALESCE(NULLIF(ax.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),ax.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi ,
                 1 as kontrol,
                 nn.priority
             FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] nn 
             INNER JOIN ".$dbnamex."GNL_Roller rr ON rr.RolID = nn.sendRolID
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng ax on (ax.language_parent_id = nn.[sendRolID] or ax.RolID = nn.[sendRolID] ) and  ax.language_id= lx.id  
+                 
             WHERE  nn.[rolID] = ".$RolID." AND
                    nn.[KurumID] = @KurumID  
                    ) as dddd
-            ORDER BY priority , sendRolID;
+            ORDER BY nn.priority , sendRolID;
  
             SET NOCOUNT OFF;   
                  "; 
@@ -7723,13 +7729,19 @@ class MblLogin extends \DAL\DalSlim {
 
             SELECT * FROM (
              SELECT      
-                'LÜTFEN OKUL SEÇİNİZ' AS aciklama, 	
+                COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS aciklama, 	
                 '00000000-0000-0000-0000-000000000000' AS ID, 
                 NULL AS DersYiliID,
                 1 AS kontrol 
+            FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =385 AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+            WHERE a.[main_group] = 1 and a.[first_group]  = 1 and
+                a.language_parent_id =0 
             UNION  
             SELECT DISTINCT    
-                UPPER(oo.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 	
+                COALESCE(NULLIF(COALESCE(NULLIF(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),golx.OkulAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),oo.OkulAdi) as aciklama, 	
                 OKL.OkulID AS ID, 
                 dy.DersYiliID,
                 1 AS kontrol
@@ -7739,8 +7751,12 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."[GNL_Okullar] oo ON oo.[OkulID] = okl.[OkulID] 
             INNER JOIN ".$dbnamex."[GNL_Kisiler] ki ON ki.KisiID = OKL.KisiID 
             INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.OkulID = OKL.OkulID AND DY.AktifMi =1 
+            inner join ".$dbnamex."GNL_EgitimYillari EY ON EY.EgitimYilID = DY.EgitimYilID AND DY.AktifMi = 1
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =385  AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = OKL.[OkulID] and golx.language_id = lx.id  
             WHERE lower(concat (ki.Adi,' ',ki.Soyadi)) != 'admin' AND 
-                oo.MebKurumTurID < 10 AND 
+                cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) AND
+                oo.KurumTurID < 500 AND 
                 dy.EgitimYilID = (select max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx WHERE dyx.OkulID = OKL.OkulID AND DY.AktifMi =1  ) and 
                 OKR.RolID = ".$SendrolID."  
             ) AS ssss
@@ -7817,13 +7833,25 @@ class MblLogin extends \DAL\DalSlim {
                     'LÜTFEN SINIF SEÇİNİZ' AS aciklama,
                     -2 AS SeviyeID,
                     1 as kontrol
+                FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                WHERE a.[main_group] = 1 and a.[first_group]  = 2 and
+                    a.language_parent_id =0 
             UNION 
-            SELECT 
+                SELECT  
                     '00000000-0000-0000-0000-000000000001' AS ID, 
                     NULL AS SinifKodu, 
-                    'TÜM LİSTEYİ GETİR' AS aciklama,
+                    COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS aciklama,
                     -1 AS SeviyeID,
                     1 as kontrol 
+                FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                WHERE a.[main_group] = 1 and a.[first_group]  = 10 and
+                    a.language_parent_id =0 
             UNION 
                 SELECT
                     SN.SinifID as ID, 
