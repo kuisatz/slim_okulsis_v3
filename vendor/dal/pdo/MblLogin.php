@@ -3382,11 +3382,11 @@ class MblLogin extends \DAL\DalSlim {
             SELECT  
                 MesajID, 
                 MesajOncelikID, 
-                Konu collate SQL_Latin1_General_CP1254_CI_AS , 
+                Konu collate SQL_Latin1_General_CP1254_CI_AS as Konu, 
                 Tarih, 
                 SenderID, 
                 ReceiverIDs, 
-                ReceiverNames collate SQL_Latin1_General_CP1254_CI_AS ,
+                ReceiverNames collate SQL_Latin1_General_CP1254_CI_AS as ReceiverNames,
                 AttachmentFile,
                 RowNum 
             FROM #okigidenmesajlar a  
