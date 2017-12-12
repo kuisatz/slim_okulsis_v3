@@ -1148,7 +1148,7 @@ class MblLogin extends \DAL\DalSlim {
                 null AS SinifID,
                 null AS DersID, 
                 null AS Aciklama1,
-                COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS Aciklama,
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama,
                 null AS DersYiliID,
                 null AS DonemID, 
                 null AS EgitimYilID   
@@ -8191,23 +8191,31 @@ class MblLogin extends \DAL\DalSlim {
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
          
             $sql = "  
+             
             SET NOCOUNT ON;  
-            
-            SELECT 
-                -1 as MesajTipID,
-                'LÜTFEN MESAJ TİPİ SEÇİNİZ' AS Aciklama
-            UNION
-            SELECT  
-                MesajTipID
-                ,Aciklama collate SQL_Latin1_General_CP1254_CI_AS
-            FROM ".$dbnamex."[MSJ_MesajTipleri] 
-             ".$addSQLWhere."   
-            ORDER BY MesajTipID;
+                SELECT 
+                    sdsdsd.MesajTipID,
+                    COALESCE(NULLIF(mtlx.[Aciklama],''),mtl.[AciklamaEng]) AS Aciklama 
+                FROM (
+                    SELECT  
+                        mtl.MesajTipID  
+                    FROM BILSANET_MOBILE.[dbo].[Mobile_MesajTipleri_lng]  mtl  
+                    WHERE mtl.deleted =0 and mtl.active =0 and mtl.language_parent_id =0 AND
+                        mtl.MesajTipID =0 
+                union 
+                    SELECT  
+                        mt.MesajTipID  
+                    FROM ".$dbnamex."[MSJ_MesajTipleri] mt
+                ) as sdsdsd 
+                INNER JOIN BILSANET_MOBILE.[dbo].[Mobile_MesajTipleri_lng] mtl ON mtl.MesajTipID= sdsdsd.MesajTipID AND mtl.deleted =0 AND mtl.active =0 AND mtl.language_parent_id =0 
+                INNER JOIN BILSANET_MOBILE.[dbo].[Mobile_MesajTipleri_lng] mtlx ON mtlx.deleted =0 AND mtlx.active =0 AND (mtlx.MesajTipID =sdsdsd.MesajTipID) AND mtlx.language_id = ".$languageIdValue."                
+                ".$addSQLWhere."  
+                ORDER BY MesajTipID;
  
-            SET NOCOUNT OFF;   
+            SET NOCOUNT OFF;  
                  "; 
             $statement = $pdo->prepare($sql);   
-      // echo debugPDO($sql, $params);
+        // echo debugPDO($sql, $params);
             $statement->execute(); 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
