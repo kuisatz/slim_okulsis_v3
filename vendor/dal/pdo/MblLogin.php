@@ -458,12 +458,12 @@ class MblLogin extends \DAL\DalSlim {
                 IF OBJECT_ID(@name+'..GNL_Kisiler' ) IS NOT NULL
                 begin 
                     SET @sqlxx =   ' 
-                        INSERT into  ##okidetaydata".$tc." (KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID)
+                        INSERT into  ##okidetaydata".$tc." (KisiID, adsoyad, TCKimlikNo, /*Fotograf, */ CinsiyetID)
                          SELECT 
                                 kk.[KisiID],   
                                 concat(kk.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS ,'' '' ,kk.[Soyadi]  collate SQL_Latin1_General_CP1254_CI_AS ) as adsoyad,   
                                 kk.[TCKimlikNo] ,
-                                ff.Fotograf,
+                               /* ff.Fotograf,*/
                                 kk.CinsiyetID
                         FROM  ['+@name+'].[dbo].[GNL_Kisiler] kk 
                         LEFT JOIN ['+@name+'].dbo.GNL_Fotograflar ff on ff.KisiID =kk.[KisiID] 
