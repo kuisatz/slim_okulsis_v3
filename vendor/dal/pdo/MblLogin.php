@@ -2571,6 +2571,10 @@ class MblLogin extends \DAL\DalSlim {
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
             } 
+            $grid = 0;
+            if (isset($params['Grid']) && $params['Grid'] != "") {
+                $grid = $params['Grid'];
+            } 
              
             
             $sql = "  
@@ -2630,7 +2634,8 @@ class MblLogin extends \DAL\DalSlim {
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id] ) and  ax.language_id= lx.id  
                     WHERE a.[main_group] = 1 and a.[first_group] = 4 AND
-                            a.language_parent_id =0  
+                            a.language_parent_id =0 AND 
+                            0= ".$grid."
 
                     UNION 
                     select  
@@ -2641,32 +2646,6 @@ class MblLogin extends \DAL\DalSlim {
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         SinavID ,  
                         SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  
-                    /*
-                        SinavTurID ,	
-                        SeviyeID ,
-                        SinavUygulamaSekliID ,
-                        KitapcikTurID ,
-                        SinavSuresi , 
-                        KitapcikSayisi , 
-                        DogruSilenYanlisSayisi , 
-                        PuanlarYuvarlansinMi , 
-                        OrtalamaVeSapmaHesaplansinMi , 
-                        SiralamadaYasKontroluYapilsinMi , 	
-                        isDegerlendirildi ,
-                        isAlistirma ,
-                        OptikFormGirisiYapilabilirMi ,
-                        isOtherTeachers ,
-                        isUserExam ,
-                        isOgrenciVeliSinavVisible ,
-                        isAltKurumHidden ,
-                        sonBasilabilirOnayTarihi ,
-                        SeviyeKodu  ,
-                        SinavTanimID , 
-                        isNotAktarildi  ,
-                        OgretmenID  , 
-                        OkulID , 
-                        OkulOgretmenID 
-                    */
                     FROM #okiogrsinavlari a 
                     inner join ".$dbnamex."[GNL_Donemler] gd on gd.DonemID = a.NotDonemID 
             IF OBJECT_ID('tempdb..#okiogrsinavlari') IS NOT NULL DROP TABLE #okiogrsinavlari; 
