@@ -714,8 +714,8 @@ class MblLogin extends \DAL\DalSlim {
             
             DECLARE db_cursor CURSOR FOR  
             SELECT sss.database_id, sss.name  collate SQL_Latin1_General_CP1254_CI_AS FROM Sys.databases sss
-                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
-                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active=0 AND tcdbb.deleted =0
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active=0 AND tcc.deleted =0
                 WHERE 
                     sss.state = 0 and 
                     tcc.[tc]= @tc and 
