@@ -8161,7 +8161,7 @@ class MblLogin extends \DAL\DalSlim {
             $addSQLWhere =NULL;
             if ((isset($params['RolID']) && $params['RolID'] != "")) {
                 $RolID = $params['RolID'];  
-                IF (($RolID == 8 ) ||  ($RolID == 9 )) {  $addSQLWhere = " WHERE MesajTipID < 2 ";   }
+                IF (($RolID == 8 ) ||  ($RolID == 9 )) {  $addSQLWhere = " WHERE sdsdsd.MesajTipID < 2 ";   }
             } 
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
