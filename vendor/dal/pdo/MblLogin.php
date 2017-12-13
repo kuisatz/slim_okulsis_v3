@@ -168,11 +168,11 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;     
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
             IF OBJECT_ID('tempdb..##okiMEBKodu".$tc."') IS NOT NULL DROP TABLE ##okiMEBKodu".$tc."; 
-            DECLARE @name nvarchar(200);
+            DECLARE @name nvarchar(200)=''  collate SQL_Latin1_General_CP1254_CI_AS;
             declare @database_id int;
-            declare @tc nvarchar(11);
-            DECLARE @sqlx nvarchar(2000); 
-            DECLARE @sqlxx nvarchar(2000);
+            declare @tc nvarchar(11) =''  collate SQL_Latin1_General_CP1254_CI_AS;
+            DECLARE @sqlx nvarchar(2000)=''  collate SQL_Latin1_General_CP1254_CI_AS; 
+            DECLARE @sqlxx nvarchar(2000)= '' collate SQL_Latin1_General_CP1254_CI_AS;
             declare @MEBKodu int;   
             set @tc =  ".$tc."; 
             CREATE TABLE #okidbname".$tc." (database_id int , name  nvarchar(200) , sqlx nvarchar(2000),MEBKodu int ); 
@@ -181,9 +181,9 @@ class MblLogin extends \DAL\DalSlim {
             
             DECLARE db_cursor CURSOR FOR  
             SELECT distinct sss.database_id, sss.name FROM Sys.databases sss
-                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
-                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
-                where 
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active = 0 AND tcdbb.deleted =0   
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active = 0 AND tcc.deleted =0                
+                WHERE 
                     sss.state = 0 and 
                     tcc.[tc]= @tc and 
                     banTarihi is null  ;
@@ -443,8 +443,8 @@ class MblLogin extends \DAL\DalSlim {
             
             DECLARE db_cursor CURSOR FOR  
                 SELECT sss.database_id, sss.name, tcdbb.KisiID, tcdbb.KurumID FROM Sys.databases sss
-                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID  
-                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id 
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active = 0 AND tcdbb.deleted =0   
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active = 0 AND tcc.deleted =0
                 WHERE 
                     sss.state = 0 AND 
                     tcc.[tc]= @tc AND 
@@ -1122,7 +1122,7 @@ class MblLogin extends \DAL\DalSlim {
 		SorumlulukSinavSayisi [tinyint],
 		DevamsizlikSabahOgleAyri  [bit] ,
 		YilSonuPuanYuvarlansin [bit],
-                EgitimYili [varchar](50),
+                EgitimYili [varchar](50)  collate SQL_Latin1_General_CP1254_CI_AS,
 		OkulDurumPuani [decimal](18, 4),
 		YilSonuNotYuvarlansin  [bit],
 		YilSonuPuanSinavSonraYuvarlansin  [bit],
@@ -1276,9 +1276,9 @@ class MblLogin extends \DAL\DalSlim {
                     BaslangicSaati datetime, 
                     BitisSaati datetime,
                     DersSirasi integer, 
-                    DersAdi varchar(100), 
-                    DersKodu varchar(100),
-                    Aciklama varchar(100),
+                    DersAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS, 
+                    DersKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Aciklama varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                     DersID [uniqueidentifier] ,
                     HaftaGunu integer 
                             ) ; 
@@ -1400,17 +1400,17 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;   
             IF OBJECT_ID('tempdb..#tmpe') IS NOT NULL DROP TABLE #tmpe; 
             CREATE TABLE #tmpe ( 
-				OgrenciID [uniqueidentifier] ,
-				Tarih [datetime]  ,
-				DersSirasi  [int] ,
+				OgrenciID [uniqueidentifier],
+				Tarih [datetime],
+				DersSirasi  [int],
 				DersYiliID [uniqueidentifier],
-				Numarasi  [int]  , 
-				Adi [varchar](50),
-				Soyadi [varchar](50),  
-				TCKimlikNo  [varchar](50) , 
-				CinsiyetID  [int]  ,
-				DevamsizlikKodID [int] , 
-				Aciklama [varchar](200)  
+				Numarasi  [int], 
+				Adi [varchar](50) collate SQL_Latin1_General_CP1254_CI_AS,
+				Soyadi [varchar](50) collate SQL_Latin1_General_CP1254_CI_AS,  
+				TCKimlikNo  [varchar](50) collate SQL_Latin1_General_CP1254_CI_AS, 
+				CinsiyetID  [int],
+				DevamsizlikKodID [int], 
+				Aciklama [varchar](200) collate SQL_Latin1_General_CP1254_CI_AS  
 		    );  
 		 
                 INSERT  INTO #tmpe 
@@ -2591,8 +2591,8 @@ class MblLogin extends \DAL\DalSlim {
                             SeviyeID int,
                             SinavUygulamaSekliID int,
                             KitapcikTurID int,
-                            SinavKodu varchar(100),
-                            SinavAciklamasi varchar(100),
+                            SinavKodu varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS,
+                            SinavAciklamasi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                             SinavTarihi datetime,
                             SinavBitisTarihi datetime, 
                             SinavSuresi int, 
@@ -2609,8 +2609,8 @@ class MblLogin extends \DAL\DalSlim {
                             isOgrenciVeliSinavVisible int,
                             isAltKurumHidden int,
                             sonBasilabilirOnayTarihi datetime,
-                            SinavTurAdi varchar(100) ,
-                            SeviyeKodu varchar(10) ,
+                            SinavTurAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS,
+                            SeviyeKodu varchar(10)  collate SQL_Latin1_General_CP1254_CI_AS,
                             NotDonemID int,
                             SinavTanimID int, 
                             isNotAktarildi bit 
@@ -2737,8 +2737,8 @@ class MblLogin extends \DAL\DalSlim {
                             SeviyeID int,
                             SinavUygulamaSekliID int,
                             KitapcikTurID int,
-                            SinavKodu varchar(100),
-                            SinavAciklamasi varchar(100),
+                            SinavKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                            SinavAciklamasi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                             SinavTarihi datetime,
                             SinavBitisTarihi datetime,    
                             SinavSuresi int, 
@@ -2755,8 +2755,8 @@ class MblLogin extends \DAL\DalSlim {
                             isOgrenciVeliSinavVisible int,
                             isAltKurumHidden int,
                             sonBasilabilirOnayTarihi datetime, 
-                            SinavTurAdi varchar(100) ,
-                            SeviyeKodu varchar(10) ,
+                            SinavTurAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS,
+                            SeviyeKodu varchar(10)  collate SQL_Latin1_General_CP1254_CI_AS,
                             NotDonemID int,
                             SinavTanimID int,      
                             isNotAktarildi bit,
@@ -2831,7 +2831,7 @@ class MblLogin extends \DAL\DalSlim {
      * @return array
      * @throws \PDOException
      */
-    public function ogrencininSinavlistesi($params = array()) {
+    public function ogrencininSinavlistesi($params = array()) { /// okii 
         try {
             $cid = -1;
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
@@ -3036,8 +3036,8 @@ class MblLogin extends \DAL\DalSlim {
                             SeviyeID int,
                             SinavUygulamaSekliID int,
                             KitapcikTurID int,
-                            SinavKodu varchar(100),
-                            SinavAciklamasi varchar(100),
+                            SinavKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                            SinavAciklamasi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                             SinavTarihi datetime,
                             SinavBitisTarihi datetime,  
                             SinavSuresi int, 
@@ -3054,8 +3054,8 @@ class MblLogin extends \DAL\DalSlim {
                             isOgrenciVeliSinavVisible int,
                             isAltKurumHidden int,
                             sonBasilabilirOnayTarihi datetime, 
-                            SinavTurAdi varchar(100) ,
-                            SeviyeKodu varchar(10) ,
+                            SinavTurAdi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS ,
+                            SeviyeKodu varchar(10)  collate SQL_Latin1_General_CP1254_CI_AS,
                             NotDonemID int,
                             SinavTanimID int,
                             isNotAktarildi bit,
@@ -3248,7 +3248,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
             declare @startRowIndex int; 
             declare @maximumRows int ; 
-            declare @sortExpression  nvarchar(10); 
+            declare @sortExpression  nvarchar(10) ='' collate SQL_Latin1_General_CP1254_CI_AS; 
          
 		SELECT 
 			M.MesajID,
@@ -3343,11 +3343,11 @@ class MblLogin extends \DAL\DalSlim {
                             (   
                                 MesajID uniqueidentifier,
                                 MesajOncelikID smallint,
-                                Konu nvarchar(max), 
+                                Konu nvarchar(max)  collate SQL_Latin1_General_CP1254_CI_AS, 
                                 Tarih smalldatetime,
                                 SenderID uniqueidentifier,
-                                ReceiverIDs nvarchar(max),
-                                ReceiverNames nvarchar(max),
+                                ReceiverIDs nvarchar(max) collate SQL_Latin1_General_CP1254_CI_AS,
+                                ReceiverNames nvarchar(max) collate SQL_Latin1_General_CP1254_CI_AS,
                                 AttachmentFile bit,
                                 RowNum int
                             ) ;
@@ -3451,7 +3451,7 @@ class MblLogin extends \DAL\DalSlim {
                 @MesajIDNewBie uniqueidentifier, 
                 @MesajTarihi datetime ,
                 @p2 xml ,
-                @KisiID1 nvarchar(50), 
+                @KisiID1 nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS, 
                 @MesajTipID1 int; 
             set @MesajTarihi = getdate();
             set @MesajIDNewBie = NEWID();  
@@ -3460,7 +3460,7 @@ class MblLogin extends \DAL\DalSlim {
     
             DECLARE 
                 @MesajID uniqueidentifier,  
-                @ReceiveKisiID nvarchar(50); 
+                @ReceiveKisiID nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS; 
 		 
             set @KisiID1 = '" . $KisiID . "';
             set @ReceiveKisiID = '" . $ReceiveKisiID . "';
@@ -3640,16 +3640,16 @@ class MblLogin extends \DAL\DalSlim {
             set @rolid = ".$RolID."; 
             set @KisiID = '".$KisiID."';
             select @tc = TCKimlikNo from ".$dbnamex."GNL_Kisiler where KisiID =@KisiID;  
-            set @settable = '##dssbrrd'+cast(@tc AS nvarchar(50));  
+            set @settable = '##dssbrrd'+cast(@tc AS nvarchar(50)  collate SQL_Latin1_General_CP1254_CI_AS);  
             set @settable1 = 'tempdb.dbo.'+@settable;   
             set @deletesql = 'DROP TABLE '+ @settable;  
             IF OBJECT_ID(@settable1) IS NOT NULL EXECUTE sp_executesql @deletesql;  
-            set @selecttable1 = 'SELECT adet,tip,aciklama,url FROM '+@settable;
+            set @selecttable1 = 'SELECT adet,tip,aciklama,url,pageurl FROM '+@settable;
             SELECT @setsql =  
              CASE 
 		WHEN 4= @rolid THEN N' SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url 
+                                            ssss.url, ''muhasebe/tahsilatlar.html'' as pageurl    
                                         into '+@settable+' 
                                         FROM (
                                             SELECT ISNULL(SUM(BS.ToplamTutar), 0) AS adet, 2 AS tip, ''Bugünkü Ödemeler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                                     
@@ -3666,7 +3666,7 @@ class MblLogin extends \DAL\DalSlim {
                                     ' 
 		WHEN 5= @rolid THEN N'  SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url 
+                                            ssss.url, ''muhasebe/tahsilatlar.html'' as pageurl  
                                         into '+@settable+'
                                         FROM (
                                             SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url                                                    
@@ -3682,7 +3682,7 @@ class MblLogin extends \DAL\DalSlim {
                                     '
 		WHEN 6= @rolid THEN N'  SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url 
+                                            ssss.url, ''muhasebe/tahsilatlar.html'' as pageurl  
                                         into '+@settable+'
                                         FROM (
                                             SELECT ISNULL(sum(TaksitTutari), 0) AS adet, 2 AS tip, ''Ödeme Plani'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                                 
@@ -3698,7 +3698,7 @@ class MblLogin extends \DAL\DalSlim {
                                     '
 		WHEN 7= @rolid THEN N'  SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url
+                                            ssss.url,'''' as pageurl
                                         into '+@settable+'
                                         FROM (    
                                             SELECT 
@@ -3719,21 +3719,21 @@ class MblLogin extends \DAL\DalSlim {
                                         LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = axx.[id] or ax.[id] = axx.[id] ) and  ax.language_id= lx.id  
                                            
                                     ' 
-		WHEN 8= @rolid THEN N'  SELECT top 1 adet, 2 AS tip, aciklama, url 
+		WHEN 8= @rolid THEN N'  SELECT top 1 adet, 2 AS tip, aciklama, url, pageurl
                                         into '+@settable+'
                                         FROM ( 
                                                 SELECT top 1 adet, 2 AS tip, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url ,firstgroup,
                                                     COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama
                                               
                                                 FROM ( 
-                                                    SELECT ISNULL(count(SNV.SinavID), 0) AS adet, 1 AS sira,''Sınavlarınız'' AS aciklama  , 5 as firstgroup 
+                                                    SELECT ISNULL(count(SNV.SinavID), 0) AS adet, 1 AS sira,''Sınavlarınız'' AS aciklama  , 5 as firstgroup ,''sinav/ogrenci_new.html'' as pageurl
                                                     FROM ".$dbnamex."SNV_Sinavlar SNV 
                                                     INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
                                                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
                                                     INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID AND OS.OgrenciID = '''+@KisiID+'''	
                                                     WHERE cast(SNV.SinavTarihi AS date) = cast(getdate() AS date)
                                                 UNION  
-                                                    SELECT ISNULL(count(OO.OgrenciOdevID), 0) AS adet, 2 AS sira, ''Ödevleriniz'' AS aciklama   , 6 as firstgroup                                                  
+                                                    SELECT ISNULL(count(OO.OgrenciOdevID), 0) AS adet, 2 AS sira, ''Ödevleriniz'' AS aciklama   , 6 as firstgroup ,''odevler/ogrenci.html'' as pageurl                                                 
                                                     FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
                                                     INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID  
                                                     WHERE OO.OgrenciID = '''+@KisiID+''' AND
@@ -3751,7 +3751,7 @@ class MblLogin extends \DAL\DalSlim {
                                             WHERE YakinID = '''+@KisiID+''' ;  
                                             SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url 
+                                            ssss.url ,''sinav/yakin_new.html'' as pageurl 
                                             into '+@settable+'
                                             FROM (
                                                 SELECT ISNULL(count(vr.VeliRandevuID), 0) as adet, 2 AS tip, ''Randevularınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                                 
@@ -3773,7 +3773,7 @@ class MblLogin extends \DAL\DalSlim {
                 ELSE N'             
                                     SELECT adet,tip, 
                                             COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''''),axx.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS aciklama, 
-                                            ssss.url 
+                                            ssss.url ,'''' as pageurl 
                                     into '+@settable+'
                                     FROM (
                                             SELECT ISNULL(count(M.MesajID), 0) AS adet, 2 AS tip, ''Aktiviteler'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/time.png'' AS url                                           
@@ -3792,10 +3792,11 @@ class MblLogin extends \DAL\DalSlim {
             EXECUTE sp_executesql @setsql;
             set @execsql = ' 
                 SELECT 
-                   adet,tip,aciklama,url 
+                   adet,tip,aciklama,url,pageurl 
                 FROM (
                     SELECT 
-                       count(M.MesajID) AS adet, 1 AS tip, ''Mesajlarınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url
+                        count(M.MesajID) AS adet, 1 AS tip, ''Mesajlarınız'' AS aciklama, ''http://mobile.okulsis.net:8280/okulsis/image/okulsis/msg1.png'' AS url,
+                        ''mesajlar/mesaj.html'' as pageurl  
                     FROM ".$dbnamex."MSJ_Mesajlar M 
                     INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
                     INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
@@ -3972,7 +3973,7 @@ class MblLogin extends \DAL\DalSlim {
 
                     DECLARE 
                         @MesajID1 uniqueidentifier,  
-                        @KisiID1 nvarchar(50); 
+                        @KisiID1 nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS; 
 
                     set @KisiID1 = '" . $KisiID . "';
                     set @MesajID1 = '" . $MesajID . "';
@@ -4047,18 +4048,18 @@ class MblLogin extends \DAL\DalSlim {
             CREATE TABLE #okiozetodevtanimlari
                         (  
                             OdevTanimID [uniqueidentifier], 
-                            OgretmenAdi  varchar(100),
-                            SinifKodu  varchar(20),
+                            OgretmenAdi  varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS,
+                            SinifKodu  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
                             SeviyeID int,
-                            SeviyeAdi  varchar(100), 
-                            DersBilgisi  varchar(100), 
-                            Tanim  varchar(100),
-                            Aciklama  varchar(100),
+                            SeviyeAdi  varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
+                            DersBilgisi  varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
+                            Tanim  varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                            Aciklama  varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                             Tarih smalldatetime, 
                             TeslimTarihi smalldatetime, 
                             OdevTipID tinyint, 
                             TanimDosyaID [uniqueidentifier], 
-                            TanimDosyaAdi   varchar(100), 
+                            TanimDosyaAdi   varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
                             TanimYuklemeTarihi smalldatetime,  
                             TanimBoyut int ,  
                             TanimDosya image, 
@@ -4462,7 +4463,7 @@ class MblLogin extends \DAL\DalSlim {
                     (   
                         BaslangicSaati datetime,
                         BitisSaati datetime,
-                        DersSaati varchar(20),
+                        DersSaati varchar(20)  collate SQL_Latin1_General_CP1254_CI_AS,
                         DersSirasi smallint,
                         Gun1_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
                         Gun2_SinifDersID  varchar(50) collate SQL_Latin1_General_CP1254_CI_AS,
@@ -4497,7 +4498,7 @@ class MblLogin extends \DAL\DalSlim {
                 isnull(sdz5.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun5_ders, 
                 isnull(sdz6.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun6_ders, 
                 isnull(sdz7.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,'') as Gun7_ders 
-            FROM #okiogrencidersprogramilistesi   a
+            FROM #okiogrencidersprogramilistesi a
             LEFT JOIN #dersller sdz1 on sdz1.SinifDersID = a.Gun1_SinifDersID 
             LEFT JOIN #dersller sdz2 on sdz2.SinifDersID = a.Gun2_SinifDersID 
             LEFT JOIN #dersller sdz3 on sdz3.SinifDersID = a.Gun3_SinifDersID 
@@ -4648,7 +4649,7 @@ class MblLogin extends \DAL\DalSlim {
                     (   
                         BaslangicSaati datetime,
                         BitisSaati datetime,
-                        DersSaati varchar(20),
+                        DersSaati varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
                         DersSirasi smallint,
                         Gun1_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
                         Gun2_SinifDersID  varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
@@ -6681,21 +6682,21 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT JOIN ".$dbnamex."GNL_Dersler  dd ON dh.DersID = dd.DersID 
                 CREATE TABLE #DersProgrami(DersSirasi smallint,
                                             HaftaGunu smallint,
-                                            SinifDersID nvarchar(4000),
-                                            OgrenciseviyeID nvarchar(4000));
+                                            SinifDersID nvarchar(4000)  collate SQL_Latin1_General_CP1254_CI_AS,
+                                            OgrenciseviyeID nvarchar(4000) collate SQL_Latin1_General_CP1254_CI_AS);
 		
-		CREATE TABLE #DersProgramiSonuc(  BaslangicSaati varchar(20),
-                    BitisSaati varchar(20),
-                    DersSaati varchar(20),
+		CREATE TABLE #DersProgramiSonuc(  BaslangicSaati varchar(20)  collate SQL_Latin1_General_CP1254_CI_AS,
+                    BitisSaati varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
+                    DersSaati varchar(20) collate SQL_Latin1_General_CP1254_CI_AS,
                     DersSirasi int,
-                    Gun1_SinifDersID nvarchar(40),
-                    Gun2_SinifDersID nvarchar(40),
-                    Gun3_SinifDersID nvarchar(40),
-                    Gun4_SinifDersID nvarchar(40),
-                    Gun5_SinifDersID nvarchar(40),
-                    Gun6_SinifDersID nvarchar(40),
-                    Gun7_SinifDersID nvarchar(40),
-                    OgrenciseviyeID nvarchar(40));  
+                    Gun1_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Gun2_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Gun3_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Gun4_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Gun5_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Gun6_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Gun7_SinifDersID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS,
+                    OgrenciseviyeID nvarchar(40) collate SQL_Latin1_General_CP1254_CI_AS);  
   
                 DECLARE @DersSirasi smallint;
                 DECLARE @HaftaGunu smallint;
@@ -9481,7 +9482,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
             declare 
                 @SinavID uniqueidentifier,
-                @SinifID nvarchar(36),
+                @SinifID nvarchar(36) =''  collate SQL_Latin1_General_CP1254_CI_AS,
                 @Onay bit ; 
             set @SinavID = '".$SinavID ."';
             set @SinifID= '".$SinifID."';
