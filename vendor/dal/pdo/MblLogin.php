@@ -3640,7 +3640,7 @@ class MblLogin extends \DAL\DalSlim {
             set @rolid = ".$RolID."; 
             set @KisiID = '".$KisiID."';
             select @tc = TCKimlikNo from ".$dbnamex."GNL_Kisiler where KisiID =@KisiID;  
-            set @settable = '##dssbrrd'+cast(@tc AS nvarchar(50)  collate SQL_Latin1_General_CP1254_CI_AS);  
+            set @settable = '##dssbrrd'+cast(@tc AS nvarchar(50));  
             set @settable1 = 'tempdb.dbo.'+@settable;   
             set @deletesql = 'DROP TABLE '+ @settable;  
             IF OBJECT_ID(@settable1) IS NOT NULL EXECUTE sp_executesql @deletesql;  

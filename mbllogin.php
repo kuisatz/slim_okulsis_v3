@@ -3033,6 +3033,7 @@ $app->get("/DashboardIconCounts_mbllogin/", function () use ($app ) {
              "tip" => html_entity_decode($menu["tip"]),  
              "aciklama" => html_entity_decode($menu["aciklama"]),   
               "url" => $menu["url"],
+             "pageurl" => $menu["pageurl"],
         );
     }
  
