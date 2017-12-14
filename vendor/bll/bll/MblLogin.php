@@ -1445,10 +1445,10 @@ class MblLogin extends \BLL\BLLSlim{
      * Function to get datagrid row count on user interface layer
      * @param array | null $params 
      * @return array
-     */
-    public function ogretmenDersProgramiCombo($params = array()) {
+     */ 
+    public function ogretmenProgramindakiDersler($params = array()) {
     $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
-    $resultSet = $DAL->ogretmenDersProgramiCombo($params);  
+    $resultSet = $DAL->ogretmenProgramindakiDersler($params);  
     return $resultSet['resultSet'];
     } 
 }

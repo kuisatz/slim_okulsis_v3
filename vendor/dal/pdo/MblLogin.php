@@ -1230,7 +1230,7 @@ class MblLogin extends \DAL\DalSlim {
      * @return array
      * @throws \PDOException
      */
-    public function ogretmenDersProgramiCombo($params = array()) {
+    public function ogretmenProgramindakiDersler($params = array()) {
         try {
             $cid = -1;
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
@@ -1267,10 +1267,9 @@ class MblLogin extends \DAL\DalSlim {
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            } 
+            }  
             
-            
-            $sql = "  
+            $sql = "   
             set nocount on; 
             
             IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
@@ -1301,83 +1300,57 @@ class MblLogin extends \DAL\DalSlim {
 		AktifMi [bit]    ); 
 
             INSERT  INTO #tmpzz
-            EXEC ".$dbnamex."[PRC_GNL_DersYili_Find] @OkulID = '".$OkulID."'  
+            EXEC ".$dbnamex."[PRC_GNL_DersYili_Find] @OkulID = '".$OkulID."'   
  
-            SELECT  
-                -1 AS HaftaGunu,
-                -1 AS DersSirasi, 
-                null AS SinifDersID ,
-                null AS DersAdi,
-                null AS DersKodu,
-                null AS SinifKodu,
-                null AS SubeGrupID,
-                null AS BaslangicSaati,
-                null AS BitisSaati,
-                null AS DersBaslangicBitisSaati,
-                null AS SinifOgretmenID,
-                null AS DersHavuzuID,
-                null AS SinifID,
-                null AS DersID, 
-                null AS Aciklama1,
-                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama,
-                null AS DersYiliID,
-                null AS DonemID, 
-                null AS EgitimYilID   
-            FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
-            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
-            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-            LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
-            WHERE a.[main_group] = 1 and a.[first_group]  = 7 and
-                a.language_parent_id =0 
-            
+
+            SELECT  DISTINCT
+                SinifDersID ,
+                DersAdi,  
+                SinifID, 
+                Aciklama
+            FROM ( 
+                (SELECT   
+                    -1 AS DersSirasi, 
+                    null AS SinifDersID ,
+                    null AS DersAdi,  
+                    null AS SinifID, 
+                    COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama            
+                FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                WHERE a.[main_group] = 1 and a.[first_group]  = 7 and
+                    a.language_parent_id =0 
+                )
             union  
 
-            (SELECT 
-                DP.HaftaGunu,
-		DP.DersSirasi,
-		DP.SinifDersID,
-                COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  as DersAdi, 
-		DH.DersKodu, 
-		SNF.SinifKodu,
-		SNF.SubeGrupID,
-		DS.BaslangicSaati,
-		DS.BitisSaati,
-		".$dbnamex."GetFormattedTime(BaslangicSaati, 1) + ' - ' + ".$dbnamex."GetFormattedTime(BitisSaati, 1) collate SQL_Latin1_General_CP1254_CI_AS AS DersBaslangicBitisSaati,                    
-		SO.SinifOgretmenID,
-		DH.DersHavuzuID,
-		SNF.SinifID,
-		DRS.DersID,
-		(CASE WHEN ISNULL(DS.BaslangicSaati,'')<>'' AND ISNULL(DS.BitisSaati,'')<>'' THEN 
-				 CAST(DS.DersSirasi AS NVARCHAR(2)) + '. ' + 
-				 COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  + ' (' + 
-				CONVERT(VARCHAR(5),DS.BaslangicSaati,108) + '-' + CONVERT(VARCHAR(5),DS.BitisSaati,108) + ')'
-			 ELSE 
-				CAST(DP.DersSirasi AS NVARCHAR(2)) + '. ' +  COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi) 
-			 END) AS Aciklama1 ,
-                         concat(SNF.SinifKodu  collate SQL_Latin1_General_CP1254_CI_AS,' - ',  COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  ) as Aciklama,   
-			 #tmpzz.DersYiliID,
-			 #tmpzz.DonemID,
-			 #tmpzz.EgitimYilID
-            FROM ".$dbnamex."GNL_DersProgramlari DP
-            INNER JOIN ".$dbnamex."GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
-            INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
-							AND SO.OgretmenID = '".$kisiId."'
-            INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."'    
-            INNER JOIN ".$dbnamex."GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
-            INNER JOIN ".$dbnamex."GNL_Dersler DRS ON DH.DersID = DRS.DersID
-            
-            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
-            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS= DRS.DersAdi collate SQL_Latin1_General_CP1254_CI_AS) and axx.language_id= l.id  
-            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS= axx.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id   
-            
-            LEFT JOIN ".$dbnamex."GNL_DersSaatleri DS ON DS.DersYiliID = SNF.DersYiliID AND DS.SubeGrupID = SNF.SubeGrupID AND DS.DersSirasi = DP.DersSirasi
-            INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
-            ) ORDER BY HaftaGunu, BaslangicSaati,DersSirasi, DersAdi ;  
-            
+                (SELECT DISTINCT  
+                    DP.DersSirasi,
+                    DP.SinifDersID,
+                    COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  as DersAdi, 
+                    SNF.SinifID, 
+                    concat(SNF.SinifKodu  collate SQL_Latin1_General_CP1254_CI_AS,' - ',  COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  ) as Aciklama	  
+                FROM ".$dbnamex."GNL_DersProgramlari DP
+                INNER JOIN ".$dbnamex."GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
+                INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
+                                                            AND SO.OgretmenID = '".$kisiId."'
+                INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."'       
+                INNER JOIN ".$dbnamex."GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
+                INNER JOIN ".$dbnamex."GNL_Dersler DRS ON DH.DersID = DRS.DersID
+
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS= DRS.DersAdi collate SQL_Latin1_General_CP1254_CI_AS) and axx.language_id= l.id  
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS= axx.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id   
+     
+                INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
+
+                )   
+            ) as sdasd   
+             
             IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
             SET NOCOUNT OFF;
-
+ 
                  "; 
             $statement = $pdo->prepare($sql);   
    // echo debugPDO($sql, $params);

@@ -392,8 +392,7 @@ $app->get("/ogretmenDersProgrami_mbllogin/", function () use ($app ) {
         'OkulID' => $vOkulID,  
         'dersYiliID' => $vdersYiliID,   
         'Cid' => $vCid, 
-        'Did' => $vDid,
-        'LanguageID' => $vLanguageID, 
+        'Did' => $vDid, 
         )); 
   
     $menus = array();
@@ -431,7 +430,7 @@ $app->get("/ogretmenDersProgrami_mbllogin/", function () use ($app ) {
  *  * Okan CIRAN
  * @since 03.10.2017
  */
-$app->get("/OgretmenDersProgramiCombo_mbllogin/", function () use ($app ) {
+$app->get("/OgretmenProgramindakiDersler_mbllogin/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
@@ -487,36 +486,25 @@ $app->get("/OgretmenDersProgramiCombo_mbllogin/", function () use ($app ) {
         $vdersYiliID = $stripper->offsetGet('dersYiliID')->getFilterValue();
     }
     
-    $resDataInsert = $BLL->OgretmenDersProgramiCombo(array( 
+    $resDataInsert = $BLL->OgretmenProgramindakiDersler(array( 
         'url' => $_GET['url'], 
         'kisiId' => $vkisiId,  
         'LanguageID' => $vLanguageID,  
         'OkulID' => $vOkulID,  
         'dersYiliID' => $vdersYiliID,   
         'Cid' => $vCid, 
-        'Did' => $vDid,
-        'LanguageID' => $vLanguageID, 
+        'Did' => $vDid, 
         )); 
   
     $menus = array();
     foreach ($resDataInsert as $menu){
         $menus[]  = array(  
-            "HaftaGunu" => $menu["HaftaGunu"],
-            "DersSirasi" => $menu["DersSirasi"],
+           
             "SinifDersID" => $menu["SinifDersID"], 
-            "DersKodu" => html_entity_decode($menu["DersKodu"]), 
-            "DersAdi" => html_entity_decode($menu["DersAdi"]), 
-            "SinifKodu" => html_entity_decode($menu["SinifKodu"]), 
-             "Aciklama" => html_entity_decode($menu["Aciklama"]), 
-         
-            "SubeGrupID" =>  ($menu["SubeGrupID"]),
-            "BaslangicSaati" =>  ($menu["BaslangicSaati"]),
-            "BitisSaati" =>  ($menu["BitisSaati"]), 
-            "DersBaslangicBitisSaati" =>  ($menu["DersBaslangicBitisSaati"]), 
-            "SinifOgretmenID" =>  ($menu["SinifOgretmenID"]),
-            "DersHavuzuID" =>  ($menu["DersHavuzuID"]),
             "SinifID" =>  ($menu["SinifID"]),
-            "DersID" =>  ($menu["DersID"]),
+            "DersAdi" => html_entity_decode($menu["DersAdi"]),  
+            "Aciklama" => html_entity_decode($menu["Aciklama"]), 
+          
         );
     }
     
