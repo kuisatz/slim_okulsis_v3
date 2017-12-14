@@ -2488,8 +2488,8 @@ class MblLogin extends \DAL\DalSlim {
                             ODG.OgrenciDersID = ODNB.OgrenciDersID  	
                             
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi = ODNB.DersAdi) and axx.language_id= 647  
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng = axx.DersAdiEng) and ax.language_id= lx.id  
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS = ODNB.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS) and axx.language_id= 647  
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS = axx.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id  
                 WHERE isPuanNotGirilsin = 1 
 				                  ) p PIVOT
                                 ( MAX(Puan) FOR SinavTanimID IN ( [1], [2], [3], [4], [5], [6], [7], [8],
