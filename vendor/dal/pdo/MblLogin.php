@@ -1222,6 +1222,177 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
      
+     /** 
+     * @author Okan CIRAN
+     * @ login olan ogretmenin ders programı   !!
+     * @version v 1.0  03.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogretmenDersProgramiCombo($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }   
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            
+            $kisiId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['kisiId']) && $params['kisiId'] != "")) {
+                $kisiId = $params['kisiId'];
+            }  
+            $OkulID = '1CCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
+                $OkulID = $params['OkulID'];
+            }   
+            $dersYiliID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['dersYiliID']) && $params['dersYiliID'] != "")) {
+                $dersYiliID = $params['dersYiliID'];
+            } 
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            } 
+            
+            
+            $sql = "  
+            set nocount on; 
+            
+            IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
+            CREATE TABLE #tmpzz ( 
+		DersYiliID [uniqueidentifier] ,
+		OkulID [uniqueidentifier]  ,
+		DonemID  [int] ,
+		TedrisatID [int],
+		TakdirTesekkurHesapID  [int]    ,
+		OnKayitTurID  [int]  ,
+                EgitimYilID  [int]  ,
+		Donem1BaslangicTarihi [datetime]  ,
+		Donem1BitisTarihi [datetime]  ,
+		Donem2BaslangicTarihi [datetime]  ,
+		Donem2BitisTarihi [datetime]  ,
+		Donem1AcikGun [decimal](18, 4)  ,
+		Donem2AcikGun [decimal](18, 4)  ,
+		YilSonuHesapla [bit] ,
+		DevamsizliktanBasarisiz [bit]  ,
+		SorumlulukSinavSayisi [tinyint],
+		DevamsizlikSabahOgleAyri  [bit] ,
+		YilSonuPuanYuvarlansin [bit],
+                EgitimYili [varchar](50)  collate SQL_Latin1_General_CP1254_CI_AS,
+		OkulDurumPuani [decimal](18, 4),
+		YilSonuNotYuvarlansin  [bit],
+		YilSonuPuanSinavSonraYuvarlansin  [bit],
+		YilSonuNotSinavSonraYuvarlansin  [bit],
+		AktifMi [bit]    ); 
+
+            INSERT  INTO #tmpzz
+            EXEC ".$dbnamex."[PRC_GNL_DersYili_Find] @OkulID = '".$OkulID."'  
+ 
+            SELECT  
+                -1 AS HaftaGunu,
+                -1 AS DersSirasi, 
+                null AS SinifDersID ,
+                null AS DersAdi,
+                null AS DersKodu,
+                null AS SinifKodu,
+                null AS SubeGrupID,
+                null AS BaslangicSaati,
+                null AS BitisSaati,
+                null AS DersBaslangicBitisSaati,
+                null AS SinifOgretmenID,
+                null AS DersHavuzuID,
+                null AS SinifID,
+                null AS DersID, 
+                null AS Aciklama1,
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama,
+                null AS DersYiliID,
+                null AS DonemID, 
+                null AS EgitimYilID   
+            FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+            WHERE a.[main_group] = 1 and a.[first_group]  = 7 and
+                a.language_parent_id =0 
+            
+            union  
+
+            (SELECT 
+                DP.HaftaGunu,
+		DP.DersSirasi,
+		DP.SinifDersID,
+                COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  as DersAdi, 
+		DH.DersKodu, 
+		SNF.SinifKodu,
+		SNF.SubeGrupID,
+		DS.BaslangicSaati,
+		DS.BitisSaati,
+		".$dbnamex."GetFormattedTime(BaslangicSaati, 1) + ' - ' + ".$dbnamex."GetFormattedTime(BitisSaati, 1) collate SQL_Latin1_General_CP1254_CI_AS AS DersBaslangicBitisSaati,                    
+		SO.SinifOgretmenID,
+		DH.DersHavuzuID,
+		SNF.SinifID,
+		DRS.DersID,
+		(CASE WHEN ISNULL(DS.BaslangicSaati,'')<>'' AND ISNULL(DS.BitisSaati,'')<>'' THEN 
+				 CAST(DS.DersSirasi AS NVARCHAR(2)) + '. ' + 
+				 COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  + ' (' + 
+				CONVERT(VARCHAR(5),DS.BaslangicSaati,108) + '-' + CONVERT(VARCHAR(5),DS.BitisSaati,108) + ')'
+			 ELSE 
+				CAST(DP.DersSirasi AS NVARCHAR(2)) + '. ' +  COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi) 
+			 END) AS Aciklama1 ,
+                         concat(SNF.SinifKodu  collate SQL_Latin1_General_CP1254_CI_AS,' - ',  COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  ) as Aciklama,   
+			 #tmpzz.DersYiliID,
+			 #tmpzz.DonemID,
+			 #tmpzz.EgitimYilID
+            FROM ".$dbnamex."GNL_DersProgramlari DP
+            INNER JOIN ".$dbnamex."GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
+            INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
+							AND SO.OgretmenID = '".$kisiId."'
+            INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."'    
+            INNER JOIN ".$dbnamex."GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
+            INNER JOIN ".$dbnamex."GNL_Dersler DRS ON DH.DersID = DRS.DersID
+            
+            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS= DRS.DersAdi collate SQL_Latin1_General_CP1254_CI_AS) and axx.language_id= l.id  
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS= axx.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id   
+            
+            LEFT JOIN ".$dbnamex."GNL_DersSaatleri DS ON DS.DersYiliID = SNF.DersYiliID AND DS.SubeGrupID = SNF.SubeGrupID AND DS.DersSirasi = DP.DersSirasi
+            INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
+            ) ORDER BY HaftaGunu, BaslangicSaati,DersSirasi, DersAdi ;  
+            
+            IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
+            SET NOCOUNT OFF;
+
+                 "; 
+            $statement = $pdo->prepare($sql);   
+   // echo debugPDO($sql, $params);
+            $statement->execute();
+           
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+     
     /** 
      * @author Okan CIRAN
      * @ login olan ogretmenin ders saatleri   !!
@@ -2962,8 +3133,7 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
-   
-   
+    
     /** 
      * @author Okan CIRAN
      * @ login olan ögretmenin sectiği subedeki ögrencilistesi  !! sınavlar kısmında kullanılıyor

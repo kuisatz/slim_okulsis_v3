@@ -424,6 +424,109 @@ $app->get("/ogretmenDersProgrami_mbllogin/", function () use ($app ) {
      
 } 
 );
+
+
+
+/**
+ *  * Okan CIRAN
+ * @since 03.10.2017
+ */
+$app->get("/OgretmenDersProgramiCombo_mbllogin/", function () use ($app ) {
+    $stripper = $app->getServiceManager()->get('filterChainerCustom');
+    $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
+    $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $vkisiId = NULL;     
+    if (isset($_GET['kisiId'])) {
+        $stripper->offsetSet('kisiId', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['kisiId']));
+    }
+    $vOkulID = NULL;     
+    if (isset($_GET['okulID'])) {
+        $stripper->offsetSet('okulID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['okulID']));
+    }
+      
+    $vdersYiliID= NULL;     
+    if (isset($_GET['dersYiliID'])) {
+        $stripper->offsetSet('dersYiliID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['dersYiliID']));
+    }  
+    $vCid = NULL;   
+    if (isset($_GET['cid'])) {
+        $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['cid']));
+    } 
+    $vDid = NULL;   
+    if (isset($_GET['did'])) {
+        $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['did']));
+    }
+    $vLanguageID = NULL;
+    if (isset($_GET['languageID'])) {
+        $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                                                                $app, 
+                                                                $_GET['languageID']));
+    } 
+    $stripper->strip();
+     if ($stripper->offsetExists('languageID')) {
+        $vLanguageID = $stripper->offsetGet('languageID')->getFilterValue();
+    }
+    if ($stripper->offsetExists('did')) {
+        $vDid = $stripper->offsetGet('did')->getFilterValue();
+    }
+    if ($stripper->offsetExists('cid')) {
+        $vCid = $stripper->offsetGet('cid')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('kisiId')) {
+        $vkisiId = $stripper->offsetGet('kisiId')->getFilterValue();
+    }
+    if ($stripper->offsetExists('okulID')) {
+        $vOkulID = $stripper->offsetGet('okulID')->getFilterValue();
+    }
+    if ($stripper->offsetExists('dersYiliID')) {
+        $vdersYiliID = $stripper->offsetGet('dersYiliID')->getFilterValue();
+    }
+    
+    $resDataInsert = $BLL->OgretmenDersProgramiCombo(array( 
+        'url' => $_GET['url'], 
+        'kisiId' => $vkisiId,  
+        'LanguageID' => $vLanguageID,  
+        'OkulID' => $vOkulID,  
+        'dersYiliID' => $vdersYiliID,   
+        'Cid' => $vCid, 
+        'Did' => $vDid,
+        'LanguageID' => $vLanguageID, 
+        )); 
+  
+    $menus = array();
+    foreach ($resDataInsert as $menu){
+        $menus[]  = array(  
+            "HaftaGunu" => $menu["HaftaGunu"],
+            "DersSirasi" => $menu["DersSirasi"],
+            "SinifDersID" => $menu["SinifDersID"], 
+            "DersKodu" => html_entity_decode($menu["DersKodu"]), 
+            "DersAdi" => html_entity_decode($menu["DersAdi"]), 
+            "SinifKodu" => html_entity_decode($menu["SinifKodu"]), 
+             "Aciklama" => html_entity_decode($menu["Aciklama"]), 
+         
+            "SubeGrupID" =>  ($menu["SubeGrupID"]),
+            "BaslangicSaati" =>  ($menu["BaslangicSaati"]),
+            "BitisSaati" =>  ($menu["BitisSaati"]), 
+            "DersBaslangicBitisSaati" =>  ($menu["DersBaslangicBitisSaati"]), 
+            "SinifOgretmenID" =>  ($menu["SinifOgretmenID"]),
+            "DersHavuzuID" =>  ($menu["DersHavuzuID"]),
+            "SinifID" =>  ($menu["SinifID"]),
+            "DersID" =>  ($menu["DersID"]),
+        );
+    }
+    
+    $app->response()->header("Content-Type", "application/json"); 
+    $app->response()->body(json_encode($menus));
+    
+     
+} 
+);
+
   
 /**
  *  * Okan CIRAN
