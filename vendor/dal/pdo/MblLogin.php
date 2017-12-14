@@ -2707,7 +2707,7 @@ class MblLogin extends \DAL\DalSlim {
             }
             $OkulOgretmenID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             $operationId = $this->findByOkulOgretmenID(
-                            array( 'OgretmenID' =>$OgretmenID, 'OkulID' => $OkulID,'Did' =>$did,));
+                            array( 'OgretmenID' =>$OgretmenID, 'OkulID' => $OkulID,'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($operationId)) {
                 $OkulOgretmenID = $operationId ['resultSet'][0]['OkulOgretmenID'];
             }   
@@ -2858,7 +2858,7 @@ class MblLogin extends \DAL\DalSlim {
             
             $OkulOgretmenID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             $operationId = $this->findByOkulOgretmenID(
-                            array( 'OgretmenID' =>$OgretmenID, 'OkulID' => $OkulID,'Did' =>$did,));
+                            array( 'OgretmenID' =>$OgretmenID, 'OkulID' => $OkulID,'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($operationId)) {
                 $OkulOgretmenID = $operationId ['resultSet'][0]['OkulOgretmenID'];
             } 
@@ -3156,7 +3156,7 @@ class MblLogin extends \DAL\DalSlim {
             
             $OkulOgretmenID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             $operationId = $this->findByOkulOgretmenID(
-                            array( 'OgretmenID' =>$OgretmenID, 'OkulID' => $OkulID,'Did' =>$did,));
+                            array( 'OgretmenID' =>$OgretmenID, 'OkulID' => $OkulID,'Cid' =>$cid,'Did' =>$did,));
             if (\Utill\Dal\Helper::haveRecord($operationId)) {
                 $OkulOgretmenID = $operationId ['resultSet'][0]['OkulOgretmenID'];
             }  
