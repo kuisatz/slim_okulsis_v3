@@ -1794,7 +1794,27 @@ and open the template in the editor. Ğİ
                         console.warn('error text status-->' + textStatus);
                     }
                 }); 
-                
+                  $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'ogretmenDersProgrami_mbllogin',
+                        kisiId: '17A68CAA-1A13-460A-BEAA-FB483AC82F7B',
+                        OkulID: '7E755C68-ABC1-492B-9D82-3B39B831A962',
+                        dersYiliID:'9D7A115C-5E96-4F6E-B31D-E5710BDA1C97',
+                        languageID : 647,  
+                        cid  : 1,
+                        did  : 91
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                });
                 
                 ////////////////////////
                 
