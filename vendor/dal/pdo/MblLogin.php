@@ -1444,7 +1444,7 @@ class MblLogin extends \DAL\DalSlim {
             FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
             LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
             LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions] ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and ax.language_id= lx.id  
-            WHERE a.[main_group] = 1 and a.[first_group] = 7 and 
+            WHERE a.[main_group] = 1 and a.[first_group] = 8 and 
                 a.language_parent_id =0 
 
             UNION 
