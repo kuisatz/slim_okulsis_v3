@@ -339,9 +339,9 @@ $app->get("/ogretmenDersProgrami_mbllogin/", function () use ($app ) {
                 $app, $_GET['kisiId']));
     }
     $vOkulID = NULL;     
-    if (isset($_GET['OkulID'])) {
-        $stripper->offsetSet('OkulID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
-                $app, $_GET['OkulID']));
+    if (isset($_GET['okulID'])) {
+        $stripper->offsetSet('okulID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['okulID']));
     }
       
     $vdersYiliID= NULL;     
@@ -378,8 +378,8 @@ $app->get("/ogretmenDersProgrami_mbllogin/", function () use ($app ) {
     if ($stripper->offsetExists('kisiId')) {
         $vkisiId = $stripper->offsetGet('kisiId')->getFilterValue();
     }
-    if ($stripper->offsetExists('OkulID')) {
-        $vOkulID = $stripper->offsetGet('OkulID')->getFilterValue();
+    if ($stripper->offsetExists('okulID')) {
+        $vOkulID = $stripper->offsetGet('okulID')->getFilterValue();
     }
     if ($stripper->offsetExists('dersYiliID')) {
         $vdersYiliID = $stripper->offsetGet('dersYiliID')->getFilterValue();
