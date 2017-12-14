@@ -4434,6 +4434,7 @@ class MblLogin extends \DAL\DalSlim {
                             array( 'KisiID' =>$KisiID,  'Cid' =>$cid,'Did' =>$did, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
+                $SinifID = $findOgrenciseviyeID ['resultSet'][0]['SinifID'];
             }  
             
             $OgrenciSeviyeID = $findOgrenciseviyeIDValue;
@@ -4442,9 +4443,11 @@ class MblLogin extends \DAL\DalSlim {
             }
           *  
           */
-            $SinifID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
-            if ((isset($params['SinifID']) && $params['SinifID'] != "")) {
-                $SinifID = $params['SinifID'];
+           if ($SinifID == "") {
+                $SinifID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+                if ((isset($params['SinifID']) && $params['SinifID'] != "")) {
+                    $SinifID = $params['SinifID'];
+                }
             }
             $DonemID = -1;
             if ((isset($params['DonemID']) && $params['DonemID'] != "")) {
@@ -7374,11 +7377,11 @@ class MblLogin extends \DAL\DalSlim {
                     [10] AS Sozlu4 ,
                     [11] AS Sozlu5 ,
                     [12] AS Sozlu6 ,
-                    isnull(cast([1] as varchar(10)),'') AS Yazili1 ,
-                    isnull(cast([2] as varchar(10)),'') AS Yazili2 ,
-                    isnull(cast([3] as varchar(10)),'') AS Yazili3 ,
-                    isnull(cast([4] as varchar(10)),'') AS Yazili4 ,
-                    isnull(cast([5] as varchar(10)),'') AS Yazili5 ,
+                    isnull(cast(cast([1] as numeric(8,2)) as varchar(10)),'') AS Yazili1 ,
+                    isnull(cast(cast([2] as numeric(8,2)) as varchar(10)),'') AS Yazili2 ,
+                    isnull(cast(cast([3] as numeric(8,2)) as varchar(10)),'') AS Yazili3 ,
+                    isnull(cast(cast([4] as numeric(8,2)) as varchar(10)),'') AS Yazili4 ,
+                    isnull(cast(cast([5] as numeric(8,2)) as varchar(10)),'') AS Yazili5 ,
                     [6] AS Yazili6 ,
                     [13] AS Odev1 ,
                     [14] AS Odev2 ,
@@ -8648,7 +8651,7 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_Dersler dd ON dh.DersID = dd.DersID 
             WHERE os.OgrenciID = '".$KisiId."' 
             ORDER BY 
-                 K.Adi + ' ' + K.Soyadi;   
+                 K.Adi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS;   
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
