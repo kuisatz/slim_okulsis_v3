@@ -4431,7 +4431,7 @@ class MblLogin extends \DAL\DalSlim {
             }
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid, ));
+                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid,'Did' =>$did, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }  
@@ -7332,7 +7332,7 @@ class MblLogin extends \DAL\DalSlim {
             }
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID, 'Cid' =>$cid, ));
+                            array( 'KisiID' =>$KisiID, 'Cid' =>$cid,'Did' =>$did, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }   
@@ -8706,7 +8706,7 @@ class MblLogin extends \DAL\DalSlim {
             } 
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid, ));
+                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid,'Did' =>$did, ));
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }  
