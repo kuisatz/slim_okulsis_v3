@@ -9303,7 +9303,7 @@ class MblLogin extends \DAL\DalSlim {
                 @NumarayaGoreSirala AS BIT = 1; 
                 DECLARE @SQL NVARCHAR(MAX);
 
-                set @sinavOkulID = '".$SinavOkulID."' ; 
+                set @sinavOkulID = '".$SinavOkulID."' ;  
                 set @SinifKodu ='".$SinifKodu."';
 
                 SELECT  
