@@ -7074,19 +7074,36 @@ class MblLogin extends \DAL\DalSlim {
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
              
             $sql = "  
+                
+
+
             SET NOCOUNT ON;  
             
             SELECT 
-                -1 as OdevTipID,
-                'LÜTFEN ÖDEV TİPİ SEÇİNİZ' AS OdevTipi
+                -1 as OdevTipID, 
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS) AS OdevTipi 
+                
+            FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+            INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+            WHERE a.[main_group] = 1 and a.[first_group]  = 11 and
+                a.language_parent_id =0  
+
             UNION
             SELECT 
-                [OdevTipID],
-                [OdevTipi]
-            FROM ".$dbnamex."[ODV_OdevTipleri] 
-            ORDER BY OdevTipID;
+                a.[OdevTipID], 
+                COALESCE(NULLIF(COALESCE(NULLIF(ax.OdevTipi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.OdevTipi_lng collate SQL_Latin1_General_CP1254_CI_AS),''),a.OdevTipi)  as OdevTipi
+            FROM  ".$dbnamex."[ODV_OdevTipleri] a
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobile_OdevTipleri_lng ax on (ax.OdevTipID = a.OdevTipID) and ax.language_id= lx.id   
+		 
+            ORDER BY OdevTipID  
+
  
-            SET NOCOUNT OFF;   
+            SET NOCOUNT OFF;    
+ 
+  
                  "; 
             $statement = $pdo->prepare($sql);   
       // echo debugPDO($sql, $params);
