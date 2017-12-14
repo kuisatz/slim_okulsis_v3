@@ -8521,38 +8521,8 @@ class MblLogin extends \DAL\DalSlim {
              
             $sql = "   
                 SET NOCOUNT ON;  
-                 select * from  ( 
-                 
-                SELECT  
-                    '' as IlAdi,
-                    '' as IlceAdi,
-                    '' as OkulAdi,
-                    '' as MEBKodu,
-                    'F700A96B-4628-41E5-A261-D7834983CF4D' as SinavOkulID,
-                    'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' as  OkulID,
-                   'LÜTFEN SEÇİNİZ' SinifKodu,
-                   0 as  OgrenciSayisi ,
-				   0 as OkulOgrenciSayisi,
-				     '' as DersYiliID ,
-					' ' as  SinifID
-               
-
-                union 
-               SELECT  
-                    'izmir' as IlAdi,
-                    'Göztepe' as IlceAdi,
-                    'Özel Orantı' as OkulAdi,
-                    '12345' as MEBKodu,
-                    'F700A96B-4628-41E5-A261-D7834983CF4D' as SinavOkulID,
-                    'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' as  OkulID,
-                   '5 A ' SinifKodu,
-                   32 as  OgrenciSayisi ,
-				   155 as OkulOgrenciSayisi,
-				     '2017' as DersYiliID ,
-					'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' as  SinifID
-               
-
-                union 
+                 SELECT * FROM  (  
+              
                 SELECT    
                     GIl.IlAdi,
                     GIlce.IlceAdi,
