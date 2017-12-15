@@ -8522,7 +8522,25 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "   
                 SET NOCOUNT ON;  
                  SELECT * FROM  (  
-              
+                    SELECT  
+                        NULL as IlAdi,
+                        NULL as IlceAdi,
+                        NULL as OkulAdi,
+                        NULL as MEBKodu,
+                        '00000000-0000-0000-0000-000000000000' as SinavOkulID,
+                        '00000000-0000-0000-0000-000000000000' as OkulID,
+                        COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS)  as SinifKodu,
+                        NULL as OgrenciSayisi,
+                        NULL as OkulOgrenciSayisi,
+                        '00000000-0000-0000-0000-000000000000' as DersYiliID,
+                        '00000000-0000-0000-0000-000000000000' as SinifID  
+                    FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                    WHERE a.[main_group] = 1 and a.[first_group]  = 7 and
+                        a.language_parent_id =0 
+                UNION 
                 SELECT    
                     GIl.IlAdi,
                     GIlce.IlceAdi,
