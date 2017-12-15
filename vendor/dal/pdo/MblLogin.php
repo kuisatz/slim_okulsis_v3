@@ -8630,18 +8630,8 @@ class MblLogin extends \DAL\DalSlim {
                 set @OkulID = '".$OkulID."';
                 set @SeviyeID = NULL;
                 set @SinifID =NULL;
-
-
-                SELECT 
-                    'C79927D0-B3AD-40CD-80CF-DCA7D841FDBD' AS OgretmenID,
-                    'Meriç Akay' AS AdiSoyadi,
-                    'Fizik' AS Brans,
-                    22 OdevSayisi,
-                    12 AS OgrenciSayisi,
-                    14 AS GorenSayisi,
-                    15 AS YapanSayisi,
-                    16 AS OnaySayisi
-                UNION 
+ 
+              
                 SELECT 
                         O.OgretmenID,
                         K.Adi  collate SQL_Latin1_General_CP1254_CI_AS+ ' ' + K.Soyadi collate SQL_Latin1_General_CP1254_CI_AS AS AdiSoyadi,
@@ -8840,9 +8830,7 @@ class MblLogin extends \DAL\DalSlim {
             set @DonemID =".$DonemID.";
 	
 
-            select 'Matematik' as SinavAciklamasi, 
-            10 as Puan 
-            union 
+            
             SELECT  
                 SINAV.SinavAciklamasi collate SQL_Latin1_General_CP1254_CI_AS ,
                 cast(OP.Puan as numeric(18,2)) as Puan
@@ -8925,12 +8913,7 @@ class MblLogin extends \DAL\DalSlim {
             
             set @SinavID='".$SinavID."';
            
-            SELECT
-                1 as Numarasi,
-                'Meriç AKAY' as adsoyad,
-                'Matematik' as SinavAciklamasi, 
-                10 as Puan 
-            union 
+           
             SELECT
                 oob.Numarasi ,
                 concat(k.Adi collate SQL_Latin1_General_CP1254_CI_AS ,' ',k.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as adsoyad,
@@ -9701,6 +9684,20 @@ class MblLogin extends \DAL\DalSlim {
               /*  set @sinavOkulID = 'F700A96B-4628-41E5-A261-D7834983CF4D' ; 
                  set @SinifKodu ='5KAR1'; */ 
 
+
+
+                SELECT * FROM ( 
+                    SELECT  
+                        '00000000-0000-0000-0000-000000000000' as SinavKitapcikID,
+                        -1 as KitapcikTurID,
+                        COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS KitapcikAciklamasi 
+                    FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                    WHERE a.[main_group] = 1 and a.[first_group]  = 9 and
+                        a.language_parent_id =0 
+                union  
                 SELECT  distinct
                     SOGR.SinavKitapcikID,
                     SK.KitapcikTurID,
@@ -9712,8 +9709,9 @@ class MblLogin extends \DAL\DalSlim {
                INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK ON SOGR.SinavKitapcikID = SK.SinavKitapcikID 
                INNER JOIN ".$dbnamex."SNV_Sinavlar SNV ON SNV.SinavID=SK.SinavID
                WHERE SOGR.SinavOkulID= @sinavOkulID  
-               AND SOGR.SinifKodu= @SinifKodu  
-               ORDER BY SK.KitapcikTurID; 
+               AND SOGR.SinifKodu= @SinifKodu 
+               ) as asdasd
+               ORDER BY  KitapcikTurID; 
 
                 SET NOCOUNT OFF;  
                  
