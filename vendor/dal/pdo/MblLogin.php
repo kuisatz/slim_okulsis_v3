@@ -9693,9 +9693,8 @@ class MblLogin extends \DAL\DalSlim {
                 @SinifKodu AS NVARCHAR(20) = ''  collate SQL_Latin1_General_CP1254_CI_AS,
                 @MyFields AS NVARCHAR(MAX) =''  collate SQL_Latin1_General_CP1254_CI_AS,
                 @NumarayaGoreSirala AS BIT = 1; 
-                DECLARE @SQL NVARCHAR(MAX);
-
-				
+                DECLARE @SQL NVARCHAR(MAX); 
+                
                 set @sinavOkulID = '".$SinavOkulID."' ; 
                 set @SinifKodu ='".$SinifKodu."';
 
@@ -9707,11 +9706,11 @@ class MblLogin extends \DAL\DalSlim {
                     SK.KitapcikTurID,
                     SK.KitapcikAciklamasi 
                FROM BILSANET_A.dbo.SNV_SinavOgrencileri SOGR
-               INNER JOIN BILSANET_A.dbo.GNL_OgrenciSeviyeleri OS ON SOGR.OgrenciSeviyeID = OS.OgrenciSeviyeID
-               INNER JOIN BILSANET_A.dbo.GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
-               INNER JOIN BILSANET_A.dbo.GNL_DersYillari DY ON SNF.DersYiliID = DY.DersYiliID 
-               INNER JOIN BILSANET_A.dbo.SNV_SinavKitapciklari SK ON SOGR.SinavKitapcikID = SK.SinavKitapcikID 
-               INNER JOIN BILSANET_A.dbo.SNV_Sinavlar SNV ON SNV.SinavID=SK.SinavID
+               INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON SOGR.OgrenciSeviyeID = OS.OgrenciSeviyeID
+               INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
+               INNER JOIN ".$dbnamex."GNL_DersYillari DY ON SNF.DersYiliID = DY.DersYiliID 
+               INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SK ON SOGR.SinavKitapcikID = SK.SinavKitapcikID 
+               INNER JOIN ".$dbnamex."SNV_Sinavlar SNV ON SNV.SinavID=SK.SinavID
                WHERE SOGR.SinavOkulID= @sinavOkulID  
                AND SOGR.SinifKodu= @SinifKodu  
                ORDER BY SK.KitapcikTurID; 
@@ -9735,12 +9734,7 @@ class MblLogin extends \DAL\DalSlim {
     ///////// numeric alanı unutma 
   /*
    
-    
-     yakın kişi id = 9EDA7233-6DA7-4F5B-B2A6-13C5CA257F48  2 tane ögrencisi var 
-    tum yetkileri var 62217072-47F2-4782-86CC-B399C4FE65DA 
-   * 
-   * ogrenci kişiid = DC7770F3-24D9-4D6D-AC8D-FAB708E0CBD7 , sinifid = FD046441-5FB0-4A6A-BDB6-C587549DD263, dersyiliid =F8D14B83-3CC4-4440-B86C-96B06EF04EB8 , okulid =A5C5D4E2-352D-426E-915C-AB533DADF146
-      
+  
      
        
    */
