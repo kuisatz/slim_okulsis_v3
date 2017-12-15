@@ -9705,7 +9705,7 @@ class MblLogin extends \DAL\DalSlim {
                     SOGR.SinavKitapcikID,
                     SK.KitapcikTurID,
                     SK.KitapcikAciklamasi 
-               FROM BILSANET_A.dbo.SNV_SinavOgrencileri SOGR
+               FROM ".$dbnamex."SNV_SinavOgrencileri SOGR
                INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON SOGR.OgrenciSeviyeID = OS.OgrenciSeviyeID
                INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON OS.SinifID = SNF.SinifID
                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON SNF.DersYiliID = DY.DersYiliID 
