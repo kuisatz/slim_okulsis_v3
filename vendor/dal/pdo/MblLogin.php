@@ -8423,35 +8423,60 @@ class MblLogin extends \DAL\DalSlim {
                 FROM ".$dbnamex."SNV_SinavSorulari 
                 WHERE 
                     SinavID = @SinavID1;
-
-                SELECT
-                    SNV.SinavID,
-                    BS.BolumSabitID,
-                    BS.SinavTurID,
-                    BS.BolumKodu,
-                    BS.BolumAdi,
-                    BK.BolumKategoriID,
-                    BK.BolumKategoriAdi,
-                    SDS.SinavDersSabitID,
-                    SDS.Sira, 
-                    DS.DersSabitID, 
-                    DS.DersSabitAdi as DersAdi, 
-                    DS.DersSabitAdi as DersAciklama,
-                    SD.SinavDersID,
-                    SD.SinavKategoriID ,
-                    ISNULL(CASE WHEN SD.SinavDersID IS NULL THEN SDS.SoruSayisi ELSE SD.DersSoruSayisi+(ISNULL(CASE WHEN SD.AcikUcluSoruSayisi IS NULL THEN 0 ELSE SD.AcikUcluSoruSayisi END,0)) END,0) AS DersSoruSayisi
-                FROM ".$dbnamex."SNV_Sinavlar SNV
-                INNER JOIN ".$dbnamex."SNV_BolumSabitleri BS ON BS.SinavTurID = SNV.SinavTurID
-                INNER JOIN ".$dbnamex."SNV_BolumKategorileri BK ON BK.BolumSabitID = BS.BolumSabitID
-                INNER JOIN ".$dbnamex."SNV_SinavDersSabitleri SDS ON SDS.BolumKategoriID = BK.BolumKategoriID 
-                INNER JOIN ".$dbnamex."GNL_DersSabitleri DS ON DS.DersSabitID = SDS.DersSabitID
-                INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = SNV.SinavID AND SK.BolumKategoriID = BK.BolumKategoriID
-                INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavKategoriID = SK.SinavKategoriID AND SD.SinavDersSabitID = SDS.SinavDersSabitID
-                INNER JOIN #okiogrsinavderslistesi TSD ON TSD.SinavDersID = SD.SinavDersID  
-                WHERE 
-                    SNV.SinavID = @SinavID1
+                
+                SELECT * FROM ( 
+                    SELECT  
+                        '00000000-0000-0000-0000-000000000000' as SinavID,
+                        NULL as BolumSabitID,
+                        NULL as SinavTurID,
+                        NULL as BolumKodu,
+                        NULL as BolumAdi,
+                        -1 as BolumKategoriID,
+                        COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS)  as BolumKategoriAdi,
+                        NULL as SinavDersSabitID,
+                        -1 as Sira, 
+                        NULL as DersSabitID, 
+                        NULL as DersAdi, 
+                        NULL as DersAciklama,
+                        '00000000-0000-0000-0000-000000000000'SinavDersID,
+                        '00000000-0000-0000-0000-000000000000'SinavKategoriID ,
+                        NULL as DersSoruSayisi  
+                    FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                    WHERE a.[main_group] = 1 and a.[first_group]  = 9 and
+                        a.language_parent_id =0 
+                union 
+                    SELECT
+                        SNV.SinavID,
+                        BS.BolumSabitID,
+                        BS.SinavTurID,
+                        BS.BolumKodu,
+                        BS.BolumAdi,
+                        BK.BolumKategoriID,
+                        BK.BolumKategoriAdi,
+                        SDS.SinavDersSabitID,
+                        SDS.Sira, 
+                        DS.DersSabitID, 
+                        DS.DersSabitAdi as DersAdi, 
+                        DS.DersSabitAdi as DersAciklama,
+                        SD.SinavDersID,
+                        SD.SinavKategoriID ,
+                        ISNULL(CASE WHEN SD.SinavDersID IS NULL THEN SDS.SoruSayisi ELSE SD.DersSoruSayisi+(ISNULL(CASE WHEN SD.AcikUcluSoruSayisi IS NULL THEN 0 ELSE SD.AcikUcluSoruSayisi END,0)) END,0) AS DersSoruSayisi
+                    FROM ".$dbnamex."SNV_Sinavlar SNV
+                    INNER JOIN ".$dbnamex."SNV_BolumSabitleri BS ON BS.SinavTurID = SNV.SinavTurID
+                    INNER JOIN ".$dbnamex."SNV_BolumKategorileri BK ON BK.BolumSabitID = BS.BolumSabitID
+                    INNER JOIN ".$dbnamex."SNV_SinavDersSabitleri SDS ON SDS.BolumKategoriID = BK.BolumKategoriID 
+                    INNER JOIN ".$dbnamex."GNL_DersSabitleri DS ON DS.DersSabitID = SDS.DersSabitID
+                    INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = SNV.SinavID AND SK.BolumKategoriID = BK.BolumKategoriID
+                    INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavKategoriID = SK.SinavKategoriID AND SD.SinavDersSabitID = SDS.SinavDersSabitID
+                    INNER JOIN #okiogrsinavderslistesi TSD ON TSD.SinavDersID = SD.SinavDersID  
+                    WHERE 
+                        SNV.SinavID = @SinavID1
+                    ) as sssc    
                 ORDER BY 
-                    BK.BolumKategoriID,SDS.Sira ;  
+                     BolumKategoriID, Sira ;  
 		 
                 IF OBJECT_ID('tempdb..#okiogrsinavderslistesi') IS NOT NULL DROP TABLE #okiogrsinavderslistesi; 
                 SET NOCOUNT OFF;  
