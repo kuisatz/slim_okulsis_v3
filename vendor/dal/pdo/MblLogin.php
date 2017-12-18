@@ -2617,8 +2617,8 @@ class MblLogin extends \DAL\DalSlim {
                                           FROM ".$dbnamex."GNL_SinifDersleri SD
                                           WHERE SD.SinifID = ODNB.SinifID
                                                  AND SD.DersHavuzuID = ODNB.DersHavuzuID  ), 999) ,
-                    DersOgretmenAdi ,
-                    DersOgretmenSoyadi ,
+                    DersOgretmenAdi  collate SQL_Latin1_General_CP1254_CI_AS as DersOgretmenAdi,
+                    DersOgretmenSoyadi  collate SQL_Latin1_General_CP1254_CI_AS as DersOgretmenSoyadi ,
                     isPuanNotGirilsin ,
                     isPuanNotHesapDahil ,
                     AgirlikliYilSonuNotu ,
