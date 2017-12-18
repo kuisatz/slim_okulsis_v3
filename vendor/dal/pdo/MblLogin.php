@@ -2544,8 +2544,8 @@ class MblLogin extends \DAL\DalSlim {
                 Donem1_PuanOrtalamasi ,
                 Donem2_PuanOrtalamasi ,
                 Donem1_DonemNotu AS AktifDonemNotu ,
-                YetistirmeKursuNotu ,
-                isnull(YilSonuNotu,0) as YilSonuNotu , 
+                YetistirmeKursuNotu , 
+                cast(isnull(YilSonuNotu,0) as varchar(10)) as YilSonuNotu ,
                 cast(isnull(YilSonuPuani,0) as varchar(10)) as YilSonuPuani,
                 YilsonuToplamAgirligi , 
                 OdevAldi ,
@@ -2575,8 +2575,8 @@ class MblLogin extends \DAL\DalSlim {
                 DersSabitID 
                 
         FROM    ( SELECT    
-                    YetistirmeKursuNotu ,
-                    YilSonuNotu,
+                    YetistirmeKursuNotu , 
+                    cast(YilSonuNotu as numeric(10,2)) as YilSonuNotu,
                     cast(YilSonuPuani as numeric(10,2)) as YilSonuPuani,
                     YilsonuToplamAgirligi ,
                     PuanOrtalamasi ,
