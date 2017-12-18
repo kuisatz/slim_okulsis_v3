@@ -4892,8 +4892,7 @@ $app->get("/KyOgretmenOdevListeleri_mbllogin/", function () use ($app ) {
     if ($stripper->offsetExists('languageID')) {
         $vLanguageID = $stripper->offsetGet('languageID')->getFilterValue();
     }
-    if ($stripper->offsetExists('languageID')) 
-        {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
+    
    
     $resDataInsert = $BLL->kyOgretmenOdevListeleri(array( 
         'url' => $_GET['url'],  
