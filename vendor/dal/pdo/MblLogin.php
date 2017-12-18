@@ -4519,8 +4519,13 @@ class MblLogin extends \DAL\DalSlim {
                 DersHavuzuID ,
                 SinifID ,
                 DersID  ,
-                '' as Aciklama
-            from #okiogretmendersprogramilistesi a ;
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),ax.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama
+            
+            FROM #okiogretmendersprogramilistesi a  
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on ax.language_id= lx.id  
+                and ax.[main_group] = 3 and ax.[first_group] = a.HaftaGunu and  ax.[first_group]>0 
+                         
                    
             IF OBJECT_ID('tempdb..#okiogretmendersprogramilistesi') IS NOT NULL DROP TABLE #okiogretmendersprogramilistesi; 
             SET NOCOUNT OFF;   
