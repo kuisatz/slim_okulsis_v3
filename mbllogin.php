@@ -4873,12 +4873,7 @@ $app->get("/KyOgretmenOdevListeleri_mbllogin/", function () use ($app ) {
         $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                 $app, $_GET['did']));
     }
-     $vLanguageID = NULL;
-    if (isset($_GET['languageID'])) {
-        $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
-                                                                $app, 
-                                                                $_GET['languageID']));
-    } 
+ 
     $stripper->strip();
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
