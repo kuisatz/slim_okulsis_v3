@@ -4508,7 +4508,7 @@ class MblLogin extends \DAL\DalSlim {
                 HaftaGunu ,
                 DersSirasi ,
                 SinifDersID ,
-                DersAdi , 
+                COALESCE(NULLIF(COALESCE(NULLIF(dx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS,''),dxx.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS),''),a.DersAdi)  AS DersAdi,
                 DersKodu, 
                 SinifKodu ,
                 SubeGrupID ,
@@ -4525,7 +4525,9 @@ class MblLogin extends \DAL\DalSlim {
             LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
             LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on ax.language_id= lx.id  
                 and ax.[main_group] = 3 and ax.[first_group] = a.HaftaGunu and  ax.[first_group]>0 
-                         
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng dxx on (dxx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS= a.DersAdi collate SQL_Latin1_General_CP1254_CI_AS) and dxx.language_id= 647
+            LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng dx on (dx.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS= dxx.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id   
+                       
                    
             IF OBJECT_ID('tempdb..#okiogretmendersprogramilistesi') IS NOT NULL DROP TABLE #okiogretmendersprogramilistesi; 
             SET NOCOUNT OFF;   
