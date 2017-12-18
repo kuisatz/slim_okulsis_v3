@@ -2245,6 +2245,9 @@ $app->get("/OgretmenDersProgramiListesi_mbllogin/", function () use ($app ) {
             "DersHavuzuID" =>    ($menu["DersHavuzuID"]), 
             "SinifID" =>    ($menu["SinifID"]), 
             "DersID" =>    ($menu["DersID"]),  
+            "aciklama" =>   html_entity_decode($menu["Aciklama"]), 
+            
+            
         );
     }
     

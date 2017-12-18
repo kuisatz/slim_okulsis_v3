@@ -4518,7 +4518,8 @@ class MblLogin extends \DAL\DalSlim {
                 SinifOgretmenID ,
                 DersHavuzuID ,
                 SinifID ,
-                DersID    
+                DersID  ,
+                '' as Aciklama
             from #okiogretmendersprogramilistesi a ;
                    
             IF OBJECT_ID('tempdb..#okiogretmendersprogramilistesi') IS NOT NULL DROP TABLE #okiogretmendersprogramilistesi; 
