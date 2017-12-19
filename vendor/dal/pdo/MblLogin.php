@@ -1426,11 +1426,11 @@ class MblLogin extends \DAL\DalSlim {
                     DersID [uniqueidentifier] ,
                     HaftaGunu integer 
                             ) ; 
-							 
+            DECLARE @tt datetime  = cast(substring( '".$tarih."',0,20) as datetime);					 
             INSERT #ogretmenDersSaatleri  exec  ".$dbnamex."PRC_GNL_DersProgrami_Find_forOgretmenDersSaatleri 
                     @OgretmenID='".$kisiId."',
                     @SinifID='".$sinifID."',
-                    @Tarih='".$tarih."' ;  
+                    @Tarih= @tt  ;  
                         
             SELECT     
                 null as BaslangicSaati , 
