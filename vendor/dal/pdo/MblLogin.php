@@ -2791,10 +2791,11 @@ class MblLogin extends \DAL\DalSlim {
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         a.SinavID ,  
                         SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  ,
-                        SK.SinavDersID 
+                        SD.SinavDersID 
                     FROM #okiogrsinavlari a 
                     INNER JOIN ".$dbnamex."[GNL_Donemler] gd on gd.DonemID = a.NotDonemID 
-                    INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = a.SinavID      
+                    INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = a.SinavID   
+                    INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavKategoriID = SK.SinavKategoriID  /* AND SD.SinavDersSabitID = SDS.SinavDersSabitID */ 
             IF OBJECT_ID('tempdb..#okiogrsinavlari') IS NOT NULL DROP TABLE #okiogrsinavlari; 
             SET NOCOUNT OFF; 
                  "; 
