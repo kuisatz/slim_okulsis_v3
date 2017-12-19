@@ -2766,7 +2766,7 @@ class MblLogin extends \DAL\DalSlim {
                                                     @OkulID = '".$OkulID."',
                                                     @KisiID =  '".$KisiID."' ; 
 
-                    select  
+                    SELECT  
                         null AS Donem  , 
                         null AS SinavTarihi ,
                         null AS SinavBitisTarihi , 
@@ -2782,16 +2782,18 @@ class MblLogin extends \DAL\DalSlim {
                             0= ".$grid."
 
                     UNION 
-                    select  
+                    SELECT  
                         gd.[Donem] , 
                         SinavTarihi ,
                         SinavBitisTarihi , 
                         SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
-                        SinavID ,  
-                        SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  
+                        a.SinavID ,  
+                        SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  ,
+                        SK.SinavDersID 
                     FROM #okiogrsinavlari a 
-                    inner join ".$dbnamex."[GNL_Donemler] gd on gd.DonemID = a.NotDonemID 
+                    INNER JOIN ".$dbnamex."[GNL_Donemler] gd on gd.DonemID = a.NotDonemID 
+                    INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = a.SinavID      
             IF OBJECT_ID('tempdb..#okiogrsinavlari') IS NOT NULL DROP TABLE #okiogrsinavlari; 
             SET NOCOUNT OFF; 
                  "; 
