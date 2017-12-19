@@ -8972,7 +8972,7 @@ class MblLogin extends \DAL\DalSlim {
             SELECT
                 oob.Numarasi ,
                 concat(k.Adi collate SQL_Latin1_General_CP1254_CI_AS ,' ',k.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as adsoyad,
-                SINAV.SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS,
+                SINAV.SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS as SinavAciklamasi,
                 cast(OP.Puan as numeric(10,2)) as Puan
             FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
             INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
