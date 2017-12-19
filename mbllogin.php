@@ -1211,6 +1211,12 @@ $app->get("/Kysubeogrencilistesi_mbllogin/", function () use ($app ) {
                                                                 $app, 
                                                                 $_GET['languageID']));
     } 
+    $vGrid= 0;
+    if (isset($_GET['grid'])) {
+        $stripper->offsetSet('grid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                                                                $app, 
+                                                                $_GET['grid']));
+    } 
     $stripper->strip();
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
@@ -1223,6 +1229,8 @@ $app->get("/Kysubeogrencilistesi_mbllogin/", function () use ($app ) {
     } 
     if ($stripper->offsetExists('languageID')) 
         {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
+    if ($stripper->offsetExists('grid')) 
+        {$vGrid = $stripper->offsetGet('grid')->getFilterValue(); }   
    
     $resDataInsert = $BLL->kysubeogrencilistesi(array( 
         'url' => $_GET['url'],  
@@ -1230,6 +1238,7 @@ $app->get("/Kysubeogrencilistesi_mbllogin/", function () use ($app ) {
         'Cid' => $vCid, 
         'Did' => $vDid,
         'LanguageID' => $vLanguageID, 
+        'Grid' => $vGrid, 
         )); 
   
     $menus = array();
