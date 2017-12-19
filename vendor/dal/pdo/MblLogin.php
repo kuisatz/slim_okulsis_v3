@@ -2773,7 +2773,8 @@ class MblLogin extends \DAL\DalSlim {
                         null AS SinavTurAdi  ,
                         null AS SinavKodu ,
                         null AS SinavID ,  
-                        COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS SinavAciklamasi				 
+                        COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS SinavAciklamasi,
+                        NULL as SinavDersID
                     FROM BILSANET_MOBILE.dbo.sys_specific_definitions a 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id] ) and  ax.language_id= lx.id  

@@ -1470,6 +1470,7 @@ $app->get("/Ogretmensinavlistesi_mbllogin/", function () use ($app ) {
             "SinavKodu" =>   html_entity_decode($menu["SinavKodu"]), 
             "SinavAciklamasi" =>   html_entity_decode($menu["SinavAciklamasi"]), 
             "SinavID" =>   ($menu["SinavID"]), 
+            "SinavDersID" =>   ($menu["SinavDersID"]), 
              
         );
     }
