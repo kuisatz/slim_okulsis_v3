@@ -1403,9 +1403,10 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['sinifID']) && $params['sinifID'] != "")) {
                 $sinifID = $params['sinifID'];
             }   
-            $tarih = '1970-01-01';
+            $tarih = new DateTime('NOW');
+            $tarih = $tarih->format('m-d-Y H:i:s');
             if ((isset($params['tarih']) && $params['tarih'] != "")) {
-                $tarih = $params['tarih'];
+               // $tarih = $params['tarih']; 
             }   
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
