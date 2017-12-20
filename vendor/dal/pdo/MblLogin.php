@@ -9,7 +9,8 @@
  */
 
 namespace DAL\PDO;
-
+ use dateDateTime;
+// use Zend\Stdlib\DateTime;
 /**
  * Class using Zend\ServiceManager\FactoryInterface
  * created to be used by DAL MAnager
@@ -1403,8 +1404,28 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['sinifID']) && $params['sinifID'] != "")) {
                 $sinifID = $params['sinifID'];
             }   
-         //   $tarih = new DateTime('NOW');
-          //  $tarih = $tarih->format('m-d-Y H:i:s');
+           // $this->plugin("dateFormat")->setTimezone("America/New_York")->setLocale("en_US");
+          //  $this->dateFormat(new DateTime(), IntlDateFormatter::MEDIUM);
+            
+           //  $timezone = new DateTimeZone('Europe/Istanbul'); 
+        /*    
+              $value = new \DateTime("now"); 
+             
+              $value->format('d-m-Y h-i-s');
+            // $date= $value.date() ; 
+                print_r ($value->format('d-m-Y H-i-s')   ); 
+                 print_r ( "/////////++"  ); 
+                 $date = new \DateTime(date('d').'-'.date('m').'-'.date('Y').' '.date('H').'-'.date('i').'-'.date('s'));
+                 print_r ($date  ); 
+                     print_r ( "--\\\\\\"  ); 
+            //  $date = DateTime::createFromFormat('j-M-Y', '15-Feb-2009');
+        //      echo $date->format('Y-m-d');
+           
+         //   $tarih = $date->get(Zend_Date::TIMESTAMP);
+         //   $tarih = $tarih->format('m-d-Y H:i:s');
+         * *
+         */
+            $tarih =null;
             if ((isset($params['tarih']) && $params['tarih'] != "")) {
                // $tarih = $params['tarih']; 
             }   
@@ -1427,7 +1448,8 @@ class MblLogin extends \DAL\DalSlim {
                     DersID [uniqueidentifier] ,
                     HaftaGunu integer 
                             ) ; 
-            DECLARE @tt datetime  = cast(substring( '".$tarih."',0,20) as datetime);					 
+            /* DECLARE @tt datetime  = cast(substring( '".$tarih."',0,20) as datetime);	 */ 
+            DECLARE @tt datetime  = getdate();					 
             INSERT #ogretmenDersSaatleri  exec  ".$dbnamex."PRC_GNL_DersProgrami_Find_forOgretmenDersSaatleri 
                     @OgretmenID='".$kisiId."',
                     @SinifID='".$sinifID."',
