@@ -1461,7 +1461,7 @@ class MblLogin extends \DAL\DalSlim {
                 sss.Aciklama collate SQL_Latin1_General_CP1254_CI_AS,
                 sss.DersID ,
                 sss.HaftaGunu 
-            FROM #ogretmenDersSaatleri sss;
+            FROM #ogretmenDersSaatleri sss 
             WHERE @ttime between cast(sss.BaslangicSaati as time ) and  cast(sss.BitisSaati  as time );
             
             IF OBJECT_ID('tempdb..#ogretmenDersSaatleri') IS NOT NULL DROP TABLE #ogretmenDersSaatleri; 
