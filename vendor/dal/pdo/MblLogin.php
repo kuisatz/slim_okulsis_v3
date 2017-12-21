@@ -7930,7 +7930,8 @@ class MblLogin extends \DAL\DalSlim {
             WHERE lower(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) != 'admin' AND 
                 cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) AND
                 oo.KurumTurID < 500 AND 
-                dy.EgitimYilID = (select max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx WHERE dyx.OkulID = OKL.OkulID AND DY.AktifMi =1  ) and 
+               /* dy.EgitimYilID = (select max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx WHERE dyx.OkulID = OKL.OkulID AND DY.AktifMi =1  ) and */
+                cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
                 OKR.RolID = ".$SendrolID."  
             ) AS ssss
             order by ID,UPPER(aciklama)
@@ -8026,8 +8027,8 @@ class MblLogin extends \DAL\DalSlim {
                 WHERE a.[main_group] = 1 and a.[first_group]  = 10 and
                     a.language_parent_id =0 AND
                     1 = ( SELECT count(1)  
-					FROM BILSANET_SIVASGAZI.dbo.GNL_Siniflar SN 
-					INNER JOIN BILSANET_SIVASGAZI.dbo.GNL_DersYillari DY ON DY.DersYiliID = SN.DersYiliID -- and DY.AktifMi =1  
+					FROM ".$dbnamex."GNL_Siniflar SN 
+					INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = SN.DersYiliID -- and DY.AktifMi =1  
 					WHERE 
                                                 ".$addSQLWhere."  
 						SN.Sanal = 0 AND 
@@ -8041,14 +8042,14 @@ class MblLogin extends \DAL\DalSlim {
                     SN.SeviyeID,
                     1 as kontrol
                 FROM ".$dbnamex."GNL_Siniflar SN 
-                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = SN.DersYiliID and DY.AktifMi =1 
+                INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = SN.DersYiliID /*and DY.AktifMi =1 */
                 WHERE 
                     ".$addSQLWhere."
                     SN.Sanal = 0 AND 
-                    dy.EgitimYilID = (select max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = DY.OkulID and DY.AktifMi =1  )   	
+                    /* dy.EgitimYilID = (select max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = DY.OkulID and DY.AktifMi =1)*/
+                    cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
             ) as ssssd
-            ORDER BY ID,SinifKodu,aciklama;
- 
+            ORDER BY ID,SinifKodu,aciklama; 
             
             SET NOCOUNT OFF;   
                  "; 
@@ -8149,12 +8150,13 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_Roller R ON R.RolID = OKR.RolID
             inner join ".$dbnamex."[GNL_Okullar] oo ON oo.[OkulID] = okl.[OkulID] 
             inner join ".$dbnamex."[GNL_Kisiler] ki ON ki.KisiID = OKL.KisiID 
-            inner join ".$dbnamex."GNL_DersYillari DY ON DY.OkulID = OKL.OkulID AND DY.AktifMi =1 
+            inner join ".$dbnamex."GNL_DersYillari DY ON DY.OkulID = OKL.OkulID AND  /* DY.AktifMi =1 */
             inner join ".$dbnamex."GNL_OgrenciSeviyeleri gos ON gos.OgrenciID = OKL.KisiID 
             LEFT JOIN ".$dbnamex."GNL_OgrenciYakinlari VELI ON VELI.OgrenciID = OKL.KisiID
             LEFT JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = VELI.YakinID  
             WHERE  
-                dy.EgitimYilID = (SELECT max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = DY.OkulID and DY.AktifMi =1) AND             
+                /* dy.EgitimYilID = (SELECT max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = DY.OkulID and DY.AktifMi =1) AND */ 
+                cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
                 ".$addSQLTum."
                 ".$addWhereSQL."
                 OKR.RolID = 8  
