@@ -8049,7 +8049,7 @@ class MblLogin extends \DAL\DalSlim {
                     /* dy.EgitimYilID = (select max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = DY.OkulID and DY.AktifMi =1)*/
                     cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
             ) as ssssd
-            ORDER BY ID,SinifKodu,aciklama; 
+            ORDER BY SeviyeID, ID, SinifKodu,aciklama; 
             
             SET NOCOUNT OFF;   
                  "; 
