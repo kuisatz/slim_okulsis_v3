@@ -991,7 +991,7 @@ $app->get("/VeliOgrencileri_mbllogin/", function () use ($app ) {
     foreach ($resDataInsert as $menu){
         $menus[]  = array(  
             "OgrenciID" => $menu["OgrenciID"],
-            "SinifID" => $menu["SinifID"],
+            "sinifID" => $menu["SinifID"],
             "DersYiliID" => $menu["DersYiliID"], 
             "SinifKodu" =>  ($menu["SinifKodu"]),            
             "SinifAdi" => html_entity_decode($menu["SinifAdi"]), 
