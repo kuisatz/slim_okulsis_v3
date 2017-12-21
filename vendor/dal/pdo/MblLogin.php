@@ -8150,13 +8150,13 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_Roller R ON R.RolID = OKR.RolID
             inner join ".$dbnamex."[GNL_Okullar] oo ON oo.[OkulID] = okl.[OkulID] 
             inner join ".$dbnamex."[GNL_Kisiler] ki ON ki.KisiID = OKL.KisiID 
-            inner join ".$dbnamex."GNL_DersYillari DY ON DY.OkulID = OKL.OkulID AND  /* DY.AktifMi =1 */
+            inner join ".$dbnamex."GNL_DersYillari DY ON DY.OkulID = OKL.OkulID /*  AND DY.AktifMi =1 */
             inner join ".$dbnamex."GNL_OgrenciSeviyeleri gos ON gos.OgrenciID = OKL.KisiID 
             LEFT JOIN ".$dbnamex."GNL_OgrenciYakinlari VELI ON VELI.OgrenciID = OKL.KisiID
             LEFT JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = VELI.YakinID  
             WHERE  
                 /* dy.EgitimYilID = (SELECT max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = DY.OkulID and DY.AktifMi =1) AND */ 
-                cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
+                cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) AND
                 ".$addSQLTum."
                 ".$addWhereSQL."
                 OKR.RolID = 8  
