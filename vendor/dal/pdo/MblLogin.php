@@ -7832,9 +7832,11 @@ class MblLogin extends \DAL\DalSlim {
             LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng ax on (ax.language_parent_id = nn.[sendRolID] or ax.RolID = nn.[sendRolID] ) and  ax.language_id= lx.id  
                  
             WHERE  nn.[rolID] = ".$RolID." AND
-                   nn.[KurumID] = @KurumID  
+                   nn.[KurumID] = @KurumID AND 
+                   nn.active =0 AND 
+                   nn.deleted =0
                    ) as dddd
-            ORDER BY priority , sendRolID;
+            ORDER BY priority, sendRolID;
  
             SET NOCOUNT OFF;   
                  "; 
