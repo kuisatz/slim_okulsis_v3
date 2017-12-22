@@ -978,7 +978,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND 
                         a.RolID = ".intval($RolID)."  AND 
                         a.language_parent_id =0 AND 
-                        a.ParentID =0 
+                        a.ParentID =".intval($parent)."
                     ORDER BY a.MenuID; 
                  ";  
             $statement = $pdo->prepare($sql);            

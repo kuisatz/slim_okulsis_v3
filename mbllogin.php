@@ -228,15 +228,24 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
         $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                                                                 $app, 
                                                                 $_GET['languageID']));
-    }   
+    }  
+    $vParentID = NULL;
+    if (isset($_GET['parentID'])) {
+        $stripper->offsetSet('parentID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                                                                $app, 
+                                                                $_GET['parentID']));
+    }
     $stripper->strip(); 
     if ($stripper->offsetExists('languageID')) 
         {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
     if ($stripper->offsetExists('RolID')) 
         {$vRolID = $stripper->offsetGet('RolID')->getFilterValue(); }  
+    if ($stripper->offsetExists('parentID')) 
+        {$vParentID = $stripper->offsetGet('parentID')->getFilterValue(); }  
     
     $resDataMenu = $BLL->mobilMenu(array(      
                                             'RolID' => $vRolID,  
+                                            'ParentID' => $vParentID,  
                                             'LanguageID' => $vLanguageID, 
                                            ) ); 
     $menus = array();
