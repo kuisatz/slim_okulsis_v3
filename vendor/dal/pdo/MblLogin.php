@@ -4617,6 +4617,7 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['OgrenciID']) && $params['OgrenciID'] != "")) {
                 $KisiID = $params['OgrenciID'];
             }
+            $SinifID ='CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             $findOgrenciseviyeIDValue= null ; 
             $findOgrenciseviyeID = $this->findOgrenciseviyeID(
                             array( 'KisiID' =>$KisiID,  'Cid' =>$cid,'Did' =>$did, ));
