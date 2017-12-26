@@ -594,6 +594,10 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['kisiId']) && $params['kisiId'] != "")) {
                 $kisiId = $params['kisiId'];
             }    
+            $ip = '111111111111111111';
+            if ((isset($params['ip']) && $params['ip'] != "")) {
+                $kisiId = $params['ip'];
+            }  
             $sql = "  
                     set nocount on;
                     IF OBJECT_ID('tempdb..#okimobilfirstdata') IS NOT NULL DROP TABLE #okimobilfirstdata; 
@@ -635,7 +639,8 @@ class MblLogin extends \DAL\DalSlim {
                             DY.DersYiliID,
                             DY.EgitimYilID, 
                             EY.EgitimYili,
-                            DY.DonemID 
+                            DY.DonemID ,
+                            '".$ip."' as ip
                         FROM #okimobilfirstdata sss
                         inner join [dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                         inner join GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 

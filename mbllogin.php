@@ -144,6 +144,10 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $ip  = 'aaaa';
+    if (isset($headerParams['X-IP'])) { 
+       $ip = $headerParams['X-IP'] ;   
+    }
     $vkisiId = NULL;     
     if (isset($_GET['kisiId'])) {
         $stripper->offsetSet('kisiId', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
@@ -177,6 +181,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
                 'kisiId' => $vkisiId,  
                 'tcno' => $vtc,  
                 'LanguageID' => $vLanguageID, 
+                'ip'=> $ip,
         )); 
   
     $menus = array();
@@ -197,6 +202,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "proxy" =>  ($menu["serverproxy"]), 
             "cid" =>  ($menu["cid"]),
             "did" =>  ($menu["database_id"]),
+            "ip" =>  ($menu["ip"]),
             
         );
     }
@@ -216,7 +222,7 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();        
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
     $headerParams = $app->request()->headers();
-     
+    
     $vRolID = NULL;
     if (isset($_GET['RolID'])) {
         $stripper->offsetSet('RolID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
