@@ -596,7 +596,7 @@ class MblLogin extends \DAL\DalSlim {
             }    
             $ip = '111111111111111111';
             if ((isset($params['ip']) && $params['ip'] != "")) {
-                $kisiId = $params['ip'];
+                $ip = $params['ip'];
             }  
             $sql = "  
                     set nocount on;
