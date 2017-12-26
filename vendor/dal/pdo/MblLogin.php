@@ -624,7 +624,7 @@ class MblLogin extends \DAL\DalSlim {
                              null AS DersYiliID,
                             '' AS EgitimYilID, 
                             '' AS EgitimYili,
-                            0 AS DonemID 
+                            0 AS DonemID ,
                             NULL as ip
 
                         UNION  	 
