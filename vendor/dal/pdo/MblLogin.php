@@ -953,15 +953,28 @@ class MblLogin extends \DAL\DalSlim {
                 $languageIdValue = $params['LanguageID'];
             }   
             
-            $sql = "   
+            $sql = "  
+            SELECT 
+                ID,
+                MenuID,
+                ParentID,  
+                MenuAdi, 
+                Aciklama,
+                URL,
+                RolID,
+                SubDivision,
+                ImageURL,
+                divid,
+                iconcolor,
+                iconclass,
+                collapse,
+                sira
+               FROM  (  
                     SELECT 
                         a.[ID]
                         ,a.[MenuID]
                         ,a.[ParentID],  
-                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi
-                       /* case lx.id  
-                            when 647 then a.[MenuAdi] 
-                            else COALESCE(isnull(ax.[MenuAdi] ,a.MenuAdiEng) ,a.MenuAdiEng) end as MenuAdi */
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi 
                         ,a.[Aciklama]
                         ,a.[URL]
                         ,a.[RolID]
@@ -970,7 +983,8 @@ class MblLogin extends \DAL\DalSlim {
                         ,a.[divid] ,
                         a.iconcolor,
                         a.[iconclass],
-                        a.collapse  
+                        a.collapse ,
+                        a.sira  
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -978,8 +992,34 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND 
                         a.RolID = ".intval($RolID)."  AND 
                         a.language_parent_id =0 AND 
-                        a.ParentID =".intval($parent)."
-                    ORDER BY a.MenuID; 
+                        a.ParentID =0
+                     UNION
+                     SELECT 
+                        a.[ID]
+                        ,a.[MenuID]
+                        ,a.[ParentID],  
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi 
+                        ,a.[Aciklama]
+                        ,a.[URL]
+                        ,a.[RolID]
+                        ,a.[SubDivision] 
+                        ,a.[ImageURL] 
+                        ,a.[divid] ,
+                        a.iconcolor,
+                        a.[iconclass],
+                        a.collapse ,
+                        a.sira  
+                    FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Menuleri] ax on (ax.language_parent_id = a.ID or ax.ID = a.ID ) and  ax.language_id= lx.id  
+                    WHERE a.active = 0 AND a.deleted = 0 AND 
+                        a.RolID = ".intval($RolID)."  AND 
+                        a.language_parent_id =0 AND 
+                        a.ParentID >0 
+                ) AS asasdasd
+                ORDER BY MenuID, ParentID, sira 
+                     
                  ";  
             $statement = $pdo->prepare($sql);            
       //echo debugPDO($sql, $params);
