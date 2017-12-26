@@ -700,6 +700,10 @@ class MblLogin extends \DAL\DalSlim {
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
             } 
+            $ip = '111111111111111111';
+            if ((isset($params['ip']) && $params['ip'] != "")) {
+                $ip = $params['ip'];
+            } 
             $sql = "  
             SET NOCOUNT ON;     
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
