@@ -2263,7 +2263,7 @@ class MblLogin extends \DAL\DalSlim {
                                 ddx.language_id = ".$languageIdValue." 
                 WHERE 
                    /*  a.DersYiliID = '".$dersYiliID."' AND */ 
-                    zz.KisiID = ='".$kisiId."'; 
+                    zz.KisiID  ='".$kisiId."'; 
  
             SET NOCOUNT OFF; 
                  "; 
