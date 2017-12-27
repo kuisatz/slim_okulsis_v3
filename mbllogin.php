@@ -110,7 +110,12 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
         $stripper->offsetSet('deviceID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
                 $app, $_GET['deviceID']));
     } 
-    $vIP = NULL;     
+    
+    $vXIP = NULL; 
+    if (isset($headerParams['X-IP'])) { 
+       $vXIP = $headerParams['X-IP'] ;   
+    }
+    $vIP = NULL;  
     if (isset($_GET['ip'])) {
         $stripper->offsetSet('ip', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
                 $app, $_GET['ip']));
@@ -154,6 +159,7 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
         'sifre' => $vsifre, 
         'DeviceID' => $vDeviceID, 
         'ip' => $vIP, 
+        'xip' => $vXIP, 
         'Long' => $vlong, 
         'Lat' => $vlat, 
         

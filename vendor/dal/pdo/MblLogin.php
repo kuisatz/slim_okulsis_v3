@@ -427,6 +427,10 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['ip']) && $params['ip'] != "")) {
                 $ip = $params['ip'];
             }  
+            $xip = '0.0.0.0';
+            if ((isset($params['xip']) && $params['xip'] != "")) {
+                $xip = $params['xip'];
+            }  
             $lang = '0';
             if ((isset($params['Lang']) && $params['Lang'] != "")) {
                 $lang = $params['Lang'];
@@ -494,14 +498,16 @@ class MblLogin extends \DAL\DalSlim {
              
             DELETE FROM [BILSANET_MOBILE].[dbo].[act_session] WHERE usid = @tcID ; 
             
-            INSERT INTO [BILSANET_MOBILE].[dbo].[act_session] ([name],[data],[public_key],[usid],[acl],[ip],[deviceId],[lang],[lot])
+            INSERT INTO [BILSANET_MOBILE].[dbo].[act_session] ([name],[data],[public_key],[usid],[acl],[ip],[deviceId],[lang],[lot],xip)
             SELECT top 1 adsoyad , '' as data, '' as public_key,tcID as usid,'' as acl,
-            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$lang."' as lang,'".$lot."' as lot FROM  ##okidetaydata".$tc."
+            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$lang."' as lang,'".$lot."' as lot,'".$xip."' as xip  
+            FROM  ##okidetaydata".$tc." 
             order by Fotograf;
             
-            INSERT INTO [BILSANET_MOBILE].[dbo].[act_session_log] ([name],[data],[public_key],[usid],[acl],[ip],[deviceId],[lang],[lot])
+            INSERT INTO [BILSANET_MOBILE].[dbo].[act_session_log] ([name],[data],[public_key],[usid],[acl],[ip],[deviceId],[lang],[lot],xip)
             SELECT top 1 adsoyad, '' as data, '' as public_key,tcID as usid,'' as acl,
-            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$lang."' as lang,'".$lot."' as lot FROM  ##okidetaydata".$tc."
+            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$lang."' as lang,'".$lot."' as lot,'".$xip."' as xip
+            FROM  ##okidetaydata".$tc."
             order by Fotograf; 
    
             SELECT TOP 1 * FROM  ##okidetaydata".$tc."
