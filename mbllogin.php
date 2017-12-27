@@ -110,6 +110,22 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
         $stripper->offsetSet('deviceID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
                 $app, $_GET['deviceID']));
     } 
+    $vIP = NULL;     
+    if (isset($_GET['ip'])) {
+        $stripper->offsetSet('ip', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['ip']));
+    } 
+    $vlong = NULL;     
+    if (isset($_GET['long'])) {
+        $stripper->offsetSet('long', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['long']));
+    } 
+    $vlat = NULL;     
+    if (isset($_GET['lat'])) {
+        $stripper->offsetSet('lat', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['lat']));
+    } 
+    
     
     $stripper->strip();
     
@@ -122,12 +138,24 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
     if ($stripper->offsetExists('deviceID')) {
         $vDeviceID = $stripper->offsetGet('deviceID')->getFilterValue();
     }
+    if ($stripper->offsetExists('ip')) {
+        $vIP = $stripper->offsetGet('ip')->getFilterValue();
+    }
+    if ($stripper->offsetExists('long')) {
+        $vlong = $stripper->offsetGet('long')->getFilterValue();
+    }
+    if ($stripper->offsetExists('lat')) {
+        $vlat = $stripper->offsetGet('lat')->getFilterValue();
+    }
    
     $resDataInsert = $BLL->gnlKullaniciFindForLoginByTcKimlikNo(array( 
         'url' => $_GET['url'], 
         'tc' => $vtc,  
         'sifre' => $vsifre, 
         'DeviceID' => $vDeviceID, 
+        'ip' => $vIP, 
+        'Long' => $vlong, 
+        'Lat' => $vlat, 
         
         ));
     $app->response()->header("Content-Type", "application/json");
