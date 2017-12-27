@@ -445,7 +445,7 @@ class MblLogin extends \DAL\DalSlim {
             IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
            
             DECLARE @name nvarchar(200) =''  collate SQL_Latin1_General_CP1254_CI_AS;
-            DECLARE @database_id int, @MEBKodu int ; 
+            DECLARE @database_id int, @MEBKodu int ,@tcID bigint; 
             DECLARE @tc nvarchar(11)  =''  collate SQL_Latin1_General_CP1254_CI_AS,
                     @sifre nvarchar(50) =''  collate SQL_Latin1_General_CP1254_CI_AS;
             DECLARE @sqlx nvarchar(2000) =''  collate SQL_Latin1_General_CP1254_CI_AS; 
