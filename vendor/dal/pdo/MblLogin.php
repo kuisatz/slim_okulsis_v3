@@ -1679,8 +1679,8 @@ class MblLogin extends \DAL\DalSlim {
                         
 
                 SELECT 
-                    tt.OgrenciID,
-                    tt.Tarih,
+                    tt.OgrenciID, 
+                    FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih
                     tt.Numarasi  ,   
                     UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) AS adsoyad ,
                     tt.CinsiyetID ,
@@ -2242,8 +2242,8 @@ class MblLogin extends \DAL\DalSlim {
                     a.DersYiliID,  
                     a.OgrenciID,
                     a.DevamsizlikKodID, 
-                    a.DevamsizlikPeriyodID,  
-                    a.Tarih, 
+                    a.DevamsizlikPeriyodID, 
+                    FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm') as Tarih
                     a.Aciklama, 
                     b.OgrenciseviyeID ,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
@@ -2905,8 +2905,8 @@ class MblLogin extends \DAL\DalSlim {
                     UNION 
                     SELECT  
                         gd.[Donem] , 
-                        SinavTarihi ,
-                        SinavBitisTarihi , 
+                        FORMAT( SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
+                        FORMAT( SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi,
                         SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         a.SinavID ,  
@@ -3038,9 +3038,9 @@ class MblLogin extends \DAL\DalSlim {
                                                     @KisiID =  '".$KisiID."' ; 
 
                     select  
-                        gd.[Donem] , 
-                        SinavTarihi ,
-                        SinavBitisTarihi , 
+                        gd.[Donem],  
+                        FORMAT(SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
+                        FORMAT(SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi
                         SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS 
@@ -3160,9 +3160,9 @@ class MblLogin extends \DAL\DalSlim {
                         SNV.SeviyeID, 
                         SNV.KitapcikTurID,
                         SNV.SinavKodu,
-                        SNV.SinavAciklamasi,
-                        SNV.SinavTarihi,
-                        SNV.SinavBitisTarihi, 
+                        SNV.SinavAciklamasi, 
+                        FORMAT(SNV.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
+                        FORMAT(SNV.SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi,
                         SNV.SinavSuresi, 
                         SOGR.SinavOgrenciID,
                         concat(ogt.Adi  collate SQL_Latin1_General_CP1254_CI_AS,'' ,ogt.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen
@@ -3192,9 +3192,9 @@ class MblLogin extends \DAL\DalSlim {
                         SNV.SeviyeID, 
                         SNV.KitapcikTurID,
                         SNV.SinavKodu,
-                        SNV.SinavAciklamasi,
-                        SNV.SinavTarihi,
-                        SNV.SinavBitisTarihi, 
+                        SNV.SinavAciklamasi, 
+                        FORMAT(SNV.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi,
+                        FORMAT(SNV.SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi, 
                         SNV.SinavSuresi, 
                         SOGR.SinavOgrenciID,
                         concat(ogt.Adi collate SQL_Latin1_General_CP1254_CI_AS ,'' ,ogt.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen
@@ -3336,9 +3336,9 @@ class MblLogin extends \DAL\DalSlim {
                                                     @KisiID =  '".$KisiID."' ; 
 
                     select  
-                        gd.[Donem], 
-                        SinavTarihi,
-                        SinavBitisTarihi, 
+                        gd.[Donem],  
+                        FORMAT(SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
+                        FORMAT(SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi,
                         SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS ,
                         SinavKodu collate SQL_Latin1_General_CP1254_CI_AS ,
                         SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS 
@@ -3520,13 +3520,13 @@ class MblLogin extends \DAL\DalSlim {
 		SELECT 
 			M.MesajID,
 			M.KisiID AS ReceiverID,
-			MK.Okundu,
-			MK.OkunduguTarih,
+			MK.Okundu, 
+                        FORMAT(MK.OkunduguTarih, 'dd-MM-yyyy hh:mm') as OkunduguTarih,
 			M.Silindi,
 			M.MesajOncelikID,
 			M.Konu collate SQL_Latin1_General_CP1254_CI_AS as Konu,
-			M.Mesaj collate SQL_Latin1_General_CP1254_CI_AS as Mesaj,
-			M.Tarih,
+			M.Mesaj collate SQL_Latin1_General_CP1254_CI_AS as Mesaj, 
+                        FORMAT(M.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
 			M.KisiID AS SenderID,
 			K.Adi  collate SQL_Latin1_General_CP1254_CI_AS AS SenderAdi,
 			K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS AS SenderSoyadi,
@@ -3628,8 +3628,8 @@ class MblLogin extends \DAL\DalSlim {
             SELECT  
                 MesajID, 
                 MesajOncelikID, 
-                Konu collate SQL_Latin1_General_CP1254_CI_AS as Konu, 
-                Tarih, 
+                Konu collate SQL_Latin1_General_CP1254_CI_AS as Konu,  
+                FORMAT(Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
                 SenderID, 
                 ReceiverIDs, 
                 ReceiverNames collate SQL_Latin1_General_CP1254_CI_AS as ReceiverNames,
@@ -4157,13 +4157,13 @@ class MblLogin extends \DAL\DalSlim {
 		SELECT 
 			M.MesajID,
 			M.KisiID AS ReceiverID,
-			MK.Okundu,
-			MK.OkunduguTarih,
+			MK.Okundu, 
+                        FORMAT(MK.OkunduguTarih, 'dd-MM-yyyy hh:mm') as OkunduguTarih,
 			M.Silindi,
 			M.MesajOncelikID,
 			M.Konu,
-			M.Mesaj,
-			M.Tarih,
+			M.Mesaj, 
+                        FORMAT(M.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
 			M.KisiID AS SenderID,
 			K.Adi AS SenderAdi,
 			K.Soyadi AS SenderSoyadi,
@@ -4342,25 +4342,25 @@ class MblLogin extends \DAL\DalSlim {
                                                     @Tumu =  1;   
 
                     SELECT  
-                        OdevTanimID  , 
-                        OgretmenAdi  ,
-                        SinifKodu   ,
-                        SeviyeID  ,
-                        SeviyeAdi   , 
-                        DersBilgisi   , 
-                        Tanim   ,
-                        Aciklama  ,
-                        Tarih  , 
-                        TeslimTarihi  , 
-                        OdevTipID  , 
-                        TanimDosyaID  , 
-                        TanimDosyaAdi   , 
-                        TanimYuklemeTarihi  ,  
-                        TanimBoyut   ,  
-                        TanimDosya  , 
-                        VerildigiOgrenciSayisi  , 
-                        BakanOgrenciSayisi   ,
-                        YapanOgrenciSayisi  ,
+                        OdevTanimID, 
+                        OgretmenAdi,
+                        SinifKodu,
+                        SeviyeID,
+                        SeviyeAdi, 
+                        DersBilgisi, 
+                        Tanim,
+                        Aciklama, 
+                        FORMAT(Tarih, 'dd-MM-yyyy hh:mm') as Tarih, 
+                        FORMAT(TeslimTarihi, 'dd-MM-yyyy hh:mm') as TeslimTarihi,
+                        OdevTipID, 
+                        TanimDosyaID, 
+                        TanimDosyaAdi, 
+                        FORMAT(TanimYuklemeTarihi, 'dd-MM-yyyy hh:mm') as TanimYuklemeTarihi,
+                        TanimBoyut,  
+                        TanimDosya, 
+                        VerildigiOgrenciSayisi, 
+                        BakanOgrenciSayisi,
+                        YapanOgrenciSayisi,
                         OnayOgrenciSayisi   
                     from #okiozetodevtanimlari a ;
             IF OBJECT_ID('tempdb..#okiozetodevtanimlari') IS NOT NULL DROP TABLE #okiozetodevtanimlari;       
@@ -4433,15 +4433,15 @@ class MblLogin extends \DAL\DalSlim {
                 OO.OdevTanimID,
                 OO.OgrenciCevap,
                 OO.OgrenciGordu,
-                OO.OgrenciOnay,
-                OO.OgrenciTeslimTarihi,
+                OO.OgrenciOnay, 
+                FORMAT(OO.OgrenciTeslimTarihi, 'dd-MM-yyyy hh:mm') as OgrenciTeslimTarihi,
                 OO.OgretmenDegerlendirme,
                 OO.OdevOnayID,
                 K.Adi  collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS  AS OgretmenAdi,
                 D.DersAdi,
-                OT.Tanim,
-                OT.Tarih,
-                OT.TeslimTarihi,
+                OT.Tanim, 
+                FORMAT(OT.Tarih, 'dd-MM-yyyy hh:mm') as Tarih, 
+                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy hh:mm') as TeslimTarihi,
                 OT.Aciklama
             FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
             INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
@@ -4516,13 +4516,13 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
             SELECT  
                 OT.OdevTanimID ,
-                K.Adi  collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS AS OgretmenAdi ,
-                S.SinifKodu ,
-                SV.SeviyeAdi ,
-                DH.DersKodu  collate SQL_Latin1_General_CP1254_CI_AS + ' (' + D.DersAdi collate SQL_Latin1_General_CP1254_CI_AS  + ')' AS DersBilgisi ,
-                OT.Tanim ,
-                OT.Tarih ,
-                OT.TeslimTarihi
+                K.Adi collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS AS OgretmenAdi ,
+                S.SinifKodu,
+                SV.SeviyeAdi,
+                DH.DersKodu collate SQL_Latin1_General_CP1254_CI_AS + ' (' + D.DersAdi collate SQL_Latin1_General_CP1254_CI_AS  + ')' AS DersBilgisi ,
+                OT.Tanim,
+                FORMAT(OT.Tarih, 'dd-MM-yyyy hh:mm') as Tarih, 
+                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy hh:mm') as TeslimTarihi
             FROM ".$dbnamex."ODV_OdevTanimlari AS OT
             INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID
             INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID
@@ -5560,69 +5560,69 @@ class MblLogin extends \DAL\DalSlim {
                 YakinTuru ,
                 BorcluBanka, 
                 /*OgrenciEvTelefonu,
-                OgrenciCepTelefonu  ,
-                OgrenciEmail  ,*/ 
-                BorcluSozlesmeID  , 
-                TaahhutnameNo  ,
-                IslemNumarasi ,
-                OdemeSekliAciklama ,
-                cast(TaahhutnameTarihi  as date) as TaahhutnameTarihi,
-                ToplamTutar   ,
-                Pesinat ,
-                NetTutar   ,             
-                ToplamOdenen ,
-                KalanTutar ,
-                ToplamIndirim ,
-                ToplamIndirimYuzdesi  ,
-                IndirimliTutar ,
-                cast(PesinatOdemeTarihi   as date) as PesinatOdemeTarihi,
-                PesinatAlindi  ,
-                /*DersYiliID  ,
-                SozlesmeID  ,*/
-                OgrenciID  ,
-                IndirimOrani ,
-                /*IndirimID  ,*/
-                IndirimOrani2 ,
-                /*IndirimID2  ,*/
-                IndirimOrani3 ,
-                /*IndirimID3  ,*/
-                /*OdemePlanID  ,*/
-                /*GelecekYil ,*/
-                /* SozlesmeIptalEdildi ,*/
-                cast(SozlesmeIptalTarihi as date) as SozlesmeIptalTarihi ,
-                IadeTutari ,
-                /*OdemeSekliID ,
-                OgrenciYakinID   ,*/
-                OkulID  ,
-                SozlesmelerAciklama  ,
-                Numarasi ,
-                concat(OgrenciAdi , ' ', OgrenciSoyadi) as OgrenciAdiSoyadi  , 
-                OgrenciTcKimlikNo  ,
-                SinifKodu ,
-                OkulAdi ,
-                BorcluTcKimlikNo ,
-                concat(BorcluAdi , ' ' ,BorcluSoyadi) as BorcluAdiSoyadi  ,
-                /*BorcluEmail ,
+                OgrenciCepTelefonu,
+                OgrenciEmail,*/ 
+                BorcluSozlesmeID, 
+                TaahhutnameNo,
+                IslemNumarasi,
+                OdemeSekliAciklama,  
+                FORMAT(cast(TaahhutnameTarihi  as date), 'dd-MM-yyyy hh:mm') as TaahhutnameTarihi, 
+                ToplamTutar,
+                Pesinat,
+                NetTutar,             
+                ToplamOdenen,
+                KalanTutar,
+                ToplamIndirim,
+                ToplamIndirimYuzdesi,
+                IndirimliTutar, 
+                FORMAT(cast(PesinatOdemeTarihi  as date), 'dd-MM-yyyy hh:mm') as PesinatOdemeTarihi,
+                PesinatAlindi,
+                /*DersYiliID,
+                SozlesmeID,*/
+                OgrenciID,
+                IndirimOrani,
+                /*IndirimID,*/
+                IndirimOrani2,
+                /*IndirimID2,*/
+                IndirimOrani3,
+                /*IndirimID3,*/
+                /*OdemePlanID,*/
+                /*GelecekYil,*/
+                /* SozlesmeIptalEdildi,*/ 
+                FORMAT(cast(SozlesmeIptalTarihi  as date), 'dd-MM-yyyy hh:mm') as SozlesmeIptalTarihi,
+                IadeTutari,
+                /*OdemeSekliID,
+                OgrenciYakinID,*/
+                OkulID,
+                SozlesmelerAciklama,
+                Numarasi,
+                concat(OgrenciAdi, ' ', OgrenciSoyadi) as OgrenciAdiSoyadi, 
+                OgrenciTcKimlikNo,
+                SinifKodu,
+                OkulAdi,
+                BorcluTcKimlikNo,
+                concat(BorcluAdi, ' ' ,BorcluSoyadi) as BorcluAdiSoyadi,
+                /*BorcluEmail,
                 BorcluAdresi,*/
-                BorcluCepTelefonu ,
-                /*BorcluEvTelefonu ,
+                BorcluCepTelefonu,
+                /*BorcluEvTelefonu,
                 BorcluIsTelefonu,
-                BorcluFax  ,*/
-                TaksitSayisi ,
-                FaizOrani ,
-                /*Aktif ,*/
-                IndirimTipi  ,
-                IndirimTipleri  ,
-                concat(VeliAdi , ' ' ,VeliSoyadi ) as VeliAdiSoyadi,
-                /*BorcTurID  ,*/
-                BorcTuru_Aciklama  ,
-                OdemePlani_Aciklama  ,
-                OdemePlaniAciklama  ,
-                Indirimler  ,
-                OdemeSekli  ,
-                BankaHesapNo ,
-                /*PesinatFaturaDetayID  ,*/
-                VergiDairesi ,
+                BorcluFax,*/
+                TaksitSayisi,
+                FaizOrani,
+                /*Aktif,*/
+                IndirimTipi,
+                IndirimTipleri,
+                concat(VeliAdi,' ' ,VeliSoyadi) as VeliAdiSoyadi,
+                /*BorcTurID,*/
+                BorcTuru_Aciklama,
+                OdemePlani_Aciklama,
+                OdemePlaniAciklama,
+                Indirimler,
+                OdemeSekli,
+                BankaHesapNo,
+                /*PesinatFaturaDetayID,*/
+                VergiDairesi,
                 VergiNo 
             FROM #okiborclusozlesmeleri   
             /*   WHERE SeviyeID = ".intval($OgrenciID)." ;*/
@@ -6148,23 +6148,23 @@ class MblLogin extends \DAL\DalSlim {
 							 @BorcluSozlesmeID='".$BorcluSozlesmeID."'; 
 
             SELECT  
-                    BorcluOdemePlaniID  ,
-                    BorcluSozlesmeID  ,
-                    OdemeTarihi  ,
-                    TaksitNo   ,
-                    TaksitTutari  ,
-                    Odendi  ,
+                    BorcluOdemePlaniID,
+                    BorcluSozlesmeID, 
+                    FORMAT(OdemeTarihi), 'dd-MM-yyyy hh:mm') as OdemeTarihi,
+                    TaksitNo,
+                    TaksitTutari,
+                    Odendi,
                     case Odendi when 0 then 'Ödenmedi' else 'Ödendi' end as Odendi_aciklama,
-                    OdemeAciklamasi   ,
-                    Iptal  ,
-                    FaturaDetayID ,
-                    OdenenTutar ,
-                    FaturaTarihi   ,
-                    FaturaSeri   ,
-                    FaturaNo  ,
-                    TaksitTutariYedek  ,
-                    KDVOrani  ,
-                    Aciklama   ,
+                    OdemeAciklamasi,
+                    Iptal,
+                    FaturaDetayID,
+                    OdenenTutar, 
+                    FORMAT(FaturaTarihi), 'dd-MM-yyyy hh:mm') as FaturaTarihi, 
+                    FaturaSeri,
+                    FaturaNo,
+                    TaksitTutariYedek,
+                    KDVOrani,
+                    Aciklama,
                     OdemeSekli    
             FROM #okiborcluodemeplani ;   
                    
