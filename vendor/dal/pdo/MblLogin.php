@@ -2243,7 +2243,7 @@ class MblLogin extends \DAL\DalSlim {
                     a.OgrenciID,
                     a.DevamsizlikKodID, 
                     a.DevamsizlikPeriyodID, 
-                    FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm') as Tarih
+                    FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
                     a.Aciklama, 
                     b.OgrenciseviyeID ,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
