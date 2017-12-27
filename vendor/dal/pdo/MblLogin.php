@@ -2237,6 +2237,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
              
                 SELECT 
+                    concat(zz.Adi,zz.Soyadi) as adsoyad,
                     a.OgrenciDevamsizlikID, 
                     a.DersYiliID,  
                     a.OgrenciID,
@@ -2245,22 +2246,24 @@ class MblLogin extends \DAL\DalSlim {
                     a.Tarih, 
                     a.Aciklama, 
                     b.OgrenciseviyeID ,
-                    cast(cast(c.OzurluDevamsiz1 AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
-                    cast(cast(c.OzursuzDevamsiz1 AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz1,
-                    cast(cast(c.OzurluDevamsiz2 AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz2,
-                    cast(cast(c.OzursuzDevamsiz2 AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz2 , 
+                    cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
+                    cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz1,
+                    cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz2,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz2,
+                    cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz2,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz2 ,
                     ROW_NUMBER() OVER(ORDER BY Tarih) AS rownum  ,
                     concat(cast(a.DevamsizlikKodID AS varchar(2)),' - ', COALESCE(NULLIF(ddx.DevamsizlikAdi,''),ddx.DevamsizlikAdi_eng) collate SQL_Latin1_General_CP1254_CI_AS) AS DevamsizlikAdi,
                     cast(cast(dd.GunKarsiligi AS numeric(10,2)) AS varchar(5)) AS GunKarsiligi
-                FROM ".$dbnamex."GNL_OgrenciDevamsizliklari  a 
-                inner join ".$dbnamex."GNL_OgrenciSeviyeleri b ON b.OgrenciID = a.OgrenciID
-                inner join ".$dbnamex."GNL_OgrenciSeviyeleri c ON c.OgrenciSeviyeID = b.OgrenciSeviyeID
+                FROM ".$dbnamex."GNL_Kisiler zz 
+                INNER JOIN ".$dbnamex."GNL_DersYillari yy on yy.DersYiliID =  '".$dersYiliID."'
+                LEFT JOIN ".$dbnamex."GNL_OgrenciDevamsizliklari  a on a.OgrenciID = zz.KisiID and yy.DersYiliID =a.DersYiliID
+                LEFT JOIN ".$dbnamex."GNL_OgrenciSeviyeleri b ON b.OgrenciID = a.OgrenciID
+                LEFT JOIN ".$dbnamex."GNL_OgrenciSeviyeleri c ON c.OgrenciSeviyeID = b.OgrenciSeviyeID
                 LEFT JOIN ".$dbnamex."[GNL_DevamsizlikKodlari] dd ON dd.DevamsizlikKodID = a.DevamsizlikKodID
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_DevamsizlikKodlari_lng ddx ON (ddx.language_parent_id = a.DevamsizlikKodID OR ddx.DevamsizlikKodID = a.DevamsizlikKodID) and 
-                                    ddx.language_id = ".$languageIdValue." 
+                                ddx.language_id = ".$languageIdValue." 
                 WHERE 
-                    a.DersYiliID = '".$dersYiliID."' AND 
-                    a.OgrenciID ='".$kisiId."'; 
+                   /*  a.DersYiliID = '".$dersYiliID."' AND */ 
+                    zz.KisiID = ='".$kisiId."'; 
  
             SET NOCOUNT OFF; 
                  "; 
