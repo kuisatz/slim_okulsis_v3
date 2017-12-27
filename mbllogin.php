@@ -95,6 +95,7 @@ $app->get("/gnlKullaniciFindForLoginByTcKimlikNo_mbllogin/", function () use ($a
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $headerParams = $app->request()->headers();
     $vtc = NULL;     
     if (isset($_GET['tc'])) {
         $stripper->offsetSet('tc', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
