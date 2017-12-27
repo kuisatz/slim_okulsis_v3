@@ -431,13 +431,13 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['xip']) && $params['xip'] != "")) {
                 $xip = $params['xip'];
             }  
-            $lang = '0';
-            if ((isset($params['Lang']) && $params['Lang'] != "")) {
-                $lang = $params['Lang'];
+            $Long = '0';
+            if ((isset($params['Long']) && $params['Long'] != "")) {
+                $Long= $params['Long'];
             } 
-            $lot = '0';
-            if ((isset($params['Lot']) && $params['Lot'] != "")) {
-                $lot = $params['Lot'];
+            $Lat = '0';
+            if ((isset($params['Lat']) && $params['Lat'] != "")) {
+                $Lat = $params['Lat'];
             } 
             $sql = "  
             SET NOCOUNT ON;     
@@ -500,13 +500,13 @@ class MblLogin extends \DAL\DalSlim {
             
             INSERT INTO [BILSANET_MOBILE].[dbo].[act_session] ([name],[data],[public_key],[usid],[acl],[ip],[deviceId],[lang],[lot],xip)
             SELECT top 1 adsoyad , '' as data, '' as public_key,tcID as usid,'' as acl,
-            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$lang."' as lang,'".$lot."' as lot,'".$xip."' as xip  
+            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$Long."' as lang,'".$Lat."' as lot,'".$xip."' as xip  
             FROM  ##okidetaydata".$tc." 
             order by Fotograf;
             
             INSERT INTO [BILSANET_MOBILE].[dbo].[act_session_log] ([name],[data],[public_key],[usid],[acl],[ip],[deviceId],[lang],[lot],xip)
             SELECT top 1 adsoyad, '' as data, '' as public_key,tcID as usid,'' as acl,
-            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$lang."' as lang,'".$lot."' as lot,'".$xip."' as xip
+            '".$ip."' as ip,'".$deviceid."' as deviceId,'".$Long."' as lang,'".$Lat."' as lot,'".$xip."' as xip
             FROM  ##okidetaydata".$tc."
             order by Fotograf; 
    
