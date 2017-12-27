@@ -3249,7 +3249,16 @@ $app->get("/SendMesajDefault_mbllogin/", function () use ($app ) {
                                                                 $app, 
                                                                 $_GET['languageID']));
     } 
+    $vXmlData = NULL;     
+    if (isset($_GET['XmlData'])) {
+        $stripper->offsetSet('XmlData', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_JASON_LVL1, 
+                $app, $_GET['XmlData']));
+    }
+    
     $stripper->strip();
+    if ($stripper->offsetExists('XmlData')) {
+        $vXmlData = $stripper->offsetGet('XmlData')->getFilterValue();
+    }
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -3283,6 +3292,7 @@ $app->get("/SendMesajDefault_mbllogin/", function () use ($app ) {
             'Cid' => $vCid,
             'Did' => $vDid,
             'LanguageID' => $vLanguageID, 
+            'XmlData' => $vXmlData, 
              ));
         
     $app->response()->header("Content-Type", "application/json"); 
