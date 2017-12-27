@@ -179,6 +179,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $headerParams = $app->request()->headers();
     $ip  = 'aaaa';
     if (isset($headerParams['X-IP'])) { 
        $ip = $headerParams['X-IP'] ;   
