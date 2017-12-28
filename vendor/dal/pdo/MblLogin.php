@@ -923,7 +923,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 UNION 
                 SELECT * from (
-                    SELECT  distinct
+                    SELECT  
                         a.OkulKullaniciID,
                         a.OkulID,
                         a.KisiID,
