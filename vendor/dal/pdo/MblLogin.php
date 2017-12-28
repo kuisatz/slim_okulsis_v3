@@ -947,7 +947,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
                 ) as ssdds 
                 ) as ssddsdsdsd 
-                inner join  ##okimobilseconddata7777 logo on logo.OkulID = ssddsdsdsd.OkulID
+                LEFT join  ##okimobilseconddata7777 logo on logo.OkulID = ssddsdsdsd.OkulID
                 IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; 
                 IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";  
                 IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
