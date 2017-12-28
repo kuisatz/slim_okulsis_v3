@@ -1820,6 +1820,29 @@ and open the template in the editor. Ğİ
                     }
                 });
                 
+               $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgrenciSinavDetayRpt_mbllogin',
+                        ogrenciID : '222F9492-BF03-41E3-87F0-891772AA2BD2',
+                        sinavID  :  '7E755C68-ABC1-492B-9D82-3B39B831A962',
+                        
+                        languageID : 647,  
+                        cid  : 1,
+                        did  : 91
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
+                
+                
                 ////////////////////////
                 
                    

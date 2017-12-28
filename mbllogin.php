@@ -5833,4 +5833,103 @@ $app->get("/OgrencininSinavlistesi_mbllogin/", function () use ($app ) {
   
 }); 
 
+/**
+ * Okan CIRAN
+ * @since 25-10-2017 
+ */
+$app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
+    $stripper = $app->getServiceManager()->get('filterChainerCustom');
+    $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();        
+    $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $headerParams = $app->request()->headers(); 
+      
+    $vCid = NULL;   
+    if (isset($_GET['cid'])) {
+        $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['cid']));
+    }  
+    $vSinavID = NULL;     
+    if (isset($_GET['sinavID'])) {
+        $stripper->offsetSet('sinavID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['sinavID']));
+    } 
+    $vOgrenciID = NULL;     
+    if (isset($_GET['ogrenciID'])) {
+        $stripper->offsetSet('ogrenciID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['ogrenciID']));
+    }  
+    $vDid = NULL;   
+    if (isset($_GET['did'])) {
+        $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['did']));
+    }
+    $vLanguageID = NULL;
+    if (isset($_GET['languageID'])) {
+        $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                                                                $app, 
+                                                                $_GET['languageID']));
+    } 
+    $stripper->strip();
+    if ($stripper->offsetExists('did')) {
+        $vDid = $stripper->offsetGet('did')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('cid')) {
+        $vCid = $stripper->offsetGet('cid')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('sinavID')) {
+        $vOkulID = $stripper->offsetGet('sinavID')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('ogrenciID')) {
+        $vOgrenciID= $stripper->offsetGet('ogrenciID')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('languageID')) 
+        {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
+      
+    $resDataMenu = $BLL->ogrenciSinavDetayRpt(array(  
+                                            'Cid' => $vCid,   
+                                            'Did' => $vDid,
+                                            'OgrenciID' => $vOgrenciID,
+                                            'SinavID' => $vSinavID,   
+                                            'LanguageID' => $vLanguageID, 
+                                           ) ); 
+    $menus = array();
+    foreach ($resDataMenu as $menu){
+        $menus[]  = array(  
+            "Sira" =>  ($menu["Sira"]),  
+            "DersKodu" => html_entity_decode($menu["DersKodu"]),  
+            "DugumAciklama" =>  html_entity_decode($menu["DugumAciklama"]),  
+            "SoruPuani" =>  ($menu["SoruPuani"]),  
+            "AldigiPuan" =>  ($menu["AldigiPuan"]),  
+            "SoruKazanimlari" =>  html_entity_decode($menu["SoruKazanimlari"]),  
+            "BolumKategoriAdi" => html_entity_decode($menu["BolumKategoriAdi"]),  
+            "SinifKodu" => html_entity_decode($menu["SinifKodu"]),  
+            "OgrenciNumarasi" =>  ($menu["OgrenciNumarasi"]),  
+            "OkulAdi" =>  html_entity_decode($menu["OkulAdi"]),  
+            "IlAdi" =>  html_entity_decode($menu["IlAdi"]),  
+            "IlceAdi" => html_entity_decode($menu["IlceAdi"]),  
+            "SinavKodu" => html_entity_decode($menu["SinavKodu"]), 
+            
+              "SinavTarihi" =>  ($menu["SinavTarihi"]), 
+              "SinavTurAdi" => html_entity_decode($menu["SinavTurAdi"]), 
+              "Adisoyadi" => html_entity_decode($menu["Adisoyadi"]), 
+              "PuanTipAdi" => html_entity_decode($menu["PuanTipAdi"]), 
+              "PuanTipKodu" => html_entity_decode($menu["PuanTipKodu"]), 
+              "Puan" =>  ($menu["Puan"]), 
+            
+              "SinifSinavaGirenSayisi" =>  ($menu["sinifSinavaGirenSayisi"]), 
+              "OkulSinavaGirenSayisi" =>  ($menu["okulSinavaGirenSayisi"]), 
+              "SinifSira" =>  ($menu["sinifSira"]), 
+              "SinifOrtalamasi" =>  ($menu["SinifOrtalamasi"]), 
+              "OkulSira" =>  ($menu["okulSira"]), 
+              "OkulOrtalamasi" =>  ($menu["OkulOrtalamasi"]),
+            
+               
+        );
+    }
+    
+    $app->response()->header("Content-Type", "application/json"); 
+    $app->response()->body(json_encode($menus));
+  
+}); 
+
 $app->run();
