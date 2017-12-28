@@ -5877,7 +5877,7 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
         $vCid = $stripper->offsetGet('cid')->getFilterValue();
     } 
     if ($stripper->offsetExists('sinavID')) {
-        $vOkulID = $stripper->offsetGet('sinavID')->getFilterValue();
+        $vSinavID = $stripper->offsetGet('sinavID')->getFilterValue();
     } 
     if ($stripper->offsetExists('ogrenciID')) {
         $vOgrenciID= $stripper->offsetGet('ogrenciID')->getFilterValue();

@@ -10041,7 +10041,7 @@ class MblLogin extends \DAL\DalSlim {
                 ST.SinavTurAdi,
                 KISI.Adi,
                 KISI.Soyadi,
-                /* SO.OgrenciSeviyeID,
+                /* SO.OgrenciSeviyeID,*/
                 SNV.EgitimYilID, 
                 /* snv.YGSSinavID, */
                 snv.SinavID
@@ -10148,10 +10148,10 @@ class MblLogin extends \DAL\DalSlim {
                     t1.IlceAdi ,
                     t1.SinavAciklamasi ,
                     t1.SinavKodu, 
-                    FORMAT( t1.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi
+                    FORMAT( t1.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi,
                     t1.SinavTurID , 
                     t1.SinavTurAdi ,
-                    concat(t1.Adi , ' ', t1.Soyadi) as Adisoyadi, 
+                    concat(t1.Adi collate SQL_Latin1_General_CP1254_CI_AS, ' ', t1.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as Adisoyadi, 
                     t1.EgitimYilID ,  
                     t1.SinavID,   
                     /* * t1 */
