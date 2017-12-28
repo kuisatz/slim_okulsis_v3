@@ -239,6 +239,8 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "cid" =>  ($menu["cid"]),
             "did" =>  ($menu["database_id"]),
             "ip" =>  ($menu["ip"]),
+            "OkulLogo" =>  ($menu["OkulLogo"]),
+            
             
         );
     }

@@ -868,12 +868,14 @@ class MblLogin extends \DAL\DalSlim {
                     DY.DonemID ,
                     oo.KurumID , 
                     '''+@dbnamex+''' as dbnamex,
-                    '+cast(@database_id as nvarchar(5))+' as database_id
+                    '+cast(@database_id as nvarchar(5))+' as database_id ,
+                    (Select D.Dosya ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID) as OkulLogo
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                 inner join ['+@dbnamex+'].[dbo].GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 
                 inner join ['+@dbnamex+'].[dbo].GNL_EgitimYillari EY ON EY.EgitimYilID = DY.EgitimYilID AND DY.AktifMi = 1
                 inner join ['+@dbnamex+'].[dbo].[GNL_Roller] rr ON rr.[RolID] =  sss.[RolID]
+                left join ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue."  AND lx.deleted =0 AND lx.active =0
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = sss.[OkulID] and golx.language_id = lx.id  
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id = sss.[RolID] or rrx.RolID = sss.[RolID] ) and  rrx.language_id= lx.id  
@@ -4480,8 +4482,8 @@ class MblLogin extends \DAL\DalSlim {
                 K.Adi  collate SQL_Latin1_General_CP1254_CI_AS  + ' ' + K.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS  AS OgretmenAdi,
                 D.DersAdi,
                 OT.Tanim, 
-                FORMAT(OT.Tarih, 'dd-MM-yyyy hh:mm') as Tarih, 
-                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy hh:mm') as TeslimTarihi,
+                FORMAT(OT.Tarih, 'dd-MM-yyyy') as Tarih, 
+                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy') as TeslimTarihi,
                 OT.Aciklama
             FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
             INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
@@ -4561,8 +4563,8 @@ class MblLogin extends \DAL\DalSlim {
                 SV.SeviyeAdi,
                 DH.DersKodu collate SQL_Latin1_General_CP1254_CI_AS + ' (' + D.DersAdi collate SQL_Latin1_General_CP1254_CI_AS  + ')' AS DersBilgisi ,
                 OT.Tanim,
-                FORMAT(OT.Tarih, 'dd-MM-yyyy hh:mm') as Tarih, 
-                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy hh:mm') as TeslimTarihi
+                FORMAT(OT.Tarih, 'dd-MM-yyyy') as Tarih, 
+                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy') as TeslimTarihi
             FROM ".$dbnamex."ODV_OdevTanimlari AS OT
             INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID
             INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID
@@ -5330,7 +5332,18 @@ class MblLogin extends \DAL\DalSlim {
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            }   
+            } 
+            $addSqlMesajAdet ="  
+                SELECT  
+                    count(M.MesajID) 
+		FROM  MSJ_Mesajlar M 
+		INNER JOIN  MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+		INNER JOIN  GNL_Kisiler K ON M.KisiID = K.KisiID 
+                WHERE MK.KisiID = 'D3C704BD-988E-43CD-970B-0D6AFB87CC61' 
+                    MK.Okundu = 0 AND
+                    M.Silindi=0 
+                " ; 
+            
             
             $sql = "  
             SELECT 
@@ -5374,8 +5387,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.language_parent_id =0 AND 
                         a.ParentID =0 AND
                         a.dashboard =0
-                     UNION
-                     SELECT 
+                    UNION
+                    SELECT 
                         a.[ID],
                         a.[MenuID],
                         a.[ParentID],  
@@ -5415,7 +5428,6 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
-    
     
     /** 
      * @author Okan CIRAN
