@@ -5347,7 +5347,7 @@ class MblLogin extends \DAL\DalSlim {
                 iconclass,
                 collapse,
                 sira,
-                0 as adet
+                '' as adet
                FROM  (  
                     SELECT 
                         a.[ID],
