@@ -821,7 +821,8 @@ class MblLogin extends \DAL\DalSlim {
                         DonemID int,
                         KurumID [uniqueidentifier],
                         dbnamex  nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
-                        database_id int
+                        database_id int,
+                        OkulLogo image
                     ) ;
                 declare @dbnamex  nvarchar(200) =''  collate SQL_Latin1_General_CP1254_CI_AS ;
                 declare @KisiID  uniqueidentifier;
@@ -852,7 +853,7 @@ class MblLogin extends \DAL\DalSlim {
                 insert into ##okimobilseconddata".$tc."  ( [OkulKullaniciID] ,
                             [OkulID],  [KisiID],  [RolID],[RolAdi],OkulAdi,
                             [MEBKodu],  [ePosta],  DersYiliID,  EgitimYilID,   
-                            EgitimYili,   DonemID ,KurumID, dbnamex, database_id )
+                            EgitimYili,   DonemID ,KurumID, dbnamex, database_id ,OkulLogo)
                 SELECT  
                     sss.[OkulKullaniciID] ,
                     sss.[OkulID],
