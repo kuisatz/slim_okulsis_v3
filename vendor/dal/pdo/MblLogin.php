@@ -870,13 +870,13 @@ class MblLogin extends \DAL\DalSlim {
                     oo.KurumID , 
                     '''+@dbnamex+''' as dbnamex,
                     '+cast(@database_id as nvarchar(5))+' as database_id ,
-                    (Select D.Dosya FROM ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID) as OkulLogo
+                    (Select D.Dosya FROM ['+@dbnamex+'].[dbo].GNL_Dosyalar D WHERE D.DosyaID = oo.LogoDosyaID) as OkulLogo
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                 inner join ['+@dbnamex+'].[dbo].GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 
                 inner join ['+@dbnamex+'].[dbo].GNL_EgitimYillari EY ON EY.EgitimYilID = DY.EgitimYilID AND DY.AktifMi = 1
                 inner join ['+@dbnamex+'].[dbo].[GNL_Roller] rr ON rr.[RolID] =  sss.[RolID]
-                left join ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID
+               /* left join ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID */
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue."  AND lx.deleted =0 AND lx.active =0
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = sss.[OkulID] and golx.language_id = lx.id  
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id = sss.[RolID] or rrx.RolID = sss.[RolID] ) and  rrx.language_id= lx.id  
