@@ -5342,8 +5342,7 @@ class MblLogin extends \DAL\DalSlim {
                 URL,
                 RolID,
                 SubDivision,
-                ImageURL,
-                divid,
+                ImageURL,  
                 iconcolor,
                 iconclass,
                 collapse,
@@ -5373,16 +5372,15 @@ class MblLogin extends \DAL\DalSlim {
                         a.ParentID =0
                      UNION
                      SELECT 
-                        a.[ID]
-                        ,a.[MenuID]
-                        ,a.[ParentID],  
-                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi 
-                        ,a.[Aciklama]
-                        ,a.[URL]
-                        ,a.[RolID]
-                        ,a.[SubDivision] 
-                        ,a.[ImageURL] 
-                        ,a.[divid] ,
+                        a.[ID],
+                        a.[MenuID],
+                        a.[ParentID],  
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi ,
+                        a.[Aciklama],
+                        a.[URL],
+                        a.[RolID],
+                        a.[SubDivision], 
+                        a.[ImageURL], 
                         a.iconcolor,
                         a.[iconclass],
                         a.collapse ,
