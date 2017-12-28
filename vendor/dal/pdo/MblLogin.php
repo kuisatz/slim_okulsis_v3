@@ -912,7 +912,8 @@ class MblLogin extends \DAL\DalSlim {
                     0 as database_id,
                     '' as serverproxy ,
                     0 as cid,
-                   NULL as ip
+                   NULL as ip,
+                   NULL as OkulLogo
                 FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
                 INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
@@ -940,7 +941,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.database_id,
                         isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
                         isnull( mss.id, (SELECT TOP 1 xxz.[id] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid,
-                        '".$ip."' as ip 
+                        '".$ip."' as ip ,
+                        a.OkulLogo    
                     FROM  ##okimobilseconddata".$tc."  a
                     LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                     WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
