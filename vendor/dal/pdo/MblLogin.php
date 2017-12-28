@@ -5362,7 +5362,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.iconcolor,
                         a.[iconclass],
                         a.collapse ,
-                        a.sira  
+                        a.sira,
+                        a.dashboardSira
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -5386,7 +5387,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.iconcolor,
                         a.[iconclass],
                         a.collapse ,
-                        a.sira  
+                        a.sira,
+                        a.dashboardSira
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -5397,7 +5399,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.ParentID >0 AND 
                         a.dashboard =0 
                 ) AS asasdasd
-                ORDER BY MenuID, sira 
+                ORDER BY dashboardSira
                      
                  ";  
             $statement = $pdo->prepare($sql);            
