@@ -3098,20 +3098,22 @@ $app->get("/DashboarddataDersProgrami_mbllogin/", function () use ($app ) {
                                             'Cid' => $vCid, 
                                             'Did' => $vDid,
                                             'LanguageID' => $vLanguageID, 
-                                           ) ); 
+                                           ) );   
     $menus = array();
     foreach ($resDataMenu as $menu){
         $menus[]  = array(
-            "DersSaati" => $menu["DersSaati"],   
-            "SinifAdi" => html_entity_decode($menu["SinifAdi"]),  
-            "ogretmen" => html_entity_decode($menu["ogretmen"]),   
-            "ogrenci" => html_entity_decode($menu["ogrenci"]),   
-             
-            "Alan1" => html_entity_decode($menu["Alan1"]),  
-            "Alan2" => html_entity_decode($menu["Alan2"]),  
-            "Alan3" => html_entity_decode($menu["Alan3"]),  
-            "Alan4" => html_entity_decode($menu["Alan4"]),  
-            
+            "ID" => $menu["ID"],
+            "MenuID" => $menu["MenuID"],
+           /* "ParentID" => $menu["ParentID"],*/
+            "MenuAdi" => html_entity_decode($menu["MenuAdi"]),
+            "Aciklama" => html_entity_decode($menu["Aciklama"]),
+            "URL" => $menu["URL"],
+            "SubDivision" => $menu["SubDivision"],
+            "ImageURL" => $menu["ImageURL"], 
+            "divid" => $menu["divid"], 
+            "iconcolor" => $menu["iconcolor"], 
+            "iconclass" => $menu["iconclass"], 
+            "collapse" => $menu["collapse"],  
         );
     }
     
