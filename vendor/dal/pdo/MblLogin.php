@@ -5299,156 +5299,110 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
-    
+     
     /** 
      * @author Okan CIRAN
-     * @ dashboard   !! --- kullanılmıyor 
-     * @version v 1.0  25.10.2017
+     * @ login olan userin menusunu dondurur  !!
+     * @version v 1.0  27.10.2017
      * @param array | null $args
      * @return array
      * @throws \PDOException
-     */ 
-    public function dashboarddata ($params = array()) {
-        try {
+     */
+    public function dashboarddata($params = array()) {
+        try { 
             $cid = -1;
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
-            $did = NULL;
-            if ((isset($params['Did']) && $params['Did'] != "")) {
-                $did = $params['Did'];
-            }
-            $dbnamex = 'dbo.';
-            $dbConfigValue = 'pgConnectFactory';
-            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
-            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
-                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
-                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
-                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
-                    }   
-            }     
-            
+        
+            $dbConfigValue = 'pgConnectFactoryMobil';
+         
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
             
-            $kisiId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
-            if ((isset($params['kisiId']) && $params['kisiId'] != "")) {
-                $kisiId = $params['kisiId'];
-            }  
-            $OkulID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
-            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
-                $kisiId = $params['OkulID'];
-            }   
-            $dersYiliID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
-            if ((isset($params['dersYiliID']) && $params['dersYiliID'] != "")) {
-                $dersYiliID = $params['dersYiliID'];
+            $RolID = -11;
+            if ((isset($params['RolID']) && $params['RolID'] != "")) {
+                $RolID = $params['RolID'];
             }    
+            $parent=0;
+            if ((isset($params['ParentID']) && $params['ParentID'] != "")) {           
+                $parent = $params['ParentID'];               
+            }
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            } 
+            }   
             
             $sql = "  
-            set nocount on; 
-            
-            IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
-            CREATE TABLE #tmpzz (
- 
-		DersYiliID [uniqueidentifier] ,
-		OkulID [uniqueidentifier]  ,
-		DonemID  [int] ,
-		TedrisatID [int],
-		TakdirTesekkurHesapID  [int]    ,
-		OnKayitTurID  [int]  ,
-                EgitimYilID  [int]  ,
-		Donem1BaslangicTarihi [datetime]  ,
-		Donem1BitisTarihi [datetime]  ,
-		Donem2BaslangicTarihi [datetime]  ,
-		Donem2BitisTarihi [datetime]  ,
-		Donem1AcikGun [decimal](18, 4)  ,
-		Donem2AcikGun [decimal](18, 4)  ,
-		YilSonuHesapla [bit] ,
-		DevamsizliktanBasarisiz [bit]  ,
-		SorumlulukSinavSayisi [tinyint],
-		DevamsizlikSabahOgleAyri  [bit] ,
-		YilSonuPuanYuvarlansin [bit],
-                EgitimYili [varchar](50) collate SQL_Latin1_General_CP1254_CI_AS,
-		OkulDurumPuani [decimal](18, 4),
-		YilSonuNotYuvarlansin  [bit],
-		YilSonuPuanSinavSonraYuvarlansin  [bit],
-		YilSonuNotSinavSonraYuvarlansin  [bit],
-		AktifMi [bit]    ); 
-
-            INSERT  INTO #tmpzz
-            EXEC  ".$dbnamex."[PRC_GNL_DersYili_Find] @OkulID = '".$OkulID."'  
- 
-            SELECT  
-                -1 AS HaftaGunu,
-                -1 AS DersSirasi, 
-                null AS SinifDersID ,
-                null  AS DersAdi,
-                null  AS DersKodu,
-                null  AS SinifKodu,
-                null  AS SubeGrupID,
-                null  AS BaslangicSaati,
-                null  AS BitisSaati,
-                null  AS DersBaslangicBitisSaati,
-                null  AS SinifOgretmenID,
-                null  AS DersHavuzuID,
-                null  AS SinifID,
-                null  AS DersID, 
-                null  AS Aciklama1,
-                'LÜTFEN SEÇİNİZ...' AS Aciklama,
-                null  AS DersYiliID,
-                null  AS DonemID, 
-                null  AS EgitimYilID  
-
-            union  
-
-            (SELECT 
-                DP.HaftaGunu,
-		DP.DersSirasi,
-		DP.SinifDersID,
-		DRS.DersAdi, 
-		DH.DersKodu, 
-		SNF.SinifKodu,
-		SNF.SubeGrupID,
-		DS.BaslangicSaati,
-		DS.BitisSaati,
-		dbo.GetFormattedTime(BaslangicSaati, 1) + ' - ' + dbo.GetFormattedTime(BitisSaati, 1) AS DersBaslangicBitisSaati,
-		SO.SinifOgretmenID,
-		DH.DersHavuzuID,
-		SNF.SinifID,
-		DRS.DersID,
-		(CASE WHEN ISNULL(DS.BaslangicSaati,'')<>'' AND ISNULL(DS.BitisSaati,'')<>'' THEN
-				CAST(DS.DersSirasi AS NVARCHAR(2)) + '. ' + 
-				DRS.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS+ ' (' + 
-				CONVERT(VARCHAR(5),DS.BaslangicSaati,108) + '-' + CONVERT(VARCHAR(5),DS.BitisSaati,108) + ')'
-			 ELSE
-				CAST(DP.DersSirasi AS NVARCHAR(2)) + '. ' + DRS.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS
-			 END) AS Aciklama1 ,
-                concat(SNF.SinifKodu collate SQL_Latin1_General_CP1254_CI_AS,' - ', DRS.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS) as Aciklama,   
-                #tmp.DersYiliID,
-                #tmp.DonemID,
-                #tmp.EgitimYilID
-            FROM  ".$dbnamex."GNL_DersProgramlari DP
-            INNER JOIN  ".$dbnamex."GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
-            INNER JOIN  ".$dbnamex."GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
-							AND SO.OgretmenID = '".$kisiId."'
-            INNER JOIN  ".$dbnamex."GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."' @DersYiliID  
-            INNER JOIN  ".$dbnamex."GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
-            INNER JOIN  ".$dbnamex."GNL_Dersler DRS ON DH.DersID = DRS.DersID
-            LEFT JOIN   ".$dbnamex."GNL_DersSaatleri DS ON DS.DersYiliID = SNF.DersYiliID AND DS.SubeGrupID = SNF.SubeGrupID AND DS.DersSirasi = DP.DersSirasi
-            inner join #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
-            ) ORDER BY HaftaGunu, BaslangicSaati,DersSirasi, DersAdi ;  
-            
-            IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
-            SET NOCOUNT OFF;
-
-                 "; 
-            $statement = $pdo->prepare($sql);   
-    // echo debugPDO($sql, $params);
+            SELECT 
+                ID,
+                MenuID,
+                ParentID,  
+                MenuAdi, 
+                Aciklama,
+                URL,
+                RolID,
+                SubDivision,
+                ImageURL,
+                divid,
+                iconcolor,
+                iconclass,
+                collapse,
+                sira
+               FROM  (  
+                    SELECT 
+                        a.[ID],
+                        a.[MenuID],
+                        a.[ParentID],  
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi, 
+                        a.[Aciklama],
+                        a.[URL],
+                        a.[RolID],
+                        a.[SubDivision],
+                        a.[ImageURL],
+                        a.iconcolor,
+                        a.[iconclass],
+                        a.collapse ,
+                        a.sira  
+                    FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Menuleri] ax on (ax.language_parent_id = a.ID or ax.ID = a.ID ) and  ax.language_id= lx.id  
+                    WHERE a.active = 0 AND a.deleted = 0 AND 
+                        a.RolID = ".intval($RolID)."  AND 
+                        a.language_parent_id =0 AND 
+                        a.ParentID =0
+                     UNION
+                     SELECT 
+                        a.[ID]
+                        ,a.[MenuID]
+                        ,a.[ParentID],  
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi 
+                        ,a.[Aciklama]
+                        ,a.[URL]
+                        ,a.[RolID]
+                        ,a.[SubDivision] 
+                        ,a.[ImageURL] 
+                        ,a.[divid] ,
+                        a.iconcolor,
+                        a.[iconclass],
+                        a.collapse ,
+                        a.sira  
+                    FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Menuleri] ax on (ax.language_parent_id = a.ID or ax.ID = a.ID ) and  ax.language_id= lx.id  
+                    WHERE a.active = 0 AND a.deleted = 0 AND 
+                        a.RolID = ".intval($RolID)."  AND 
+                        a.language_parent_id =0 AND 
+                        a.ParentID >0 AND 
+                        a.dashboard =0 
+                ) AS asasdasd
+                ORDER BY MenuID, ParentID, sira 
+                     
+                 ";  
+            $statement = $pdo->prepare($sql);            
+      //echo debugPDO($sql, $params);
             $statement->execute();
-           
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
@@ -5458,6 +5412,7 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
+    
     
     /** 
      * @author Okan CIRAN
@@ -7357,7 +7312,7 @@ class MblLogin extends \DAL\DalSlim {
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
-     
+      
     /** 
      * @author Okan CIRAN
      * @ odev tipleri

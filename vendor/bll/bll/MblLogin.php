@@ -474,12 +474,12 @@ class MblLogin extends \BLL\BLLSlim{
     $resultSet = $DAL->muhBorcluOdemePlani($params);  
     return $resultSet['resultSet'];
     } 
-       /**
+    /**
      * Function to get datagrid row count on user interface layer
      * @param array | null $params 
      * @return array
      */
-    public function dashboarddataDersProgrami($params = array()) {
+    public function dashboarddataDersProgrami_eskisi($params = array()) {
     $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
     
     $RolID = -11;
@@ -544,7 +544,16 @@ class MblLogin extends \BLL\BLLSlim{
     
     return $resultSet['resultSet'];
     } 
-    
+     /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */
+    public function dashboarddataDersProgrami($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO'); 
+    $resultSet = $DAL->dashboarddata($params);  
+    return $resultSet['resultSet'];
+    } 
     /**
      * Function to get datagrid row count on user interface layer
      * @param array | null $params 
