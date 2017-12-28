@@ -3113,6 +3113,7 @@ $app->get("/DashboarddataDersProgrami_mbllogin/", function () use ($app ) {
             "iconcolor" => $menu["iconcolor"], 
             "iconclass" => $menu["iconclass"], 
             "collapse" => $menu["collapse"],  
+            "adet" => $menu["adet"],  
         );
     }
     

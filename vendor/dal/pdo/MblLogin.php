@@ -5346,7 +5346,8 @@ class MblLogin extends \DAL\DalSlim {
                 iconcolor,
                 iconclass,
                 collapse,
-                sira
+                sira,
+                0 as adet
                FROM  (  
                     SELECT 
                         a.[ID],
@@ -5396,7 +5397,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.ParentID >0 AND 
                         a.dashboard =0 
                 ) AS asasdasd
-                ORDER BY MenuID, ParentID, sira 
+                ORDER BY MenuID, sira 
                      
                  ";  
             $statement = $pdo->prepare($sql);            
