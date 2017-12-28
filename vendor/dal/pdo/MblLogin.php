@@ -10092,7 +10092,8 @@ class MblLogin extends \DAL\DalSlim {
                 PST.PuanSiralamaTipID,
                 S.sinavID
             ORDER BY Snf.SeviyeID,Snf.SinifKodu;
-        
+        ";
+        $sql1 = "  
 	   
 	    SELECT  
                 OP.SinavOgrenciID ,
@@ -10136,7 +10137,7 @@ class MblLogin extends \DAL\DalSlim {
                     DUGUM.DugumAciklama,
                     SS.SoruPuani,
                     SOSC.AldigiPuan,
-                    dbo.GetSoruKazanimlari(SS.SoruID) as SoruKazanimlari, 
+                    ".$dbnamex."GetSoruKazanimlari(SS.SoruID) as SoruKazanimlari, 
                     BKS.BolumKategoriID,
                     BKS.BolumKategoriAdi , 
                     /* t1 */
@@ -10189,6 +10190,7 @@ class MblLogin extends \DAL\DalSlim {
             IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;  
             SET NOCOUNT OFF; 
                  "; 
+            $sql =  $sql +  $sql1;
             $statement = $pdo->prepare($sql);   
     // echo debugPDO($sql, $params);
             $statement->execute();
