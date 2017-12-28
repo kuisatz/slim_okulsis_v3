@@ -5347,6 +5347,7 @@ class MblLogin extends \DAL\DalSlim {
                 iconclass,
                 collapse,
                 sira,
+                dashboardSira,
                 '' as adet
                FROM  (  
                     SELECT 
