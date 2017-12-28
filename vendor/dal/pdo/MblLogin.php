@@ -870,7 +870,7 @@ class MblLogin extends \DAL\DalSlim {
                     oo.KurumID , 
                     '''+@dbnamex+''' as dbnamex,
                     '+cast(@database_id as nvarchar(5))+' as database_id ,
-                    (Select D.Dosya ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID) as OkulLogo
+                    (Select D.Dosya FROM ['+@dbnamex+'].[dbo].GNL_Dosyalar D ON D.DosyaID = oo.LogoDosyaID) as OkulLogo
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                 inner join ['+@dbnamex+'].[dbo].GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 
