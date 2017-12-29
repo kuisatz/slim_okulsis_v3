@@ -5379,6 +5379,19 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+             $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }    
         
             $dbConfigValue = 'pgConnectFactoryMobil';
          
@@ -5436,15 +5449,15 @@ class MblLogin extends \DAL\DalSlim {
                         a.dashboardSira,
                         case a.URL 
                             when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        FROM  ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' 
                                                 AND MK.Okundu = 0 AND M.Silindi=0 ) 
                             when '1mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        FROM  ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' 
                                         AND MK.Okundu = 0 AND M.Silindi=0 )  
                         else NULL end as adet 
@@ -5475,15 +5488,15 @@ class MblLogin extends \DAL\DalSlim {
                         a.dashboardSira,
                         case a.URL 
                             when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        FROM  ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' 
                                                 AND MK.Okundu = 0 AND M.Silindi=0 ) 
                             when '1mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        FROM ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' 
                                         AND MK.Okundu = 0 AND M.Silindi=0 )  
                         else NULL end as adet 
