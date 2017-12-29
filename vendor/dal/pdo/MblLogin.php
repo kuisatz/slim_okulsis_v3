@@ -5430,7 +5430,7 @@ class MblLogin extends \DAL\DalSlim {
                 collapse,
                 sira,
                 dashboardSira,
-                COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'')  as adet
+                COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'-')  as adet
                FROM  (  
                     SELECT 
                         a.[ID],
