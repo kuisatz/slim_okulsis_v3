@@ -241,7 +241,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "ip" =>  ($menu["ip"]),
             "OkulLogo" =>  ($menu["OkulLogo"]),
             "brans" => html_entity_decode($menu["brans"]), 
-            
+            "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
             
         );
     }

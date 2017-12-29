@@ -825,10 +825,11 @@ class MblLogin extends \DAL\DalSlim {
                         KurumID [uniqueidentifier],
                         dbnamex nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
                         database_id int,
-                        brans nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS
+                        brans nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
+                        cinsiyetID smallint
                     ) ;
                      CREATE TABLE ##okiokullogo".$tc."
-                    (   LogoDosyaID  [uniqueidentifier],
+                    (   LogoDosyaID [uniqueidentifier],
                         OkulID [uniqueidentifier],
                         OkulLogo image);
 
@@ -846,7 +847,7 @@ class MblLogin extends \DAL\DalSlim {
                 BEGIN   
 
                 SET @sqlxx =  ' 
-                          INSERT ##okimobilfirstdata".$tc."  EXEC  ['+@dbnamex+'].[dbo].[PRC_GNL_Kisi_TumRoller_FindByID]  @KisiID=  ''' +  cast(@KisiID as varchar(50))+'''   '; 
+                    INSERT ##okimobilfirstdata".$tc." EXEC  ['+@dbnamex+'].[dbo].[PRC_GNL_Kisi_TumRoller_FindByID]  @KisiID=  ''' +  cast(@KisiID as varchar(50))+'''   '; 
  
                 /* print(@sqlxx); */
                 EXEC sp_executesql @sqlxx; 
@@ -857,20 +858,18 @@ class MblLogin extends \DAL\DalSlim {
 
                 delete from #okidbname".$tc." where MEBKodu is null ; 
 
-                SET @sqlx = '
-                insert into ##okimobilseconddata".$tc."([OkulKullaniciID],
-                            [OkulID],[KisiID],[RolID],[RolAdi],OkulAdi,
-                            [MEBKodu],[ePosta],DersYiliID,EgitimYilID,
-                            EgitimYili,DonemID,KurumID,dbnamex,database_id,brans)
+                SET @sqlx = 
+                'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,
+                            MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans)
                 SELECT
-                    sss.[OkulKullaniciID],
-                    sss.[OkulID],
-                    sss.[KisiID],
-                    sss.[RolID],
+                    sss.OkulKullaniciID,
+                    sss.OkulID,
+                    sss.KisiID,
+                    sss.RolID,
                     COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi,
-                    upper(concat(golx.[OkulAdi] collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.[RolAdi] collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
-                    oo.[MEBKodu],
-                    oo.[ePosta] collate SQL_Latin1_General_CP1254_CI_AS,
+                    upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
+                    oo.MEBKodu,
+                    oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS,
                     DY.DersYiliID,
                     DY.EgitimYilID,
                     EY.EgitimYili,
@@ -878,34 +877,32 @@ class MblLogin extends \DAL\DalSlim {
                     oo.KurumID,
                     '''+@dbnamex+''' as dbnamex,
                     '+cast(@database_id as nvarchar(5))+' as database_id,
-                    case sss.[RolID]
-                        WHEN 4 THEN (SELECT Top 1 itx.Unvani
-                                        FROM ['+@dbnamex+'].[dbo].OGT_IdareciTurleri itx
-                                        LEFT JOIN ['+@dbnamex+'].[dbo].OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
-                                        where ogtix.OgretmenID=sss.[KisiID])
-                        WHEN 5 THEN (SELECT Top 1 itx.Unvani
-                                        FROM ['+@dbnamex+'].[dbo].OGT_IdareciTurleri itx
-                                        LEFT JOIN ['+@dbnamex+'].[dbo].OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
-                                        where ogtix.OgretmenID=sss.[KisiID])
-                        WHEN 6 THEN (SELECT Top 1 itx.Unvani
-                                        FROM ['+@dbnamex+'].[dbo].OGT_IdareciTurleri itx
-                                        LEFT JOIN ['+@dbnamex+'].[dbo].OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
-                                        where ogtix.OgretmenID  =sss.[KisiID])
-                        WHEN 7 THEN (SELECT Top 1 Brans
-                                        FROM ['+@dbnamex+'].[dbo].OGT_Branslar bx
-                                        LEFT JOIN ['+@dbnamex+'].[dbo].OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
-                                        where ogtx.OgretmenID =sss.[KisiID])
-                    else '''' end as brans
+                    case sss.RolID
+                        WHEN 4 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
+                                WHERE ogtix.OgretmenID=sss.KisiID)
+                        WHEN 5 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
+                                WHERE ogtix.OgretmenID=sss.KisiID)
+                        WHEN 6 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
+                                WHERE ogtix.OgretmenID  =sss.KisiID)
+                        WHEN 7 THEN (SELECT Top 1 Brans FROM '+@dbnamex+'.dbo.OGT_Branslar bx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
+                                WHERE ogtx.OgretmenID =sss.KisiID)
+                    else '''' end as brans,
+                    gg.cinsiyetID 
                 FROM ##okimobilfirstdata".$tc." sss
-                inner join ['+@dbnamex+'].[dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID]
-                inner join ['+@dbnamex+'].[dbo].GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1
-                inner join ['+@dbnamex+'].[dbo].GNL_EgitimYillari EY ON EY.EgitimYilID = DY.EgitimYilID AND DY.AktifMi = 1
-                inner join ['+@dbnamex+'].[dbo].[GNL_Roller] rr ON rr.[RolID] = sss.[RolID]
-                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue."  AND lx.deleted =0 AND lx.active =0
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID = sss.[OkulID] and golx.language_id = lx.id 
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id = sss.[RolID] or rrx.RolID = sss.[RolID]) and  rrx.language_id= lx.id
+                inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
+                inner join '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=sss.OkulID and DY.AktifMi=1
+                inner join '+@dbnamex+'.dbo.GNL_EgitimYillari EY ON EY.EgitimYilID=DY.EgitimYilID AND DY.AktifMi=1
+                inner join '+@dbnamex+'.dbo.GNL_Roller rr ON rr.[RolID]=sss.RolID
+                inner join '+@dbnamex+'.dbo.GNL_Kisiler gg ON gg.KisiID=sss.KisiID
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id=".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID=sss.OkulID and golx.language_id=lx.id
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id=sss.RolID or rrx.RolID=sss.RolID) and rrx.language_id= lx.id
                 WHERE
-                    cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date);
+                    cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
                  ';
                 SET @sqlx1 = '   
                 INSERT INTO ##okiokullogo".$tc." (LogoDosyaID ,OkulLogo ,OkulID)
@@ -947,7 +944,9 @@ class MblLogin extends \DAL\DalSlim {
                     '' as serverproxy ,
                     0 as cid,
                    NULL as ip,
-                   '' as brans 
+                   '' as brans,
+                   NULL as cinsiyetID,
+                   '' as  defaultFotoURL
                 FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
                 INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
@@ -976,7 +975,12 @@ class MblLogin extends \DAL\DalSlim {
                         isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
                         isnull( mss.id, (SELECT TOP 1 xxz.[id] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid,
                         '".$ip."' as ip,
-                        a.brans 
+                        a.brans,
+                        a.cinsiyetID,
+                        WHEN 1 THEN case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoE.jpg'  
+                                    else '/okulsis/image/okulsis/fotoBE.jpg' end
+                        ELSE case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoK.jpg'  
+                                    else '/okulsis/image/okulsis/fotoBK.jpg' end END AS defaultFotoURL
                     FROM  ##okimobilseconddata".$tc."  a
                     LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                     WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
