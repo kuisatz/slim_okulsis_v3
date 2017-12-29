@@ -977,6 +977,7 @@ class MblLogin extends \DAL\DalSlim {
                         '".$ip."' as ip,
                         a.brans,
                         a.cinsiyetID,
+                        case a.CinsiyetID 
                         WHEN 1 THEN case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoE.jpg'  
                                     else '/okulsis/image/okulsis/fotoBE.jpg' end
                         ELSE case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoK.jpg'  
