@@ -860,7 +860,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 SET @sqlx = 
                 'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,
-                            MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans)
+                            MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans,cinsiyetID)
                 SELECT
                     sss.OkulKullaniciID,
                     sss.OkulID,
