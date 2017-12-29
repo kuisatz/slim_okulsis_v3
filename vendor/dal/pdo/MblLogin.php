@@ -737,7 +737,8 @@ class MblLogin extends \DAL\DalSlim {
                 $ip = $params['ip'];
             } 
             $sql = "  
-            SET NOCOUNT ON;     
+            SET NOCOUNT ON;   
+            SET TEXTSIZE 2147483647;
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
             IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
             IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc."; 
@@ -890,7 +891,7 @@ class MblLogin extends \DAL\DalSlim {
                                         FROM ['+@dbnamex+'].[dbo].OGT_IdareciTurleri itx
                                         LEFT JOIN ['+@dbnamex+'].[dbo].OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
                                         where ogtix.OgretmenID  =sss.[KisiID])
-                        WHEN 8 THEN (SELECT Top 1 Brans
+                        WHEN 7 THEN (SELECT Top 1 Brans
                                         FROM ['+@dbnamex+'].[dbo].OGT_Branslar bx
                                         LEFT JOIN ['+@dbnamex+'].[dbo].OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
                                         where ogtx.OgretmenID =sss.[KisiID])
@@ -999,7 +1000,23 @@ class MblLogin extends \DAL\DalSlim {
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
-       echo '<img src="data:image/png;base64,'.base64_encode($result['resultSet'][0]['OkulLogo']).'" alt="My image alt" />';
+            
+       // print_r($result );
+ //$imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;
+	//print_r($imgData);
+  //*   echo '<img src="data:image/png;base64,'.$imgData.'" alt="My image alt" />'.$result [2]['OkulAdi'];
+  //   echo '<img src="'.$imgData.'" alt="My image alt" />'.$result [1]['OkulAdi'];
+	// $imgData =$result[0]['OkulLogo'];
+	  header("Content-type: image/png"); 
+ 	//   $image = sqlsrv_get_field( $result  , 10 );
+     //               // SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY));  
+   //  header("Content-Type: image/png");  
+   // fpassthru($image); 
+	  
+     // echo  $result[1]['OkulLogo']; 
+	//  echo $imgData;
+            
+   //    echo '<img src="data:image/png;base64,'.base64_encode($result [1]['OkulLogo']).'" alt="My image alt" />'.$fresim;
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
             return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
