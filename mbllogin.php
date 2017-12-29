@@ -240,6 +240,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "did" =>  ($menu["database_id"]),
             "ip" =>  ($menu["ip"]),
             "OkulLogo" =>  ($menu["OkulLogo"]),
+            "brans" => html_entity_decode($menu["brans"]), 
             
             
         );
