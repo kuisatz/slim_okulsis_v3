@@ -995,9 +995,11 @@ class MblLogin extends \DAL\DalSlim {
             $statement->execute();
             
            
+            
+           
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
-         
+       echo '<img src="data:image/png;base64,'.base64_encode($result['resultSet'][0]['OkulLogo']).'" alt="My image alt" />';
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
             return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
