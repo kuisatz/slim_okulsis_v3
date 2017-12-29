@@ -5396,18 +5396,11 @@ class MblLogin extends \DAL\DalSlim {
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
             } 
-            $addSqlMesajAdet ="  
-                SELECT  
-                    count(M.MesajID) 
-		FROM  MSJ_Mesajlar M 
-		INNER JOIN  MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-		INNER JOIN  GNL_Kisiler K ON M.KisiID = K.KisiID 
-                WHERE MK.KisiID = 'D3C704BD-988E-43CD-970B-0D6AFB87CC61' 
-                    MK.Okundu = 0 AND
-                    M.Silindi=0 
-                " ; 
-            
-            
+            $KisiID =  'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['KisiID']) && $params['KisiID'] != "")) {
+                $KisiID = $params['KisiID'];
+            }
+             
             $sql = "  
             SELECT 
                 ID,
@@ -5424,7 +5417,7 @@ class MblLogin extends \DAL\DalSlim {
                 collapse,
                 sira,
                 dashboardSira,
-                '' as adet
+                COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'')  as adet
                FROM  (  
                     SELECT 
                         a.[ID],
@@ -5440,7 +5433,21 @@ class MblLogin extends \DAL\DalSlim {
                         a.[iconclass],
                         a.collapse ,
                         a.sira,
-                        a.dashboardSira
+                        a.dashboardSira,
+                        case a.URL 
+                            when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                                AND MK.Okundu = 0 AND M.Silindi=0 ) 
+                            when '1mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                        AND MK.Okundu = 0 AND M.Silindi=0 )  
+                        else NULL end as adet 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -5465,7 +5472,21 @@ class MblLogin extends \DAL\DalSlim {
                         a.[iconclass],
                         a.collapse ,
                         a.sira,
-                        a.dashboardSira
+                        a.dashboardSira,
+                        case a.URL 
+                            when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                                AND MK.Okundu = 0 AND M.Silindi=0 ) 
+                            when '1mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                                        FROM  BILSANET_OKULSIS.dbo.MSJ_Mesajlar M 
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN  BILSANET_OKULSIS.dbo.GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                        AND MK.Okundu = 0 AND M.Silindi=0 )  
+                        else NULL end as adet 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0

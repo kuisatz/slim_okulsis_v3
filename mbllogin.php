@@ -3057,8 +3057,7 @@ $app->get("/DashboarddataDersProgrami_mbllogin/", function () use ($app ) {
     if (isset($_GET['kurumID'])) {
         $stripper->offsetSet('kurumID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
                 $app, $_GET['kurumID']));
-    }
-    
+    } 
     $vCid = NULL;   
     if (isset($_GET['cid'])) {
         $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
@@ -3072,10 +3071,10 @@ $app->get("/DashboarddataDersProgrami_mbllogin/", function () use ($app ) {
     $vLanguageID = NULL;
     if (isset($_GET['languageID'])) {
         $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
-                                                                $app, 
-                                                                $_GET['languageID']));
-    } 
-    $stripper->strip();
+                $app, 
+                $_GET['languageID']));
+    }  
+    $stripper->strip(); 
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -3100,7 +3099,7 @@ $app->get("/DashboarddataDersProgrami_mbllogin/", function () use ($app ) {
                                             'RolID' => $vRolId,  
                                             'Cid' => $vCid, 
                                             'Did' => $vDid,
-                                            'LanguageID' => $vLanguageID, 
+                                            'LanguageID' => $vLanguageID,  
                                            ) );   
     $menus = array();
     foreach ($resDataMenu as $menu){
