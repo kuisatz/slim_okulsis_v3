@@ -816,6 +816,7 @@ class MblLogin extends \DAL\DalSlim {
                         [RolID] int,
                         [RolAdi] varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
                         OkulAdi varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
+                        OkulAdiKisa varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
                         MEBKodu bigint,
                         ePosta varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                         DersYiliID [uniqueidentifier],
@@ -859,23 +860,15 @@ class MblLogin extends \DAL\DalSlim {
                 delete from #okidbname".$tc." where MEBKodu is null ; 
 
                 SET @sqlx = 
-                'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,
+                'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,OkulAdiKisa,
                             MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans,cinsiyetID)
-                SELECT
-                    sss.OkulKullaniciID,
-                    sss.OkulID,
-                    sss.KisiID,
-                    sss.RolID,
+                SELECT sss.OkulKullaniciID,sss.OkulID,sss.KisiID,sss.RolID,
                     COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi,
                     upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
+                    upper( golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS ) as OkulAdiKisa,
                     oo.MEBKodu,
                     oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS,
-                    DY.DersYiliID,
-                    DY.EgitimYilID,
-                    EY.EgitimYili,
-                    DY.DonemID,
-                    oo.KurumID,
-                    '''+@dbnamex+''' as dbnamex,
+                    DY.DersYiliID,DY.EgitimYilID,EY.EgitimYili,DY.DonemID,oo.KurumID,'''+@dbnamex+''' as dbnamex,
                     '+cast(@database_id as nvarchar(5))+' as database_id,
                     case sss.RolID
                         WHEN 4 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
@@ -890,8 +883,7 @@ class MblLogin extends \DAL\DalSlim {
                         WHEN 7 THEN (SELECT Top 1 Brans FROM '+@dbnamex+'.dbo.OGT_Branslar bx
                                 LEFT JOIN '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
                                 WHERE ogtx.OgretmenID =sss.KisiID)
-                    else '''' end as brans,
-                    gg.cinsiyetID 
+                    else '''' end as brans,gg.cinsiyetID 
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
                 inner join '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=sss.OkulID and DY.AktifMi=1
@@ -946,7 +938,8 @@ class MblLogin extends \DAL\DalSlim {
                    NULL as ip,
                    '' as brans,
                    NULL as cinsiyetID,
-                   '' as  defaultFotoURL
+                   '' as  defaultFotoURL,
+                   '' as OkulAdiKisa
                 FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
                 INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
@@ -981,7 +974,8 @@ class MblLogin extends \DAL\DalSlim {
                         WHEN 1 THEN case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoE.jpg'  
                                     else '/okulsis/image/okulsis/fotoBE.jpg' end
                         ELSE case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoK.jpg'  
-                                    else '/okulsis/image/okulsis/fotoBK.jpg' end END AS defaultFotoURL
+                                    else '/okulsis/image/okulsis/fotoBK.jpg' end END AS defaultFotoURL,
+                        a.OkulAdiKisa
                     FROM  ##okimobilseconddata".$tc."  a
                     LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
                     WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
