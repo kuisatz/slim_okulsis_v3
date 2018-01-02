@@ -2130,7 +2130,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
     $Aciklama = NULL;
     $menus = array();
     foreach ($resDataInsert as $menu){
-        
+        print_r( $menu["Aciklama"]);
      
         if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
             $stripper2->offsetSet('Aciklama', $stripChainerFactory->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
