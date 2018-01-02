@@ -2128,14 +2128,15 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         'LanguageID' => $vLanguageID, 
         )); 
     
-    $Aciklama = NULL;
+    
     $menus = array();
     foreach ($resDataInsert as $menu){
-        print_r( $menu["Aciklama"]);
+      /*  $Aciklama = NULL; 
+        print_r( $menu);
      
         if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
-            $stripper2->offsetSet('Aciklama', $stripChainerFactory2->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
-                                                                    $app, 
+            $stripper2->offsetSet('Aciklama', $stripChainerFactory2->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_BASE, 
+                                                                    $menu, 
                                                                     $menu["Aciklama"]));
         } 
         $stripper2->strip();
@@ -2145,8 +2146,8 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         } 
          }
          
-        
-        
+        */ 
+         
         $menus[]  = array(  
             "OgrenciOdevID" =>   ($menu["OdevTanimID"]), 
           //  "OgrenciID" =>   ($menu["OgrenciID"]), 
@@ -2162,7 +2163,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
             "Tanim" =>   html_entity_decode($menu["Tanim"]), 
             "Tarih" =>   ($menu["Tarih"]), 
             "TeslimTarihi" =>   ($menu["TeslimTarihi"]),  
-            "Aciklama" =>   html_entity_decode($Aciklama), 
+            "Aciklama" =>   html_entity_decode($menu["Aciklama"]), 
             
         );
     } 
