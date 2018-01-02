@@ -4540,8 +4540,9 @@ class MblLogin extends \DAL\DalSlim {
                 D.DersAdi,
                 OT.Tanim, 
                 FORMAT(OT.Tarih, 'dd-MM-yyyy') as Tarih, 
-                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy') as TeslimTarihi,
-                OT.Aciklama
+                FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy') as TeslimTarihi, 
+                COALESCE(NULLIF(OT.Aciklama collate SQL_Latin1_General_CP1254_CI_AS,''),'' collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama
+ 
             FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
             INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
             INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
