@@ -2095,7 +2095,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                 $app, $_GET['did']));
     }
-     $vLanguageID = NULL;
+    $vLanguageID = NULL;
     if (isset($_GET['languageID'])) {
         $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                                                                 $app, 
@@ -2125,9 +2125,24 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         'Did' => $vDid,
         'LanguageID' => $vLanguageID, 
         )); 
-  
+    
+    $Aciklama = NULL;
     $menus = array();
     foreach ($resDataInsert as $menu){
+        
+     
+        if (isset($menu["Aciklama"])) {
+            $stripper->offsetSet('Aciklama', $stripChainerFactory->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
+                                                                    $app, 
+                                                                    $menu["Aciklama"]));
+        } 
+        $stripper->strip();
+        if ($stripper->offsetExists('Aciklama')) {
+            $Aciklama = $stripper->offsetGet('Aciklama')->getFilterValue();
+        } 
+        
+        
+        
         $menus[]  = array(  
             "OgrenciOdevID" =>   ($menu["OdevTanimID"]), 
           //  "OgrenciID" =>   ($menu["OgrenciID"]), 
@@ -2143,7 +2158,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
             "Tanim" =>   html_entity_decode($menu["Tanim"]), 
             "Tarih" =>   ($menu["Tarih"]), 
             "TeslimTarihi" =>   ($menu["TeslimTarihi"]),  
-            "Aciklama" =>   html_entity_decode($menu["Aciklama"]), 
+            "Aciklama" =>   html_entity_decode($Aciklama), 
             
         );
     } 
