@@ -2132,13 +2132,13 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
     foreach ($resDataInsert as $menu){
         print_r( $menu["Aciklama"]);
      
-        if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
+        if (  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
             $stripper2->offsetSet('Aciklama', $stripChainerFactory->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
                                                                     $app, 
                                                                     $menu["Aciklama"]));
         } 
         $stripper2->strip();
-         if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
+         if (   $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
         if ($stripper2->offsetExists('Aciklama')) {
             $Aciklama = $stripper2->offsetGet('Aciklama')->getFilterValue();
         } 
