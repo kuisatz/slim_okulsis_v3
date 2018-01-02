@@ -2138,9 +2138,11 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
                                                                     $menu["Aciklama"]));
         } 
         $stripper2->strip();
+         if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
         if ($stripper2->offsetExists('Aciklama')) {
             $Aciklama = $stripper2->offsetGet('Aciklama')->getFilterValue();
         } 
+         }
          
         
         
