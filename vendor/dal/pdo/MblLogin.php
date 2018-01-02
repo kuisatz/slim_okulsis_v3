@@ -5446,8 +5446,16 @@ class MblLogin extends \DAL\DalSlim {
                                         FROM  ".$dbnamex."MSJ_Mesajlar M 
                                         INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
                                         INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
-                                        WHERE MK.KisiID = '".$KisiID."' 
-                                                AND MK.Okundu = 0 AND M.Silindi=0 ) 
+                                        WHERE MK.KisiID = '".$KisiID."' AND MK.Okundu = 0 AND M.Silindi=0 ) 
+                            when 'odevler/ogretmen_new.html' then (SELECT count(distinct OT.OdevTanimID) as adet  
+                                        FROM ".$dbnamex."ODV_OdevTanimlari AS OT
+                                        INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID
+                                        INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID
+                                                        AND SO.DersHavuzuID = SD.DersHavuzuID
+                                                        AND OT.OgretmenID = SO.OgretmenID  
+                                        INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
+                                        WHERE OT.OgretmenID = '".$KisiID."' AND getdate() <= TeslimTarihi)
                             when 'sinav/ogretmenSinavlar.html' then (SELECT count(distinct SNV.SinavID ) as adet 
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
                                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
@@ -5465,9 +5473,7 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
                                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
                                     INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'	
-                                    WHERE
-                                        SNV.isOgrenciVeliSinavVisible = 1 AND
-                                        getdate() <= SNV.SinavTarihi
+                                    WHERE SNV.isOgrenciVeliSinavVisible = 1 AND getdate() <= SNV.SinavTarihi
                                 union
                                     SELECT SNV.SinavID
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
@@ -5478,9 +5484,7 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
                                     INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'
                                     WHERE
-                                        SNV.isAltKurumHidden = 0 AND
-                                     	SNV.isOgrenciVeliSinavVisible =1 AND
-                                        getdate() <= SNV.SinavTarihi
+                                        SNV.isAltKurumHidden = 0 AND SNV.isOgrenciVeliSinavVisible =1 AND getdate() <= SNV.SinavTarihi
                                     ) as dasdasd)
                         else NULL end as adet
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a
@@ -5510,11 +5514,19 @@ class MblLogin extends \DAL\DalSlim {
                         a.dashboardSira,
                         case a.URL 
                             when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                        FROM  ".$dbnamex."MSJ_Mesajlar M 
+                                        FROM ".$dbnamex."MSJ_Mesajlar M 
                                         INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
                                         INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
-                                        WHERE MK.KisiID = '".$KisiID."' 
-                                                AND MK.Okundu = 0 AND M.Silindi=0)
+                                        WHERE MK.KisiID = '".$KisiID."' AND MK.Okundu = 0 AND M.Silindi=0)
+                            when 'odevler/ogretmen_new.html' then (SELECT count(distinct OT.OdevTanimID) as adet  
+                                        FROM ".$dbnamex."ODV_OdevTanimlari AS OT
+                                        INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID
+                                        INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID
+                                                        AND SO.DersHavuzuID = SD.DersHavuzuID
+                                                        AND OT.OgretmenID = SO.OgretmenID  
+                                        INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
+                                        WHERE OT.OgretmenID = '".$KisiID."' AND getdate() <= TeslimTarihi)
                             when 'sinav/ogretmenSinavlar.html' then (SELECT count(distinct SNV.SinavID ) as adet 
                                         FROM ".$dbnamex."SNV_Sinavlar SNV
                                         INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
@@ -5522,28 +5534,28 @@ class MblLogin extends \DAL\DalSlim {
                                         INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = '".$KisiID."' 
                                         INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID
                                         INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
-                                        WHERE  getdate() <= SNV.SinavTarihi)
+                                        WHERE getdate() <= SNV.SinavTarihi)
                             when 'sinav/ogrenci.html' then ( 
                                 SELECT count(distinct SinavID) as adet from (
                                     SELECT  SNV.SinavID
-                                    FROM BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar SNV
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'	
+                                    FROM ".$dbnamex."dbo.SNV_Sinavlar SNV
+                                    INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
+                                    INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
+                                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'	
                                     WHERE
                                         SNV.isOgrenciVeliSinavVisible = 1 AND
                                         getdate() <= SNV.SinavTarihi
                                 union
                                     SELECT SNV.SinavID
-                                    FROM BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar SNV
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID	
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
-                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'
+                                    FROM ".$dbnamex."SNV_Sinavlar SNV
+                                    INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID	
+                                    INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
+                                    INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
+                                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'
                                     WHERE
                                         SNV.isAltKurumHidden = 0 AND
                                      	SNV.isOgrenciVeliSinavVisible =1 AND
