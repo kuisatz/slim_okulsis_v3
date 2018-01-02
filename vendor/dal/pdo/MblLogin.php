@@ -3099,7 +3099,7 @@ class MblLogin extends \DAL\DalSlim {
                     select  
                         gd.[Donem],  
                         FORMAT(SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
-                        FORMAT(SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi
+                        FORMAT(SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi,
                         SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS as SinavTurAdi ,
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS as SinavKodu,
                         SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS  as SinavAciklamasi
