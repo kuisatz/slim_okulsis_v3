@@ -5452,9 +5452,9 @@ class MblLogin extends \DAL\DalSlim {
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
                                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
                                     INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
-                                    INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = @KisiID 
+                                    INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = '".$KisiID."' 
                                     INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID
-                                    INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = @KisiID
+                                    INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
                                     WHERE  getdate() <= SNV.SinavTarihi)
                             when 'sinav/ogrenci.html' then ( 
                                 SELECT count(distinct SinavID) as adet from (
@@ -5519,9 +5519,9 @@ class MblLogin extends \DAL\DalSlim {
                                         FROM ".$dbnamex."SNV_Sinavlar SNV
                                         INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
                                         INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
-                                        INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = @KisiID 
+                                        INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = '".$KisiID."' 
                                         INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID
-                                        INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = @KisiID
+                                        INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
                                         WHERE  getdate() <= SNV.SinavTarihi)
                             when 'sinav/ogrenci.html' then ( 
                                 SELECT count(distinct SinavID) as adet from (
