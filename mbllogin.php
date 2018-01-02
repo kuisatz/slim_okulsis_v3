@@ -2071,6 +2071,7 @@ $app->get("/OdevListesiOgretmen_mbllogin/", function () use ($app ) {
  */
 $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
+    $stripper2 = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
     
@@ -2132,13 +2133,13 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         
      
         if (isset($menu["Aciklama"])) {
-            $stripper->offsetSet('Aciklama', $stripChainerFactory->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
+            $stripper2->offsetSet('Aciklama', $stripChainerFactory->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
                                                                     $app, 
                                                                     $menu["Aciklama"]));
         } 
-        $stripper->strip();
-        if ($stripper->offsetExists('Aciklama')) {
-            $Aciklama = $stripper->offsetGet('Aciklama')->getFilterValue();
+        $stripper2->strip();
+        if ($stripper2->offsetExists('Aciklama')) {
+            $Aciklama = $stripper2->offsetGet('Aciklama')->getFilterValue();
         } 
         
         
