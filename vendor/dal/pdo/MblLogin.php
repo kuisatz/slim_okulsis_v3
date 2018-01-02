@@ -5409,10 +5409,7 @@ class MblLogin extends \DAL\DalSlim {
             }
              
             $sql = "  
-            SET NOCOUNT ON;  
-            declare  @KisiID UNIQUEIDENTIFIER;
-            set @KisiID = '".$KisiID."'; 
-            SELECT 
+            SELECT
                 ID,
                 MenuID,
                 ParentID,  
@@ -5427,13 +5424,13 @@ class MblLogin extends \DAL\DalSlim {
                 collapse,
                 sira,
                 dashboardSira,
-                COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'')  as adet
-               FROM  (  
-                    SELECT 
+                COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'') as adet
+               FROM (
+                    SELECT
                         a.[ID],
                         a.[MenuID],
-                        a.[ParentID],  
-                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi, 
+                        a.[ParentID],
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi,
                         a.[Aciklama],
                         a.[URL],
                         a.[RolID],
@@ -5441,48 +5438,81 @@ class MblLogin extends \DAL\DalSlim {
                         a.[ImageURL],
                         a.iconcolor,
                         a.[iconclass],
+                        a.collapse,
+                        a.sira,
+                        a.dashboardSira,
+                        case a.URL
+                            when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                                        FROM  ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                                AND MK.Okundu = 0 AND M.Silindi=0 ) 
+                            when '1mesajlar/gelenMesaj.html' then ( 
+                                SELECT count(distinct SinavID) as adet from (
+                                    SELECT  SNV.SinavID
+                                    FROM BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar SNV
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'	
+                                    WHERE
+                                        SNV.isOgrenciVeliSinavVisible = 1 AND
+                                        getdate() <= SNV.SinavTarihi
+                                union
+                                    SELECT SNV.SinavID
+                                    FROM BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar SNV
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID	
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
+                                    INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'
+                                    WHERE
+                                        SNV.isAltKurumHidden = 0 AND
+                                     	SNV.isOgrenciVeliSinavVisible =1 AND
+                                        getdate() <= SNV.SinavTarihi
+                                    ) as dasdasd)
+                        else NULL end as adet
+                    FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Menuleri] ax on (ax.language_parent_id = a.ID or ax.ID = a.ID ) and  ax.language_id= lx.id  
+                    WHERE a.active = 0 AND a.deleted = 0 AND
+                        a.RolID = ".intval($RolID)." AND
+                        a.language_parent_id =0 AND 
+                        a.ParentID =0 AND
+                        a.dashboard =0
+                    UNION
+                    SELECT 
+                        a.[ID],
+                        a.[MenuID],
+                        a.[ParentID],  
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi ,
+                        a.[Aciklama],
+                        a.[URL],
+                        a.[RolID],
+                        a.[SubDivision], 
+                        a.[ImageURL], 
+                        a.iconcolor,
+                        a.[iconclass],
                         a.collapse ,
                         a.sira,
                         a.dashboardSira,
                         case a.URL 
                             when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                    FROM  ".$dbnamex."MSJ_Mesajlar M 
-                                    INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-                                    INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
-                                    WHERE MK.KisiID = '".$KisiID."' 
-                                            AND MK.Okundu = 0 AND M.Silindi=0 ) 
+                                        FROM  ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                                AND MK.Okundu = 0 AND M.Silindi=0 ) 
                             when '1mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
-                                    FROM  ".$dbnamex."MSJ_Mesajlar M 
-                                    INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
-                                    INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
-                                    WHERE MK.KisiID = '".$KisiID."' 
-                                    AND MK.Okundu = 0 AND M.Silindi=0 )  
-                             when 'sinav/ogrenci.html' then ( 
-                                SELECT count(distinct SinavID) as adet  from (
-                                    SELECT  SNV.SinavID  
-                                    FROM ".$dbnamex."SNV_Sinavlar SNV
-                                    INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
-                                    INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
-                                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
-                                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
-                                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = @KisiID	
-                                    WHERE  
-                                        SNV.isOgrenciVeliSinavVisible  = 1 AND
-                                        getdate() <= SNV.SinavTarihi
-                                union 
-                                    SELECT SNV.SinavID  
-                                    FROM ".$dbnamex."SNV_Sinavlar SNV
-                                    INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID	
-                                    INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
-                                    INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
-                                    INNER JOIN ".$dbnamex."SNV_SinavSiniflari SSNF ON SSNF.SinavID=SNV.SinavID
-                                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SOGR ON SOGR.SinavSinifID=SSNF.SinavSinifID
-                                    INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = @KisiID
-                                    WHERE  
-                                        SNV.isAltKurumHidden = 0 AND
-                                     	SNV.isOgrenciVeliSinavVisible =1 AND
-                                        getdate() <= SNV.SinavTarihi
-                                    ) as dasdasd)  
+                                        FROM ".$dbnamex."MSJ_Mesajlar M 
+                                        INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
+                                        INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
+                                        WHERE MK.KisiID = '".$KisiID."' 
+                                        AND MK.Okundu = 0 AND M.Silindi=0 )  
                         else NULL end as adet 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
@@ -5494,9 +5524,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.ParentID >0 AND 
                         a.dashboard =0 
                 ) AS asasdasd
-                ORDER BY dashboardSira;
-                IF OBJECT_ID('tempdb..#okiyakinsinavlari') IS NOT NULL DROP TABLE #okiyakinsinavlari  
-                SET NOCOUNT OFF; 
+                ORDER BY dashboardSira
                      
                  ";  
             $statement = $pdo->prepare($sql);            
