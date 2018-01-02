@@ -5409,6 +5409,7 @@ class MblLogin extends \DAL\DalSlim {
             }
              
             $sql = "  
+            SET NOCOUNT ON;  
             SELECT 
                 ID,
                 MenuID,
@@ -5454,6 +5455,69 @@ class MblLogin extends \DAL\DalSlim {
                                         INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' 
                                         AND MK.Okundu = 0 AND M.Silindi=0 )  
+                             when '1mesajlar/gelenMesaj.html' then (            
+
+  
+        
+                        IF OBJECT_ID('tempdb..#okiyakinsinavlari') IS NOT NULL DROP TABLE #okiyakinsinavlari; 
+
+                        CREATE TABLE #okiyakinsinavlari
+                            ( 
+                            SinavID [uniqueidentifier],
+                            OkulID [uniqueidentifier], 
+                            OkulOgretmenID [uniqueidentifier],
+                            SinavTurID int,	
+                            SeviyeID int,
+                            SinavUygulamaSekliID int,
+                            KitapcikTurID int,
+                            SinavKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                            SinavAciklamasi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                            SinavTarihi datetime,
+                            SinavBitisTarihi datetime,    
+                            SinavSuresi int, 
+                            KitapcikSayisi int, 
+                            DogruSilenYanlisSayisi int, 
+                            PuanlarYuvarlansinMi int, 
+                            OrtalamaVeSapmaHesaplansinMi int, 
+                            SiralamadaYasKontroluYapilsinMi int, 
+                            isDegerlendirildi int,
+                            isAlistirma int,
+                            OptikFormGirisiYapilabilirMi int,
+                            isOtherTeachers int,
+                            isUserExam int,
+                            isOgrenciVeliSinavVisible int,
+                            isAltKurumHidden int,
+                            sonBasilabilirOnayTarihi datetime, 
+                            SinavTurAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS,
+                            SeviyeKodu varchar(10)  collate SQL_Latin1_General_CP1254_CI_AS,
+                            NotDonemID int,
+                            SinavTanimID int,      
+                            isNotAktarildi bit,
+                            SinavOgrenciID [uniqueidentifier]
+                                                ) ;
+
+                        INSERT #okiyakinsinavlari EXEC  BILSANET_TAKEVBODRUM.dbo.[PRC_SNV_Sinavlar_FindForOgrenci]
+                                                        @OkulOgretmenID = 'A18A3EB0-602B-4570-8D51-A1A68310C4D4',
+                                                        @EgitimYilID = 2017,
+                                                        @OkulID = '316E8400-E6A9-41BF-A428-46948B7877F7',
+                                                        @KisiID =  '2A238B2B-E20C-4B74-911E-052D46461AA3' ; 
+
+                        select count( SinavTarihi) as adet   
+                        FROM #okiyakinsinavlari a 
+                        INNER JOIN BILSANET_TAKEVBODRUM.dbo.[GNL_Donemler] gd on gd.DonemID = a.NotDonemID  
+                                            where getdate() <= SinavTarihi
+                        IF OBJECT_ID('tempdb..#okiyakinsinavlari') IS NOT NULL DROP TABLE #okiyakinsinavlari  
+                    )
+                 
+
+
+
+
+
+
+
+
+
                         else NULL end as adet 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
@@ -5505,6 +5569,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.dashboard =0 
                 ) AS asasdasd
                 ORDER BY dashboardSira
+                SET NOCOUNT OFF; 
                      
                  ";  
             $statement = $pdo->prepare($sql);            
