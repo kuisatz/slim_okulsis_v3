@@ -2073,6 +2073,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripper2 = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
+    $stripChainerFactory2 = new \Services\Filter\Helper\FilterChainerFactory();
     $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
     
     $vOgrenciID= NULL;     
@@ -2132,13 +2133,13 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
     foreach ($resDataInsert as $menu){
         print_r( $menu["Aciklama"]);
      
-        if (  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
-            $stripper2->offsetSet('Aciklama', $stripChainerFactory->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
+        if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
+            $stripper2->offsetSet('Aciklama', $stripChainerFactory2->get(stripChainers::FILTER_HTML_TAGS_CUSTOM_ADVANCED, 
                                                                     $app, 
                                                                     $menu["Aciklama"]));
         } 
         $stripper2->strip();
-         if (   $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
+         if (isset($menu["Aciklama"]) &&  $menu["Aciklama"] != "" && $menu["Aciklama"]  != NULL  ) {
         if ($stripper2->offsetExists('Aciklama')) {
             $Aciklama = $stripper2->offsetGet('Aciklama')->getFilterValue();
         } 
