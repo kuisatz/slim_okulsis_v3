@@ -1366,7 +1366,7 @@ class MblLogin extends \DAL\DalSlim {
         }
     }
      
-     /** 
+    /** 
      * @author Okan CIRAN
      * @ login olan ogretmenin ders programı   !!
      * @version v 1.0  03.10.2017
@@ -3100,9 +3100,9 @@ class MblLogin extends \DAL\DalSlim {
                         gd.[Donem],  
                         FORMAT(SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
                         FORMAT(SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi
-                        SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
-                        SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
-                        SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS 
+                        SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS as SinavTurAdi ,
+                        SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS as SinavKodu,
+                        SinavAciklamasi   collate SQL_Latin1_General_CP1254_CI_AS  as SinavAciklamasi
                     /*
                         SinavTurID ,	
                         SeviyeID ,
@@ -6658,7 +6658,7 @@ class MblLogin extends \DAL\DalSlim {
                 DECLARE db_cursor CURSOR FOR  
                     SELECT DersSirasi,HaftaGunu,SinifDersID FROM ".$dbnamex."GNL_DersProgramlari
                     WHERE SinifDersID IN 
-                        (SELECT SinifDersID FROM Bilsanet1.dbo.GNL_SinifDersleri 
+                        (SELECT SinifDersID FROM ".$dbnamex."GNL_SinifDersleri 
                         WHERE SinifID = @SinifID AND DersHavuzuID IN (SELECT DersHavuzuID FROM ".$dbnamex."GNL_OgrenciDersleri WHERE OgrenciSeviyeID=@OgrenciSeviyeID))
                         AND DonemID = @DonemID ORDER BY HaftaGunu,DersSirasi,SinifDersID
                 OPEN db_cursor   
