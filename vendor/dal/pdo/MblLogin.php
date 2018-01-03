@@ -5495,8 +5495,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND
                         a.RolID = ".intval($RolID)." AND
                         a.language_parent_id =0 AND 
-                        a.ParentID =0 AND
-                        a.dashboard =0
+                        a.ParentID =0 /* AND  a.dashboard =0 */ 
                     UNION
                     SELECT 
                         a.[ID],
@@ -5570,8 +5569,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND 
                         a.RolID = ".intval($RolID)."  AND 
                         a.language_parent_id =0 AND 
-                        a.ParentID >0 AND 
-                        a.dashboard =0 
+                        a.ParentID >0 /* AND  a.dashboard =0 */ 
                 ) AS asasdasd
                 ORDER BY dashboardSira
                      
@@ -10133,194 +10131,182 @@ class MblLogin extends \DAL\DalSlim {
                 $languageIdValue = $params['LanguageID'];
             } 
               
-            $sql = "  
-            SET NOCOUNT ON;   
-            /* 1 */
-            DECLARE @egitimYilID INT
-            DECLARE @ogrenciID UNIQUEIDENTIFIER;
-            DECLARE @OgrenciSeviyeID UNIQUEIDENTIFIER;
-            DECLARE @SinavID UNIQUEIDENTIFIER;
-            DECLARE @SinavOgrenciID UNIQUEIDENTIFIER;
+        $sql =   
+           " SET NOCOUNT ON; "+   
+           " /* 1 */ "+
+           " DECLARE @egitimYilID INT "+
+           " DECLARE @ogrenciID UNIQUEIDENTIFIER; "+
+           " DECLARE @OgrenciSeviyeID UNIQUEIDENTIFIER; "+
+           " DECLARE @SinavID UNIQUEIDENTIFIER; "+
+           " DECLARE @SinavOgrenciID UNIQUEIDENTIFIER; "+
 
-            SET @OgrenciSeviyeID = '".$OgrenciSeviyeID."';
-            SET @SinavID =  '".$SinavID."';
-            IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;  
-            IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif;  
-            IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;  
+           " SET @OgrenciSeviyeID = '".$OgrenciSeviyeID."'; "+
+           " SET @SinavID = '".$SinavID."'; "+
+           " IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri; "+
+           " IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; "+
+           " IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar; "+
 
-            SELECT @egitimYilID = EgitimYilID,
-                   @ogrenciID = OgrenciID
-            FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
-            INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
-            INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID
-            WHERE OgrenciSeviyeID = @OgrenciSeviyeID;
+           " SELECT @egitimYilID = EgitimYilID, "+
+           "        @ogrenciID = OgrenciID "+
+           " FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS "+
+           " INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID "+
+           " INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID "+
+           " WHERE OgrenciSeviyeID = @OgrenciSeviyeID; "+
 		  
-            SELECT  
-                SO.SinavOgrenciID,
-                SO.SinifKodu,
-                SO.OgrenciNumarasi,
-                /* OKUL.OkulID, */
-                OKUL.OkulAdi,
-                IL.IlAdi,
-                ILCE.IlceAdi,
-                SNV.SinavAciklamasi,
-                SNV.SinavKodu,
-                SNV.SinavTarihi,
-                SNV.SinavTurID,
-                /* SKIT.KitapcikTurID, */
-                ST.SinavTurAdi,
-                KISI.Adi,
-                KISI.Soyadi,
-                /* SO.OgrenciSeviyeID,*/
-                SNV.EgitimYilID, 
-                /* snv.YGSSinavID, */
-                snv.SinavID
-                /* ,D.Dosya AS Logo */
-            into #tempogrencibilgileri
-            FROM ".$dbnamex."SNV_Sinavlar SNV
-            INNER JOIN ".$dbnamex."SNV_SinavSiniflari SNVSNF ON SNVSNF.SinavID = SNV.SinavID AND SNVSNF.SinavID = @SinavID
-            INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavSinifID = SNVSNF.SinavSinifID 
-            INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SO.OgrenciSeviyeID
-            INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID = SO.SinavOkulID
-            INNER JOIN ".$dbnamex."GNL_Kisiler KISI ON KISI.KisiID = OS.OgrenciID
-            INNER JOIN ".$dbnamex."GNL_Okullar OKUL ON OKUL.OkulID = SOK.OkulID
-            INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID
-            INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKIT ON SKIT.SinavKitapcikID = SO.SinavKitapcikID
-            LEFT JOIN ".$dbnamex."GNL_Adresler ADR ON ADR.AdresID = OKUL.AdresID
-            LEFT JOIN ".$dbnamex."GNL_Ilceler ILCE ON ILCE.IlceID = ADR.IlceID
-            LEFT JOIN ".$dbnamex."GNL_Iller IL ON IL.IlID = ILCE.IlID
-            /* LEFT JOIN GNL_Dosyalar D ON D.DosyaID = OKUL.LogoDosyaID	 */
-            WHERE SO.OgrenciSeviyeID = @OgrenciSeviyeID  
+           " SELECT "+
+               " SO.SinavOgrenciID,"+
+               " SO.SinifKodu,"+
+               " SO.OgrenciNumarasi,"+
+               "  /* OKUL.OkulID, */"+
+               " OKUL.OkulAdi,"+
+               " IL.IlAdi,"+
+               " ILCE.IlceAdi,"+
+               " SNV.SinavAciklamasi,"+
+               " SNV.SinavKodu,"+
+               " SNV.SinavTarihi,"+
+               " SNV.SinavTurID,"+
+               " /* SKIT.KitapcikTurID, */"+
+               " ST.SinavTurAdi,"+
+               " KISI.Adi,"+
+               " KISI.Soyadi,"+
+               " /* SO.OgrenciSeviyeID,*/ "+
+               " SNV.EgitimYilID, "+
+               " /* snv.YGSSinavID, */ "+
+               " snv.SinavID"+
+               " /* ,D.Dosya AS Logo */ "+
+           " into #tempogrencibilgileri "+
+           " FROM ".$dbnamex."SNV_Sinavlar SNV "+
+           " INNER JOIN ".$dbnamex."SNV_SinavSiniflari SNVSNF ON SNVSNF.SinavID = SNV.SinavID AND SNVSNF.SinavID = @SinavID "+
+           " INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavSinifID = SNVSNF.SinavSinifID "+
+           " INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SO.OgrenciSeviyeID "+
+           " INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID = SO.SinavOkulID "+
+           " INNER JOIN ".$dbnamex."GNL_Kisiler KISI ON KISI.KisiID = OS.OgrenciID "+
+           " INNER JOIN ".$dbnamex."GNL_Okullar OKUL ON OKUL.OkulID = SOK.OkulID "+
+           " INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID "+
+           " INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKIT ON SKIT.SinavKitapcikID = SO.SinavKitapcikID "+
+           " LEFT JOIN ".$dbnamex."GNL_Adresler ADR ON ADR.AdresID = OKUL.AdresID "+
+           " LEFT JOIN ".$dbnamex."GNL_Ilceler ILCE ON ILCE.IlceID = ADR.IlceID "+
+           " LEFT JOIN ".$dbnamex."GNL_Iller IL ON IL.IlID = ILCE.IlID "+
+           " /* LEFT JOIN GNL_Dosyalar D ON D.DosyaID = OKUL.LogoDosyaID */"+
+           " WHERE SO.OgrenciSeviyeID = @OgrenciSeviyeID "+
             
-            /*  3333 */
-            SELECT @SinavOgrenciID= SinavOgrenciID FROM #tempogrencibilgileri;
-            SELECT  op.SinavOgrenciID,
-                Snf.SeviyeID,
-                SNF.SinifID,
-                SNF.SinifKodu,
-                PST.PuanSiralamaTipID,
-                SUM(OP.Puan) AS TopPuan,
-                S.sinavID
-            INTO #tmpSinif
-            FROM ".$dbnamex."OD_SinavPuanTipleri SPT
-            INNER JOIN ".$dbnamex."SNV_Sinavlar S ON S.SinavID = SPT.SinavID
-            INNER JOIN ".$dbnamex."OD_OgrenciPuanlari OP ON OP.SinavPuanTipID = SPT.SinavPuanTipID  /* AND OP.SinavOgrenciID = @SinavOgrenciID */
-            INNER JOIN ".$dbnamex."OD_PuanTipleri PT ON PT.PuanTipID = SPT.PuanTipID
-            INNER JOIN ".$dbnamex."OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID = OP.OgrenciPuanID
-            INNER JOIN ".$dbnamex."OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID = OPS.PuanSiralamaTipID
-            INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavOgrenciID = OP.SinavOgrenciID
-            INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID = SO.SinavOkulID
-            INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SO.OgrenciSeviyeID
-            INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID = OS.SinifID
-            INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = SNF.DersYiliID
-            WHERE SPT.SinavID = @SinavID AND 
-                PST.PuanSiralamaTipID IN (4,5)
-            GROUP BY op.SinavOgrenciID,
-                Snf.SeviyeID,
-                SNF.SinifID,
-                SNF.SinifKodu,
-                PST.PuanSiralamaTipID,
-                S.sinavID
-            ORDER BY Snf.SeviyeID,Snf.SinifKodu;
-        ";
-        $sql1 = "  
-	   
-	    SELECT  
-                OP.SinavOgrenciID ,
-                PT.PuanTipAdi ,
-                PT.PuanTipKodu ,
-                SPT.SinavPuanTipID ,
-                OP.OgrenciPuanID ,
-                S.sinavkodu ,
-                OP.Puan ,
-                (SELECT AVG(TopPuan) FROM #tmpSinif WHERE SinifID = SNF.SinifID AND
-                        PuanSiralamaTipID = PST.PuanSiralamaTipID
-                ) AS SinifOrtalamasi,
-                (SELECT AVG(TopPuan) FROM #tmpSinif WHERE PuanSiralamaTipID = PST.PuanSiralamaTipID
-                ) AS OkulOrtalamasi,
-                OPS.Sira,
-                OPS.SinavaGirenOgrenciSayisi,
-                PST.PuanSiralamaTipID,
-                PST.PuanSiralamaTipAdi,
-                S.isVeliSiralamaHidden
-		into #puanlar
-            FROM ".$dbnamex."OD_SinavPuanTipleri SPT
-            INNER JOIN ".$dbnamex."SNV_Sinavlar S ON S.SinavID = SPT.SinavID
-            INNER JOIN ".$dbnamex."OD_OgrenciPuanlari OP ON OP.SinavPuanTipID = SPT.SinavPuanTipID AND OP.SinavOgrenciID = @SinavOgrenciID
-            INNER JOIN ".$dbnamex."OD_PuanTipleri PT ON PT.PuanTipID = SPT.PuanTipID
-            INNER JOIN ".$dbnamex."OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID = OP.OgrenciPuanID
-            INNER JOIN ".$dbnamex."OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID = OPS.PuanSiralamaTipID
-            INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavOgrenciID = OP.SinavOgrenciID
-            INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID = SO.SinavOkulID
-            INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SO.OgrenciSeviyeID
-            INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID = OS.SinifID
-            WHERE SPT.SinavID = @SinavID AND
-                PST.PuanSiralamaTipID IN (4,5)
-            ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
-            
-            /*3333 */ 
-
-            SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* FROM ( 
-                SELECT  distinct 
-                    SKS.Sira,
-                    SDS.DersKodu,
-                    DUGUM.DugumAciklama,
-                    SS.SoruPuani,
-                    SOSC.AldigiPuan,
-                    ".$dbnamex."GetSoruKazanimlari(SS.SoruID) as SoruKazanimlari, 
-                    BKS.BolumKategoriID,
-                    BKS.BolumKategoriAdi , 
-                    /* t1 */
-                    t1.SinavOgrenciID ,
-                    t1.SinifKodu ,
-                    t1.OgrenciNumarasi , 
-                    t1.OkulAdi ,
-                    t1.IlAdi ,
-                    t1.IlceAdi ,
-                    t1.SinavAciklamasi ,
-                    t1.SinavKodu, 
-                    FORMAT( t1.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi,
-                    t1.SinavTurID , 
-                    t1.SinavTurAdi ,
-                    concat(t1.Adi collate SQL_Latin1_General_CP1254_CI_AS, ' ', t1.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as Adisoyadi, 
-                    t1.EgitimYilID ,  
-                    t1.SinavID,   
-                    /* * t1 */
-
-                    /*   p1 */
-                    p1.PuanTipAdi,
-                    p1.PuanTipKodu,
-                    p1.Puan,  
-                    (Select SinavaGirenOgrenciSayisi from #puanlar px1 where PuanSiralamaTipID = 5 ) as sinifSinavaGirenSayisi,
-                    (Select SinavaGirenOgrenciSayisi from #puanlar px1 where PuanSiralamaTipID = 4 ) as okulSinavaGirenSayisi, 
-                    (Select Sira from #puanlar px1 where PuanSiralamaTipID = 5 ) as sinifSira,
-                    (Select SinifOrtalamasi from #puanlar px1 where PuanSiralamaTipID = 5 ) as SinifOrtalamasi,
-                    (Select Sira from #puanlar px1 where PuanSiralamaTipID = 4 ) as okulSira,
-                    (Select OkulOrtalamasi from #puanlar px1 where PuanSiralamaTipID = 4 ) as OkulOrtalamasi
-                    /* * p1 */  
-		FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS 
-		INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID = SO.SinavKitapcikID 
-		INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID = SKS.SinavSoruID
-		INNER JOIN ".$dbnamex."SB_SoruIcerikleri SI ON SI.SoruID = SS.SoruID
-		INNER JOIN ".$dbnamex."SB_Sorular SORU ON SORU.SoruID = SI.soruID
-		LEFT JOIN ".$dbnamex."SNV_SinavOgrenciSoruCevaplari SOSC ON SOSC.SinavSoruID = SS.SinavSoruID AND SOSC.SinavOgrenciID = SO.SinavOgrenciID
-		LEFT JOIN ".$dbnamex."SNV_SinavKitapcikSoruCevapSiralari D_CVP ON D_CVP.SinavKitapcikSoruID = SKS.SinavKitapcikSoruID AND D_CVP.SoruCevaplariID = SI.SoruCevaplariID 
-		LEFT JOIN ".$dbnamex."SNV_SinavKitapcikSoruCevapSiralari O_CVP ON O_CVP.SinavKitapcikSoruCevapSiraID = SOSC.SinavKitapcikSoruCevapSiraID
-		INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavDersID = SS.SinavDersID 
-		INNER JOIN ".$dbnamex."SNV_SinavDersSabitleri SDS ON SDS.SinavDersSabitID = SD.SinavDersSabitID
-		INNER JOIN ".$dbnamex."SNV_BolumKategorileri BKS ON BKS.BolumKategoriID = SDS.BolumKategoriID
-		INNER JOIN ".$dbnamex."KA_Dugumler DUGUM ON DUGUM.DugumID = SORU.DugumID 
-		INNER JOIN #tempogrencibilgileri t1 ON t1.SinavOgrenciID = SO.SinavOgrenciID
-		INNER JOIN #puanlar p1 ON p1.SinavOgrenciID = SO.SinavOgrenciID 
-            ) AS sdasdasd 
-            ORDER BY  BolumKategoriID, SoruSira; 
-                   
-            IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;  
-            IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif;  
-            IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;  
-            SET NOCOUNT OFF; 
-                 "; 
-            $sql =  $sql +  $sql1;
+           " /*  3333 */ "+
+           " SELECT @SinavOgrenciID= SinavOgrenciID FROM #tempogrencibilgileri; "+
+           " SELECT op.SinavOgrenciID,"+
+           "     Snf.SeviyeID,"+
+           "     SNF.SinifID,"+
+           "     SNF.SinifKodu,"+
+           "     PST.PuanSiralamaTipID,"+
+           "     SUM(OP.Puan) AS TopPuan,"+
+           "     S.sinavID "+
+           " INTO #tmpSinif "+
+           " FROM ".$dbnamex."OD_SinavPuanTipleri SPT "+
+           " INNER JOIN ".$dbnamex."SNV_Sinavlar S ON S.SinavID = SPT.SinavID "+
+           " INNER JOIN ".$dbnamex."OD_OgrenciPuanlari OP ON OP.SinavPuanTipID = SPT.SinavPuanTipID /* AND OP.SinavOgrenciID = @SinavOgrenciID */"+
+           " INNER JOIN ".$dbnamex."OD_PuanTipleri PT ON PT.PuanTipID = SPT.PuanTipID "+
+           " INNER JOIN ".$dbnamex."OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID = OP.OgrenciPuanID "+
+           " INNER JOIN ".$dbnamex."OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID = OPS.PuanSiralamaTipID "+
+           " INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavOgrenciID = OP.SinavOgrenciID "+
+           " INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID = SO.SinavOkulID "+
+           " INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SO.OgrenciSeviyeID "+
+           " INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID = OS.SinifID "+
+           " INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = SNF.DersYiliID "+ 
+           " WHERE SPT.SinavID = @SinavID AND PST.PuanSiralamaTipID IN (4,5) "+
+           " GROUP BY op.SinavOgrenciID,Snf.SeviyeID,SNF.SinifID,SNF.SinifKodu,PST.PuanSiralamaTipID,S.sinavID "+
+           " ORDER BY Snf.SeviyeID,Snf.SinifKodu; "+ 
+                    
+	   "  SELECT "+ 
+           "      OP.SinavOgrenciID, "+
+           "      PT.PuanTipAdi, "+
+           "      PT.PuanTipKodu, "+
+           "      SPT.SinavPuanTipID, "+
+           "      OP.OgrenciPuanID, "+
+           "      S.sinavkodu, "+
+           "      OP.Puan, "+
+           "      (SELECT AVG(TopPuan) FROM #tmpSinif WHERE SinifID = SNF.SinifID AND "+
+           "              PuanSiralamaTipID = PST.PuanSiralamaTipID "+
+           "      ) AS SinifOrtalamasi, "+
+           "      (SELECT AVG(TopPuan) FROM #tmpSinif WHERE PuanSiralamaTipID = PST.PuanSiralamaTipID "+
+           "      ) AS OkulOrtalamasi, "+
+           "      OPS.Sira, "+
+           "      OPS.SinavaGirenOgrenciSayisi, "+
+           "      PST.PuanSiralamaTipID, "+
+           "      PST.PuanSiralamaTipAdi, "+
+           "     S.isVeliSiralamaHidden "+
+           "  into #puanlar "+
+           "  FROM ".$dbnamex."OD_SinavPuanTipleri SPT "+
+           "  INNER JOIN ".$dbnamex."SNV_Sinavlar S ON S.SinavID = SPT.SinavID "+
+           "  INNER JOIN ".$dbnamex."OD_OgrenciPuanlari OP ON OP.SinavPuanTipID = SPT.SinavPuanTipID AND OP.SinavOgrenciID = @SinavOgrenciID "+
+           "  INNER JOIN ".$dbnamex."OD_PuanTipleri PT ON PT.PuanTipID = SPT.PuanTipID "+
+           "  INNER JOIN ".$dbnamex."OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID = OP.OgrenciPuanID "+
+           "  INNER JOIN ".$dbnamex."OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID = OPS.PuanSiralamaTipID "+
+           "  INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavOgrenciID = OP.SinavOgrenciID "+
+           "  INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID = SO.SinavOkulID "+
+           "  INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SO.OgrenciSeviyeID "+
+           "  INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID = OS.SinifID "+
+           "  WHERE SPT.SinavID = @SinavID AND "+
+           "      PST.PuanSiralamaTipID IN (4,5) "+
+           "  ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC; "+ 
+           "  /*3333 */ "+  // '07YnHZ0kbau12VI', XClfJPRr9F2POqw 
+           "  SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* FROM ( "+
+           "      SELECT distinct  "+
+                   "  SKS.Sira, "+
+                   "  SDS.DersKodu, "+
+                   "  DUGUM.DugumAciklama, "+
+                   "  SS.SoruPuani, "+
+                   "  SOSC.AldigiPuan, "+
+                   "  ".$dbnamex."GetSoruKazanimlari(SS.SoruID) as SoruKazanimlari,  "+
+                   " BKS.BolumKategoriID, "+
+                   "  BKS.BolumKategoriAdi,  "+
+                   "  /* t1 */ "+
+                   "  t1.SinavOgrenciID, "+
+                   "  t1.SinifKodu, "+
+                   "  t1.OgrenciNumarasi, "+
+                   "  t1.OkulAdi, "+
+                   "  t1.IlAdi, "+
+                   "  t1.IlceAdi, "+
+                   "  t1.SinavAciklamasi, "+
+                   "  t1.SinavKodu, "+
+                   "  FORMAT(t1.SinavTarihi,'dd-MM-yyyy hh:mm') as SinavTarihi, "+
+                   "  t1.SinavTurID, "+
+                   "  t1.SinavTurAdi, "+
+                   "  concat(t1.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',t1.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as Adisoyadi,  "+
+                   "  t1.EgitimYilID, "+  
+                   "  t1.SinavID, "+
+                   "  /* * t1 */ "+ 
+                   "  /*   p1 */ "+
+                   "  p1.PuanTipAdi, "+
+                   "  p1.PuanTipKodu, "+
+                   "  p1.Puan, "+ 
+                   "  (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID = 5) as sinifSinavaGirenSayisi, "+
+                   "  (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID = 4) as okulSinavaGirenSayisi,  "+
+                   "  (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID = 5) as sinifSira, "+
+                   "  (SELECT SinifOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID = 5) as SinifOrtalamasi, "+
+                   "  (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID = 4) as okulSira, "+
+                   "  (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID = 4) as OkulOrtalamasi "+
+                   "  /* * p1 */ "+
+		" FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS "+
+		" INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID = SO.SinavKitapcikID "+
+		" INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID = SKS.SinavSoruID "+
+		" INNER JOIN ".$dbnamex."SB_SoruIcerikleri SI ON SI.SoruID = SS.SoruID "+
+		" INNER JOIN ".$dbnamex."SB_Sorular SORU ON SORU.SoruID = SI.soruID "+
+		" LEFT JOIN ".$dbnamex."SNV_SinavOgrenciSoruCevaplari SOSC ON SOSC.SinavSoruID = SS.SinavSoruID AND SOSC.SinavOgrenciID = SO.SinavOgrenciID "+
+		" LEFT JOIN ".$dbnamex."SNV_SinavKitapcikSoruCevapSiralari D_CVP ON D_CVP.SinavKitapcikSoruID = SKS.SinavKitapcikSoruID AND D_CVP.SoruCevaplariID = SI.SoruCevaplariID "+ 
+		" LEFT JOIN ".$dbnamex."SNV_SinavKitapcikSoruCevapSiralari O_CVP ON O_CVP.SinavKitapcikSoruCevapSiraID = SOSC.SinavKitapcikSoruCevapSiraID "+
+		" INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavDersID = SS.SinavDersID "+ 
+		" INNER JOIN ".$dbnamex."SNV_SinavDersSabitleri SDS ON SDS.SinavDersSabitID = SD.SinavDersSabitID "+
+		" INNER JOIN ".$dbnamex."SNV_BolumKategorileri BKS ON BKS.BolumKategoriID = SDS.BolumKategoriID "+
+		" INNER JOIN ".$dbnamex."KA_Dugumler DUGUM ON DUGUM.DugumID = SORU.DugumID "+
+		" INNER JOIN #tempogrencibilgileri t1 ON t1.SinavOgrenciID = SO.SinavOgrenciID "+
+		" INNER JOIN #puanlar p1 ON p1.SinavOgrenciID = SO.SinavOgrenciID "+
+            " ) AS sdasdasd "+
+            " ORDER BY BolumKategoriID, SoruSira; "+
+          
+            " IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri; "+ 
+            " IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; "+ 
+            " IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar; "+ 
+           "  SET NOCOUNT OFF; "; 
+           // $sql =  $sql +  $sql1;
             $statement = $pdo->prepare($sql);   
     // echo debugPDO($sql, $params);
             $statement->execute();
