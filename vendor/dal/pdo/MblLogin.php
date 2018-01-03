@@ -881,7 +881,7 @@ class MblLogin extends \DAL\DalSlim {
                                 LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
                                 WHERE ogtix.OgretmenID  =sss.KisiID)
                         WHEN 7 THEN (SELECT Top 1 mob.brans_kisa FROM [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] bx
-                                LEFT JOIN  '+@dbnamex+'dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
+                                LEFT JOIN  '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
                                 LEFT JOIN [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] mob ON mob.Brans = bx.Brans 
                                 WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
                     else '''' end as brans,gg.cinsiyetID 
