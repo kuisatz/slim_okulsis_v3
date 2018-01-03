@@ -867,7 +867,7 @@ class MblLogin extends \DAL\DalSlim {
                     upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
                     upper( golx.OkulBaslikKisaAdi collate SQL_Latin1_General_CP1254_CI_AS ) as OkulAdiKisa,
                     oo.MEBKodu,
-                    oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS,
+                    oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS as ePosta,
                     DY.DersYiliID,DY.EgitimYilID,EY.EgitimYili,DY.DonemID,oo.KurumID,'''+@dbnamex+''' as dbnamex,
                     '+cast(@database_id as nvarchar(5))+' as database_id,
                     case sss.RolID
@@ -880,9 +880,10 @@ class MblLogin extends \DAL\DalSlim {
                         WHEN 6 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
                                 LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
                                 WHERE ogtix.OgretmenID  =sss.KisiID)
-                        WHEN 7 THEN (SELECT Top 1 Brans FROM '+@dbnamex+'.dbo.OGT_Branslar bx
-                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
-                                WHERE ogtx.OgretmenID =sss.KisiID)
+                        WHEN 7 THEN (SELECT Top 1 mob.brans_kisa FROM [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] bx
+                                LEFT JOIN  '+@dbnamex+'dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
+                                LEFT JOIN [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] mob ON mob.Brans = bx.Brans 
+                                WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
                     else '''' end as brans,gg.cinsiyetID 
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
