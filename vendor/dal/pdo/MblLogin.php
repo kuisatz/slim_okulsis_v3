@@ -865,7 +865,7 @@ class MblLogin extends \DAL\DalSlim {
                 SELECT sss.OkulKullaniciID,sss.OkulID,sss.KisiID,sss.RolID,
                     COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi,
                     upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
-                    upper( golx.OkulBaslikKisaAdi collate SQL_Latin1_General_CP1254_CI_AS ) as OkulAdiKisa,
+                    upper( golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS ) as OkulAdiKisa,
                     oo.MEBKodu,
                     oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS,
                     DY.DersYiliID,DY.EgitimYilID,EY.EgitimYili,DY.DonemID,oo.KurumID,'''+@dbnamex+''' as dbnamex,
