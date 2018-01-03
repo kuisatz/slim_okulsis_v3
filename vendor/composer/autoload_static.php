@@ -171,6 +171,13 @@ class ComposerStaticInitb5698824169a0b637d3041f71a6c1ca2
                 0 => __DIR__ . '/..' . '/videlalvaro/php-amqplib',
             ),
         ),
+        'J' => 
+        array (
+            'Jaspersoft' => 
+            array (
+                0 => __DIR__ . '/..' . '/jaspersoft/rest-client/src',
+            ),
+        ),
         'E' => 
         array (
             'Evenement' => 

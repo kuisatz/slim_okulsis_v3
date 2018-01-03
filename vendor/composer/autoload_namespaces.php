@@ -10,5 +10,6 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
     'PhpAmqpLib' => array($vendorDir . '/videlalvaro/php-amqplib'),
+    'Jaspersoft' => array($vendorDir . '/jaspersoft/rest-client/src'),
     'Evenement' => array($vendorDir . '/evenement/evenement/src'),
 );
