@@ -47,11 +47,11 @@ class ComposerAutoloaderInitb5698824169a0b637d3041f71a6c1ca2
 
         $loader->register(true);
 
-        if ($useStaticLoader) {
+     /*   if ($useStaticLoader) {
             $includeFiles = Composer\Autoload\ComposerStaticInitb5698824169a0b637d3041f71a6c1ca2::$files;
-        } else {
+        } else {*/
             $includeFiles = require __DIR__ . '/autoload_files.php';
-        }
+       /* }*/
         foreach ($includeFiles as $fileIdentifier => $file) {
             composerRequireb5698824169a0b637d3041f71a6c1ca2($fileIdentifier, $file);
         }
