@@ -24,11 +24,11 @@ class ComposerAutoloaderInitb5698824169a0b637d3041f71a6c1ca2
         spl_autoload_unregister(array('ComposerAutoloaderInitb5698824169a0b637d3041f71a6c1ca2', 'loadClassLoader'));
 
         $useStaticLoader = PHP_VERSION_ID >= 50600 && !defined('HHVM_VERSION') && (!function_exists('zend_loader_file_encoded') || !zend_loader_file_encoded());
-        if ($useStaticLoader) {
+       /* if ($useStaticLoader) {
             require_once __DIR__ . '/autoload_static.php';
 
             call_user_func(\Composer\Autoload\ComposerStaticInitb5698824169a0b637d3041f71a6c1ca2::getInitializer($loader));
-        } else {
+        } else {*/
             $map = require __DIR__ . '/autoload_namespaces.php';
             foreach ($map as $namespace => $path) {
                 $loader->set($namespace, $path);
@@ -43,7 +43,7 @@ class ComposerAutoloaderInitb5698824169a0b637d3041f71a6c1ca2
             if ($classMap) {
                 $loader->addClassMap($classMap);
             }
-        }
+        /*}*/
 
         $loader->register(true);
 
