@@ -880,7 +880,7 @@ class MblLogin extends \DAL\DalSlim {
                         WHEN 6 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
                                 LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
                                 WHERE ogtix.OgretmenID  =sss.KisiID)
-                        WHEN 7 THEN (SELECT Top 1 mob.brans_kisa FROM [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] bx
+                        WHEN 7 THEN (SELECT Top 1 concat('(',mob.brans_kisa,')') as brans_kisa FROM [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] bx
                                 LEFT JOIN  '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
                                 LEFT JOIN [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] mob ON mob.Brans = bx.Brans 
                                 WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
