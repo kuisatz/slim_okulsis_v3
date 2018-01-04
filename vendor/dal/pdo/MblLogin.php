@@ -10324,7 +10324,7 @@ class MblLogin extends \DAL\DalSlim {
     // echo debugPDO($sql, $params);
             $statement->execute();
             
-            
+            //   http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki
            $c = new \Jaspersoft\Client\Client(
                 "http://localhost:8081/jasperserver",
                 "jasperadmin",
@@ -10332,7 +10332,8 @@ class MblLogin extends \DAL\DalSlim {
                 ""
               );
 
-                $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
+              //  $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
+                 $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
                 echo $report; 
  
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
