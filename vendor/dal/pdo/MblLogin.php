@@ -1732,7 +1732,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 SELECT 
                     tt.OgrenciID, 
-                    FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih
+                    FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
                     tt.Numarasi  ,   
                     UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) AS adsoyad ,
                     tt.CinsiyetID ,
