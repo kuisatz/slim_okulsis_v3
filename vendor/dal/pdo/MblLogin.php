@@ -10332,7 +10332,7 @@ class MblLogin extends \DAL\DalSlim {
                 "bilsa/mobile"
               );
 
-                $report = $c->reportService()->runReport('oppp', 'pdf');
+                $report = $c->reportService()->runReport('reports/bilsa/mobile/oppp', 'pdf');
                 echo $report; 
  
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
