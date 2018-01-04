@@ -10278,6 +10278,9 @@ class MblLogin extends \DAL\DalSlim {
            "      PST.PuanSiralamaTipID IN (4,5) "+
            "  ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC; "+ 
            "  /*3333 */ "+  // '07YnHZ0kbau12VI', XClfJPRr9F2POqw 
+                
+           " IF OBJECT_ID('tempdb..".$dosyaID."') IS NOT NULL DROP TABLE ".$dosyaID."; "+      
+                
            "  SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* FROM ( "+
            "      SELECT distinct  "+
                    "  SKS.Sira, "+
@@ -10315,6 +10318,7 @@ class MblLogin extends \DAL\DalSlim {
                    "  (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID = 4) as okulSira, "+
                    "  (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID = 4) as OkulOrtalamasi "+
                    "  /* * p1 */ "+
+                " into ".$dosyaID." "+
 		" FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS "+
 		" INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID = SO.SinavKitapcikID "+
 		" INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID = SKS.SinavSoruID "+
@@ -10338,20 +10342,20 @@ class MblLogin extends \DAL\DalSlim {
            "  SET NOCOUNT OFF; "; 
            // $sql =  $sql +  $sql1;
             $statement = $pdo->prepare($sql);   
-    // echo debugPDO($sql, $params);
+     echo debugPDO($sql, $params);
             $statement->execute();
             
             
-             $c = new \Jaspersoft\Client\Client(
+         /*    $c = new \Jaspersoft\Client\Client(
                 "http://localhost:8080/jasperserver-pro",
                 "jasperadmin",
                 "12345678oki",
-                "organization_1"
+                "bilsa"
               );
 
-                $report = $c->reportService()->runReport('/reports/samples/AllAccounts', 'html');
+                $report = $c->reportService()->runReport('/bilsa/oooo', 'pdf');
                 echo $report; 
-
+*/
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
