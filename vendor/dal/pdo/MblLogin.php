@@ -9630,6 +9630,39 @@ class MblLogin extends \DAL\DalSlim {
 
                 set @sinavOkulID = '".$SinavOkulID."' ;  
                 set @SinifKodu ='".$SinifKodu."';
+                SELECT * FROM ( 
+                    SELECT    
+                        null as SiraNo, 
+                        null as SinavKitapcikID,
+                        null as KitapcikTurID,
+                        null as KitapcikAciklamasi,
+                        null as SinifKodu,
+                        null as SinifID,
+                        null as SinavOgrenciID,
+                        null as SinavSinifID, 
+                        null as OgrenciSeviyeID,
+                        null as OgrenciID,
+                        null as SinavOkulID,
+                        null as TelafiSinavinaGirecekMi,
+                        null as OgrenciNumarasi,
+                        null as KisiID,
+                        null as Adi,
+                        null as Soyadi,
+                        COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS  AdiSoyadi,
+                        null as OgretmenAdiSoyadi,
+                        null as TCKimlikNo,
+                        null as isOgrenciDisaridan, 
+                        null as TOPLAM_PUAN_1,
+                        null as TOPLAM_PUAN_2,
+                        null as NOTU,
+                        null as TPS 
+            FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions] ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and ax.language_id= lx.id  
+            WHERE a.[main_group] = 1 and a.[first_group] = 5 and 
+                a.language_parent_id =0 
+
+                UNION
 
                 SELECT  
                     ROW_NUMBER() OVER(ORDER BY SOGR.OgrenciNumarasi) AS SiraNo, 
@@ -9678,7 +9711,8 @@ class MblLogin extends \DAL\DalSlim {
                INNER JOIN ".$dbnamex."SNV_Sinavlar SNV ON SNV.SinavID=SK.SinavID
                WHERE SOGR.SinavOkulID= @sinavOkulID  
                AND SOGR.SinifKodu= @SinifKodu  
-               ORDER BY K.Adi,K.Soyadi; 
+               ) as sss
+               ORDER BY Adi,Soyadi; 
 
                 SET NOCOUNT OFF;  
                  "; 
