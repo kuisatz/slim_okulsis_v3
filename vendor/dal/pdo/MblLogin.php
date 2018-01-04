@@ -10329,10 +10329,10 @@ class MblLogin extends \DAL\DalSlim {
                 "http://localhost:8081/jasperserver",
                 "jasperadmin",
                 "12345678oki",
-                "bilsa/mobile"
+                ""
               );
 
-                $report = $c->reportService()->runReport('reports/bilsa/mobile/oppp', 'pdf');
+                $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
                 echo $report; 
  
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
