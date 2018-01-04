@@ -1721,11 +1721,12 @@ class MblLogin extends \DAL\DalSlim {
 				DevamsizlikKodID [int], 
 				Aciklama [varchar](200) collate SQL_Latin1_General_CP1254_CI_AS  
 		    );  
-		 
+                declare  @tt datetime  ;
+                set  @tt =  getdate();
                 INSERT  INTO #tmpe 
                 exec  ".$dbnamex."PRC_GNL_OgrenciDevamsizlikSaatleri_Find_SinifDersSaati 
                     @SinifID='".$sinifID."',
-                    @Tarih='".$tarih."' ,
+                    @Tarih= @tt, /* '".$tarih."' , */ 
                     @DersSirasi='".$dersSirasi."',
                     @DersYiliID='".$dersYiliID."', 
                     @OgretmenID='".$kisiId."'  ;  
@@ -10158,6 +10159,7 @@ class MblLogin extends \DAL\DalSlim {
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
             } 
+            $dosyaID = '##'.str_replace ('-','',$OgrenciSeviyeID);
               
         $sql =   
            " SET NOCOUNT ON; "+   
