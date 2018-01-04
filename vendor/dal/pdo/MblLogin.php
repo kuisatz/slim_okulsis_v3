@@ -10263,7 +10263,8 @@ class MblLogin extends \DAL\DalSlim {
                 PST.PuanSiralamaTipID IN (4,5)
              ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
             IF OBJECT_ID('tempdb..".$dosyaID."') IS NOT NULL DROP TABLE ".$dosyaID."; 
-             SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* FROM (
+             SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* 
+             into ".$dosyaID." FROM (
                  SELECT distinct
                      SKS.Sira,
                      SDS.DersKodu,
@@ -10295,8 +10296,7 @@ class MblLogin extends \DAL\DalSlim {
                      (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=5) as sinifSira,
                      (SELECT SinifOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=5) as SinifOrtalamasi,
                      (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=4) as okulSira,
-                     (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=4) as OkulOrtalamasi
-                 into ".$dosyaID."
+                     (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=4) as OkulOrtalamasi 
 		 FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
 		 INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID=SO.SinavKitapcikID
 		 INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID=SKS.SinavSoruID
@@ -10318,7 +10318,7 @@ class MblLogin extends \DAL\DalSlim {
              IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
              SET NOCOUNT OFF;";
            // $sql =  $sql +  $sql1;
-           print_r($sql);
+       //    print_r($sql);
             $statement = $pdo->prepare($sql);   
      echo debugPDO($sql, $params);
             $statement->execute();
