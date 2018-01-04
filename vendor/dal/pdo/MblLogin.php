@@ -10169,20 +10169,17 @@ class MblLogin extends \DAL\DalSlim {
            " DECLARE @OgrenciSeviyeID UNIQUEIDENTIFIER; "+
            " DECLARE @SinavID UNIQUEIDENTIFIER; "+
            " DECLARE @SinavOgrenciID UNIQUEIDENTIFIER; "+
-
            " SET @OgrenciSeviyeID = '".$OgrenciSeviyeID."'; "+
            " SET @SinavID = '".$SinavID."'; "+
            " IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri; "+
            " IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; "+
            " IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar; "+
-
            " SELECT @egitimYilID = EgitimYilID, "+
            "        @ogrenciID = OgrenciID "+
            " FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS "+
            " INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID "+
            " INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = S.DersYiliID "+
            " WHERE OgrenciSeviyeID = @OgrenciSeviyeID; "+
-		  
            " SELECT "+
                " SO.SinavOgrenciID,"+
                " SO.SinifKodu,"+
@@ -10219,8 +10216,6 @@ class MblLogin extends \DAL\DalSlim {
            " LEFT JOIN ".$dbnamex."GNL_Iller IL ON IL.IlID = ILCE.IlID "+
            " /* LEFT JOIN GNL_Dosyalar D ON D.DosyaID = OKUL.LogoDosyaID */"+
            " WHERE SO.OgrenciSeviyeID = @OgrenciSeviyeID "+
-            
-           " /*  3333 */ "+
            " SELECT @SinavOgrenciID= SinavOgrenciID FROM #tempogrencibilgileri; "+
            " SELECT op.SinavOgrenciID,"+
            "     Snf.SeviyeID,"+
@@ -10244,7 +10239,6 @@ class MblLogin extends \DAL\DalSlim {
            " WHERE SPT.SinavID = @SinavID AND PST.PuanSiralamaTipID IN (4,5) "+
            " GROUP BY op.SinavOgrenciID,Snf.SeviyeID,SNF.SinifID,SNF.SinifKodu,PST.PuanSiralamaTipID,S.sinavID "+
            " ORDER BY Snf.SeviyeID,Snf.SinifKodu; "+ 
-                    
 	   "  SELECT "+ 
            "      OP.SinavOgrenciID, "+
            "      PT.PuanTipAdi, "+
@@ -10277,10 +10271,7 @@ class MblLogin extends \DAL\DalSlim {
            "  WHERE SPT.SinavID = @SinavID AND "+
            "      PST.PuanSiralamaTipID IN (4,5) "+
            "  ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC; "+ 
-           "  /*3333 */ "+  // '07YnHZ0kbau12VI', XClfJPRr9F2POqw 
-                
-           " IF OBJECT_ID('tempdb..".$dosyaID."') IS NOT NULL DROP TABLE ".$dosyaID."; "+      
-                
+           " IF OBJECT_ID('tempdb..".$dosyaID."') IS NOT NULL DROP TABLE ".$dosyaID."; "+ 
            "  SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* FROM ( "+
            "      SELECT distinct  "+
                    "  SKS.Sira, "+
@@ -10317,7 +10308,6 @@ class MblLogin extends \DAL\DalSlim {
                    "  (SELECT SinifOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID = 5) as SinifOrtalamasi, "+
                    "  (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID = 4) as okulSira, "+
                    "  (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID = 4) as OkulOrtalamasi "+
-                   "  /* * p1 */ "+
                 " into ".$dosyaID." "+
 		" FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS "+
 		" INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID = SO.SinavKitapcikID "+
@@ -10335,12 +10325,12 @@ class MblLogin extends \DAL\DalSlim {
 		" INNER JOIN #puanlar p1 ON p1.SinavOgrenciID = SO.SinavOgrenciID "+
             " ) AS sdasdasd "+
             " ORDER BY BolumKategoriID, SoruSira; "+
-          
             " IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri; "+ 
             " IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; "+ 
             " IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar; "+ 
            "  SET NOCOUNT OFF; "; 
            // $sql =  $sql +  $sql1;
+           print_r($sql);
             $statement = $pdo->prepare($sql);   
      echo debugPDO($sql, $params);
             $statement->execute();
