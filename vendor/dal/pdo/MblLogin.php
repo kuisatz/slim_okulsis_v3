@@ -10326,7 +10326,7 @@ class MblLogin extends \DAL\DalSlim {
             
             
            $c = new \Jaspersoft\Client\Client(
-                "http://localhost:8081/jasperserver-pro",
+                "http://localhost:8081/jasperserver",
                 "jasperadmin",
                 "12345678oki",
                 "bilsa"
