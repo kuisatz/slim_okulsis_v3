@@ -5488,7 +5488,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND
                         a.RolID = ".intval($RolID)." AND
                         a.language_parent_id =0 AND 
-                        a.ParentID =0   AND  a.dashboard =0   
+                        a.ParentID =0  /* AND  a.dashboard =0   */
                     UNION
                     SELECT 
                         a.[ID],
@@ -5562,7 +5562,7 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE a.active = 0 AND a.deleted = 0 AND 
                         a.RolID = ".intval($RolID)."  AND 
                         a.language_parent_id =0 AND 
-                        a.ParentID >0   AND  a.dashboard =0  
+                        a.ParentID >0  /*  AND  a.dashboard =0  */ 
                 ) AS asasdasd
                 ORDER BY dashboardSira
                      
