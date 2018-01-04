@@ -10321,12 +10321,12 @@ class MblLogin extends \DAL\DalSlim {
            // $sql =  $sql +  $sql1;
        //    print_r($sql);
             $statement = $pdo->prepare($sql);   
-     echo debugPDO($sql, $params);
+    // echo debugPDO($sql, $params);
             $statement->execute();
             
             
-         /*    $c = new \Jaspersoft\Client\Client(
-                "http://localhost:8080/jasperserver-pro",
+           $c = new \Jaspersoft\Client\Client(
+                "http://localhost:8081/jasperserver-pro",
                 "jasperadmin",
                 "12345678oki",
                 "bilsa"
@@ -10334,7 +10334,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 $report = $c->reportService()->runReport('/bilsa/oooo', 'pdf');
                 echo $report; 
-*/
+ 
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
