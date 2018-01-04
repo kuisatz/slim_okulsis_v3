@@ -1589,7 +1589,8 @@ class MblLogin extends \DAL\DalSlim {
             INSERT #ogretmenDersSaatleri  exec  ".$dbnamex."PRC_GNL_DersProgrami_Find_forOgretmenDersSaatleri 
                     @OgretmenID='".$kisiId."',
                     @SinifID='".$sinifID."',
-                    @Tarih= @tt  ;  
+                     /* @Tarih= @tt  ;   */ 
+                    @Tarih= '2018-01-05 10:20:00.000'  ;   
             
             DECLARE @ttime time ;
             set @ttime = cast(@tt as time);
@@ -5564,7 +5565,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.language_parent_id =0 AND 
                         a.ParentID >0  /*  AND  a.dashboard =0  */ 
                 ) AS asasdasd
-                ORDER BY dashboardSira
+                ORDER BY dashboardSira, sira
                      
                  ";  
             $statement = $pdo->prepare($sql);            
