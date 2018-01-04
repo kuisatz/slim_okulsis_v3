@@ -736,270 +736,272 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['ip']) && $params['ip'] != "")) {
                 $ip = $params['ip'];
             } 
-            $sql =   
-            " SET NOCOUNT ON; "+  
-            " SET TEXTSIZE 2147483647; "+
-            " IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; "+ 
-            " IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; "+
-            " IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc."; "+
-            " IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc."; "+ 
-            " IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc."; "+ 
-            " DECLARE @name nvarchar(200) = ''  collate SQL_Latin1_General_CP1254_CI_AS; "+
-            " declare @database_id int; "+
-            " declare @tc bigint; "+
-            " DECLARE @sqlx nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS; "+ 
-            " DECLARE @sqlxx nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS; "+
-            " DECLARE @sqlx1 nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS; "+
-            " DECLARE @sqlxx1 nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS; "+
-            " declare @MEBKodu int; "+
+            $sql = "  
+            SET NOCOUNT ON;   
+            SET TEXTSIZE 2147483647;
+            IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
+            IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
+            IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc."; 
+            IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc."; 
+            IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc."; 
+            DECLARE @name nvarchar(200) = ''  collate SQL_Latin1_General_CP1254_CI_AS;
+            declare @database_id int;
+            declare @tc bigint;
+            DECLARE @sqlx nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS; 
+            DECLARE @sqlxx nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS;
+            DECLARE @sqlx1 nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS; 
+            DECLARE @sqlxx1 nvarchar(max)= ''  collate SQL_Latin1_General_CP1254_CI_AS;
+            declare @MEBKodu int;   
 		 
-            " CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, sqlx nvarchar(2000)  collate SQL_Latin1_General_CP1254_CI_AS,MEBKodu int ); "+  
-            " CREATE TABLE ##okidetaydata".$tc." (dbnamex  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer ,database_id int  ); "+
+            CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, sqlx nvarchar(2000)  collate SQL_Latin1_General_CP1254_CI_AS,MEBKodu int );  
+            CREATE TABLE ##okidetaydata".$tc." (dbnamex  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS, KisiID uniqueidentifier, KurumID uniqueidentifier, MEBKodu integer ,database_id int  );
 
-            " set @tc = ".$tc."; "+  
+            set @tc = ".$tc.";  
             
-            " DECLARE db_cursor CURSOR FOR "+  
-            " SELECT sss.database_id, sss.name  collate SQL_Latin1_General_CP1254_CI_AS FROM Sys.databases sss "+
-                " INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active=0 AND tcdbb.deleted =0 "+
-                " INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active=0 AND tcc.deleted =0 "+
-                " WHERE "+
-                    " sss.state = 0 and "+
-                    " tcc.[tc]= @tc and "+
-                    " banTarihi is null; "+
+            DECLARE db_cursor CURSOR FOR  
+            SELECT sss.database_id, sss.name  collate SQL_Latin1_General_CP1254_CI_AS FROM Sys.databases sss
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active=0 AND tcdbb.deleted =0
+                INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active=0 AND tcc.deleted =0
+                WHERE 
+                    sss.state = 0 and 
+                    tcc.[tc]= @tc and 
+                    banTarihi is null; 
 
-            " OPEN db_cursor "+
-            " FETCH NEXT FROM db_cursor INTO  @database_id , @name "+
-            " WHILE @@FETCH_STATUS = 0 "+
-            " BEGIN "+
-                " IF OBJECT_ID(@name+'..GNL_Kisiler') IS NOT NULL "+
-                " begin "+
-                    " INSERT INTO #okidbname".$tc." (database_id, name, sqlx) VALUES "+
-                               " (@database_id, CAST(@name AS nvarchar(200)), 'select '+ cast(@database_id as varchar(10))+'; exec ['+@name+'].[dbo].PRC_GNL_KullaniciMebKodu_FindByTcKimlikNo @TcKimlikNo= '+cast(@tc as nvarchar(11))); "+
+            OPEN db_cursor   
+            FETCH NEXT FROM db_cursor INTO  @database_id , @name 
+            WHILE @@FETCH_STATUS = 0   
+            BEGIN   
+                IF OBJECT_ID(@name+'..GNL_Kisiler' )  IS NOT NULL
+                begin 
+                    INSERT INTO #okidbname".$tc." ( database_id , name , sqlx ) VALUES
+                                    (@database_id, CAST(@name AS nvarchar(200)) ,   'select '+ cast(@database_id as varchar(10))+'; exec ['+@name+'].[dbo].PRC_GNL_KullaniciMebKodu_FindByTcKimlikNo @TcKimlikNo= '+cast(@tc as nvarchar(11))  );
 
-                    " SET @sqlxx = ' "+
-                        " INSERT into  ##okidetaydata".$tc."  (dbnamex,KisiID , KurumID, MEBKodu, database_id) "+
-                            " SELECT "+
-                            "         '''+@name+''', k.KisiID , k.KurumID, kr.MEBKodu ,'+cast(@database_id as nvarchar(10))+' "+
-                            " FROM ['+@name+'].dbo.GNL_Kullanicilar K "+
-                            " INNER JOIN ['+@name+'].dbo.GNL_Kurumlar KR ON K.KurumID = KR.KurumID "+
-                            " INNER JOIN ['+@name+'].dbo.GNL_Kisiler KS ON K.KisiID = KS.KisiID "+
-                            " WHERE KS.TCKimlikNo =   ' +cast(@tc as nvarchar(11)); "+
-                            "     /* print(@sqlxx); */ "+
-                    " EXEC sp_executesql @sqlxx; "+
-                              "   /* -- select * from #okidbname ; */ "+
-                    " update  #okidbname".$tc." "+
-                        " set MEBKodu = (select MEBKodu from ##okidetaydata".$tc." as xxx where xxx.dbnamex = #okidbname".$tc.".name) "+
-                    " where database_id =  @database_id; "+
-                " END "+
+                    SET @sqlxx =   ' 
+                        INSERT into  ##okidetaydata".$tc."  (dbnamex,KisiID , KurumID, MEBKodu, database_id)
+                            SELECT 
+                                    '''+@name+''', k.KisiID , k.KurumID, kr.MEBKodu ,'+cast(@database_id as nvarchar(10))+'  
+                            FROM ['+@name+'].dbo.GNL_Kullanicilar K
+                            INNER JOIN ['+@name+'].dbo.GNL_Kurumlar KR ON K.KurumID = KR.KurumID
+                            INNER JOIN ['+@name+'].dbo.GNL_Kisiler KS ON K.KisiID = KS.KisiID
+                            WHERE KS.TCKimlikNo =   ' +cast(@tc as nvarchar(11)) ; 
+                                /* print(@sqlxx); */ 
+                    EXEC sp_executesql @sqlxx; 
+                                /* -- select * from #okidbname ; */ 
+                    update  #okidbname".$tc." 
+                        set MEBKodu = (select MEBKodu from ##okidetaydata".$tc." as xxx where xxx.dbnamex = #okidbname".$tc.".name  )
+                    where database_id =  @database_id;
+                END
           
-            " FETCH NEXT FROM db_cursor INTO @database_id, @name; "+
-            " END "+
+            FETCH NEXT FROM db_cursor INTO @database_id,  @name;
+            END   
 
-            " CLOSE db_cursor; "+
-            " DEALLOCATE db_cursor; "+
+            CLOSE db_cursor;
+            DEALLOCATE db_cursor ; 
           
-                " CREATE TABLE ##okimobilfirstdata".$tc." "+
-                    " ( "+
-                        " OkulKullaniciID uniqueidentifier, "+
-                        " OkulID uniqueidentifier, "+
-                        " KisiID uniqueidentifier, "+
-                        " RolID int, "+
-                        " RolAdi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS "+
-                    " ); "+
+                CREATE TABLE ##okimobilfirstdata".$tc."
+                    (
+                        [OkulKullaniciID]  [uniqueidentifier],
+                        [OkulID] [uniqueidentifier], 
+                        [KisiID] [uniqueidentifier],
+                        [RolID]  int,
+                        [RolAdi] varchar(100) collate SQL_Latin1_General_CP1254_CI_AS
+                    ) ;
 
-                " CREATE TABLE ##okimobilseconddata".$tc." "+
-                    " ( "+
-                        " OkulKullaniciID uniqueidentifier, "+
-                        " OkulID uniqueidentifier, "+
-                        " KisiID uniqueidentifier, "+
-                        " RolID int, "+
-                        " RolAdi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " OkulAdi varchar(200) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " OkulAdiKisa varchar(200) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " MEBKodu bigint, "+
-                        " ePosta varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " DersYiliID uniqueidentifier, "+
-                        " EgitimYilID int, "+
-                        " EgitimYili varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " DonemID int, "+
-                        " KurumID uniqueidentifier, "+
-                        " dbnamex nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " database_id int, "+
-                        " brans nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS, "+
-                        " cinsiyetID smallint "+
-                    " ); "+
-                    "  CREATE TABLE ##okiokullogo".$tc." "+
-                    " (LogoDosyaID uniqueidentifier, "+
-                       " OkulID uniqueidentifier, "+
-                       " OkulLogo image); "+
+                CREATE TABLE ##okimobilseconddata".$tc."
+                    (
+                        [OkulKullaniciID]  [uniqueidentifier],
+                        [OkulID] [uniqueidentifier], 
+                        [KisiID] [uniqueidentifier],
+                        [RolID] int,
+                        [RolAdi] varchar(100) collate SQL_Latin1_General_CP1254_CI_AS, 
+                        OkulAdi varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
+                        OkulAdiKisa varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
+                        MEBKodu bigint,
+                        ePosta varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                        DersYiliID [uniqueidentifier],
+                        EgitimYilID int, 
+                        EgitimYili varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                        DonemID int,
+                        KurumID [uniqueidentifier],
+                        dbnamex nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
+                        database_id int,
+                        brans nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
+                        cinsiyetID smallint
+                    ) ;
+                     CREATE TABLE ##okiokullogo".$tc."
+                    (   LogoDosyaID [uniqueidentifier],
+                        OkulID [uniqueidentifier],
+                        OkulLogo image);
 
-                " declare @dbnamex nvarchar(200) ='' collate SQL_Latin1_General_CP1254_CI_AS; "+
-                " declare @KisiID uniqueidentifier; "+
-                " declare @KurumID uniqueidentifier; "+
+                declare @dbnamex  nvarchar(200) =''  collate SQL_Latin1_General_CP1254_CI_AS ;
+                declare @KisiID  uniqueidentifier;
+                declare @KurumID  uniqueidentifier; 
 
-                " DECLARE db_cursor CURSOR FOR "+
-                " SELECT distinct dbnamex, KisiID, KurumID, MEBKodu, database_id FROM ##okidetaydata".$tc." "+
-                " WHERE MEBKodu is not null; "+
+                DECLARE db_cursor CURSOR FOR  
+                SELECT distinct dbnamex  ,  KisiID  , KurumID  , MEBKodu , database_id  FROM ##okidetaydata".$tc." 
+                WHERE MEBKodu is not null ;
 
-                " OPEN db_cursor "+
-                " FETCH NEXT FROM db_cursor INTO @dbnamex, @KisiID, @KurumID, @MEBKodu ,@database_id "+
-                " WHILE @@FETCH_STATUS = 0 "+
-                " BEGIN "+
+                OPEN db_cursor   
+                FETCH NEXT FROM db_cursor INTO  @dbnamex  ,  @KisiID  , @KurumID  , @MEBKodu ,@database_id
+                WHILE @@FETCH_STATUS = 0   
+                BEGIN   
 
-                " SET @sqlxx = ' "+
-                    " INSERT ##okimobilfirstdata".$tc." EXEC '+@dbnamex+'.dbo.PRC_GNL_Kisi_TumRoller_FindByID @KisiID=  ''' +  cast(@KisiID as varchar(50))+'''   '; "+
+                SET @sqlxx =  ' 
+                    INSERT ##okimobilfirstdata".$tc." EXEC  ['+@dbnamex+'].[dbo].[PRC_GNL_Kisi_TumRoller_FindByID]  @KisiID=  ''' +  cast(@KisiID as varchar(50))+'''   '; 
  
-                " /* print(@sqlxx); */ "+
-                " EXEC sp_executesql @sqlxx; "+
-                " /* select * from #okidbname ;*/ "+
-                " update  #okidbname".$tc." "+
-                    " set MEBKodu = (select MEBKodu from ##okidetaydata".$tc." as xxx where xxx.dbnamex = #okidbname".$tc.".name) "+
-                " where database_id = @database_id; "+
+                /* print(@sqlxx); */
+                EXEC sp_executesql @sqlxx; 
+                /* select * from #okidbname ;*/
+                update  #okidbname".$tc." 
+                    set MEBKodu = (select MEBKodu from ##okidetaydata".$tc." as xxx where xxx.dbnamex = #okidbname".$tc.".name  )
+                where database_id =  @database_id;
 
-                " delete from #okidbname".$tc." where MEBKodu is null; "+
+                delete from #okidbname".$tc." where MEBKodu is null ; 
 
-                " SET @sqlx = "+
-                " 'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,OkulAdiKisa, "+
-                            " MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans,cinsiyetID) "+
-                " SELECT sss.OkulKullaniciID,sss.OkulID,sss.KisiID,sss.RolID, "+
-                    " COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi, "+
-                    " upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi, "+
-                    " upper(golx.OkulBaslikKisaAdi collate SQL_Latin1_General_CP1254_CI_AS) as OkulAdiKisa, "+
-                    " oo.MEBKodu, "+
-                    " oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS as ePosta, "+
-                    " DY.DersYiliID,DY.EgitimYilID,EY.EgitimYili,DY.DonemID,oo.KurumID,'''+@dbnamex+''' as dbnamex, "+
-                    " '+cast(@database_id as nvarchar(5))+' as database_id, "+
-                    " case sss.RolID "+
-                        " WHEN 4 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx "+
-                                " LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID "+
-                                " WHERE ogtix.OgretmenID=sss.KisiID) "+
-                        " WHEN 5 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx "+
-                                " LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID "+
-                                " WHERE ogtix.OgretmenID=sss.KisiID) "+
-                        " WHEN 6 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx "+
-                                " LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID "+
-                                " WHERE ogtix.OgretmenID =sss.KisiID) "+
-                        " WHEN 7 THEN (SELECT Top 1 concat(''('',mob.brans_kisa,'')'') as brans_kisa FROM [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] bx "+
-                                " LEFT JOIN  '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID "+
-                                " LEFT JOIN BILSANET_MOBILE.dbo.Mobile_OGT_Branslar mob ON mob.Brans = bx.Brans "+
-                                " WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0) "+
-                    " else '''' end as brans,gg.cinsiyetID "+
-                " FROM ##okimobilfirstdata".$tc." sss "+
-                " inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID "+
-                " inner join '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=sss.OkulID and DY.AktifMi=1 "+
-                " inner join '+@dbnamex+'.dbo.GNL_EgitimYillari EY ON EY.EgitimYilID=DY.EgitimYilID AND DY.AktifMi=1 "+
-                " inner join '+@dbnamex+'.dbo.GNL_Roller rr ON rr.RolID=sss.RolID "+
-                " inner join '+@dbnamex+'.dbo.GNL_Kisiler gg ON gg.KisiID=sss.KisiID "+
-                " LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id=".$languageIdValue." AND lx.deleted =0 AND lx.active =0 "+
-                " LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID=sss.OkulID and golx.language_id=lx.id "+
-                " LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id=sss.RolID or rrx.RolID=sss.RolID) and rrx.language_id= lx.id "+
-                " WHERE "+
-                    " cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) "+
-                "  '; "+
-                " SET @sqlx1 = ' "+ 
-                " INSERT INTO ##okiokullogo".$tc." (LogoDosyaID ,OkulLogo ,OkulID) "+
-                " SELECT dx.DosyaID, dx.Dosya ,oox.OkulID "+
-                " FROM '+@dbnamex+'.dbo.GNL_Okullar oox "+
-                " INNER JOIN '+@dbnamex+'.dbo.GNL_Dosyalar dx ON dx.DosyaID = oox.LogoDosyaID "+
-                " WHERE oox.OkulID IN (SELECT DISTINCT OkulID FROM ##okimobilfirstdata".$tc.") ; "+
-                " '; "+
+                SET @sqlx = 
+                'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,OkulAdiKisa,
+                            MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans,cinsiyetID)
+                SELECT sss.OkulKullaniciID,sss.OkulID,sss.KisiID,sss.RolID,
+                    COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi,
+                    upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
+                    upper( golx.OkulBaslikKisaAdi collate SQL_Latin1_General_CP1254_CI_AS ) as OkulAdiKisa,
+                    oo.MEBKodu,
+                    oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS as ePosta,
+                    DY.DersYiliID,DY.EgitimYilID,EY.EgitimYili,DY.DonemID,oo.KurumID,'''+@dbnamex+''' as dbnamex,
+                    '+cast(@database_id as nvarchar(5))+' as database_id,
+                    case sss.RolID
+                        WHEN 4 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
+                                WHERE ogtix.OgretmenID=sss.KisiID)
+                        WHEN 5 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
+                                WHERE ogtix.OgretmenID=sss.KisiID)
+                        WHEN 6 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID = itx.IdareciTurID
+                                WHERE ogtix.OgretmenID  =sss.KisiID)
+                        WHEN 7 THEN (SELECT Top 1 concat(''('',mob.brans_kisa,'')'') as brans_kisa FROM [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] bx
+                                LEFT JOIN  '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
+                                LEFT JOIN [BILSANET_MOBILE].[dbo].[Mobile_OGT_Branslar] mob ON mob.Brans = bx.Brans 
+                                WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
+                    else '''' end as brans,gg.cinsiyetID 
+                FROM ##okimobilfirstdata".$tc." sss
+                inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
+                inner join '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=sss.OkulID and DY.AktifMi=1
+                inner join '+@dbnamex+'.dbo.GNL_EgitimYillari EY ON EY.EgitimYilID=DY.EgitimYilID AND DY.AktifMi=1
+                inner join '+@dbnamex+'.dbo.GNL_Roller rr ON rr.[RolID]=sss.RolID
+                inner join '+@dbnamex+'.dbo.GNL_Kisiler gg ON gg.KisiID=sss.KisiID
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id=".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID=sss.OkulID and golx.language_id=lx.id
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id=sss.RolID or rrx.RolID=sss.RolID) and rrx.language_id= lx.id
+                WHERE
+                    cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
+                 ';
+                SET @sqlx1 = '   
+                INSERT INTO ##okiokullogo".$tc." (LogoDosyaID ,OkulLogo ,OkulID)
+                SELECT  dx.DosyaID, dx.Dosya ,oox.OkulID
+                FROM ['+@dbnamex+'].[dbo].[GNL_Okullar] oox
+                INNER JOIN ['+@dbnamex+'].[dbo].GNL_Dosyalar dx ON dx.DosyaID = oox.LogoDosyaID 
+                WHERE oox.[OkulID] IN (SELECT DISTINCT OkulID FROM ##okimobilfirstdata".$tc.") ;
+                ';    
                  
-                " /* print(@sqlx); */ "+
-                " EXEC sp_executesql @sqlx; "+ 
-                " EXEC sp_executesql @sqlx1; "+
+                /* print(@sqlx); */
+                EXEC sp_executesql @sqlx;  
+                EXEC sp_executesql @sqlx1; 
 
-                " FETCH NEXT FROM db_cursor INTO @dbnamex, @KisiID, @KurumID, @MEBKodu ,@database_id; "+
-                " END "+
+                FETCH NEXT FROM db_cursor INTO @dbnamex  ,  @KisiID  , @KurumID  , @MEBKodu ,@database_id ;
+                END   
 
-                " CLOSE db_cursor; "+
-                " DEALLOCATE db_cursor ; "+
-                " SET NOCOUNT OFF; "+
+                CLOSE db_cursor;
+                DEALLOCATE db_cursor ;
+                SET NOCOUNT OFF;
 
-        " SET NOCOUNT ON; "+
-            " SELECT ssddsdsdsd.*,logo.OkulLogo from ("+
-                " SELECT "+
-                    " null AS OkulKullaniciID, "+
-                    " null AS OkulID, "+
-                    " null AS KisiID, "+
-                    " -1 AS RolID, "+
-                    " '' AS  RolAdi, "+
-                    " COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS OkulAdi, "+
-                    " '' AS MEBKodu, "+
-                    " '' AS ePosta, "+
-                    " null AS DersYiliID, "+
-                    " '' AS EgitimYilID, "+
-                    " '' AS EgitimYili, "+
-                    " 0 AS DonemID, "+
-                    " null as KurumID, "+
-                    " '' AS dbnamex, "+
-                    " 0 as database_id, "+
-                    " '' as serverproxy, "+
-                    " 0 as cid, "+
-                   " NULL as ip, "+
-                   " '' as brans, "+
-                   " NULL as cinsiyetID, "+
-                   " '' as  defaultFotoURL, "+
-                   " '' as OkulAdiKisa "+
-                " FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a "+
-                " INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 "+
-                " LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 "+
-                " LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions] ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and  ax.language_id= lx.id "+
-                " WHERE a.[main_group] = 1 and a.[first_group] = 1 and "+
-                    " a.language_parent_id =0 "+
+        SET NOCOUNT ON; 
+            SELECT ssddsdsdsd.*,logo.OkulLogo from ( 
+                SELECT     
+                    null AS OkulKullaniciID ,
+                    null AS OkulID,
+                    null AS KisiID,
+                    -1 AS RolID, 
+                    '' AS  RolAdi, 
+                    COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS OkulAdi,
+                    '' AS MEBKodu,
+                    '' AS ePosta,
+                    null AS DersYiliID,
+                    '' AS EgitimYilID, 
+                    '' AS EgitimYili,
+                    0 AS DonemID ,
+                    null as KurumID, 
+                    '' AS dbnamex ,
+                    0 as database_id,
+                    '' as serverproxy ,
+                    0 as cid,
+                   NULL as ip,
+                   '' as brans,
+                   NULL as cinsiyetID,
+                   '' as  defaultFotoURL,
+                   '' as OkulAdiKisa
+                FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
+                LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions] ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and  ax.language_id= lx.id  
+                WHERE a.[main_group] = 1 and a.[first_group] = 1 and
+                    a.language_parent_id =0
 
-                " UNION "+
-                " SELECT * from ( "+
-                    " SELECT DISTINCT "+
-                        " a.OkulKullaniciID, "+
-                        " a.OkulID, "+
-                        " a.KisiID, "+
-                        " a.RolID, "+
-                        " a.RolAdi collate SQL_Latin1_General_CP1254_CI_AS as RolAdi, "+
-                        " a.OkulAdi, "+
-                        " a.MEBKodu, "+
-                        " a.ePosta, "+
-                        " a.DersYiliID, "+
-                        " a.EgitimYilID, "+
-                        " a.EgitimYili, "+
-                        " a.DonemID, "+
-                        " a.KurumID, "+
-                        " a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS as dbnamex, "+
-                        " a.database_id, "+
-                        " isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57)) as serverproxy, "+
-                        " isnull(mss.id, (SELECT TOP 1 xxz.[id] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid, "+
-                        " '".$ip."' as ip, "+
-                        " a.brans, "+
-                        " a.cinsiyetID, "+
-                        " case a.CinsiyetID "+ 
-                        " WHEN 1 THEN case when RolID = 8 THEN '/okulsis/image/okulsis/fotoE.jpg' "+
-                                    " else '/okulsis/image/okulsis/fotoBE.jpg' end "+
-                        " ELSE case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoK.jpg' "+
-                                    " else '/okulsis/image/okulsis/fotoBK.jpg' end END AS defaultFotoURL, "+
-                        " a.OkulAdiKisa "+
-                    " FROM ##okimobilseconddata".$tc." a "+
-                    " LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null "+
-                    " WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000') "+
-                " ) as ssdds "+
-                " ) as ssddsdsdsd "+
-                " LEFT join ##okiokullogo".$tc." logo on logo.OkulID = ssddsdsdsd.OkulID "+
-                " IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; "+
-                " IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc."; "+  
-                " IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; "+
-                " IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc."; "+ 
-                " IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc.";  "+
-                " SET NOCOUNT OFF;  
+                UNION
+                SELECT * from (
+                    SELECT DISTINCT
+                        a.OkulKullaniciID,
+                        a.OkulID,
+                        a.KisiID,
+                        a.RolID,
+                        a.RolAdi collate SQL_Latin1_General_CP1254_CI_AS as RolAdi,
+                        a.OkulAdi,
+                        a.MEBKodu,
+                        a.ePosta,
+                        a.DersYiliID,
+                        a.EgitimYilID,
+                        a.EgitimYili,
+                        a.DonemID,
+                        a.KurumID,
+                        a.dbnamex collate SQL_Latin1_General_CP1254_CI_AS as dbnamex,
+                        a.database_id,
+                        isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.[proxy] collate SQL_Latin1_General_CP1254_CI_AS FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as serverproxy,
+                        isnull( mss.id, (SELECT TOP 1 xxz.[id] FROM [BILSANET_MOBILE].[dbo].[Mobil_Settings] xxz  WHERE xxz.database_id = 57 )) as cid,
+                        '".$ip."' as ip,
+                        a.brans,
+                        a.cinsiyetID,
+                        case a.CinsiyetID 
+                        WHEN 1 THEN case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoE.jpg'  
+                                    else '/okulsis/image/okulsis/fotoBE.jpg' end
+                        ELSE case  when RolID = 8 THEN '/okulsis/image/okulsis/fotoK.jpg'  
+                                    else '/okulsis/image/okulsis/fotoBK.jpg' end END AS defaultFotoURL,
+                        a.OkulAdiKisa
+                    FROM  ##okimobilseconddata".$tc."  a
+                    LEFT JOIN BILSANET_MOBILE.dbo.[Mobil_Settings] mss ON mss.database_id =a.database_id and mss.configclass is not null
+                    WHERE a.RolID in (SELECT distinct zzx.[rolID] FROM [BILSANET_MOBILE].[dbo].[Mobile_MessageRolles] zzx WHERE zzx.[KurumID] ='00000000-0000-0000-0000-000000000000')
+                ) as ssdds 
+                ) as ssddsdsdsd 
+                LEFT join ##okiokullogo".$tc." logo on logo.OkulID = ssddsdsdsd.OkulID
+                IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc."; 
+                IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";  
+                IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
+                IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc."; 
+                IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc."; 
+                SET NOCOUNT OFF;
 
                  "; 
             $statement = $pdo->prepare($sql);   
      // echo debugPDO($sql, $params);
             $statement->execute();
-             
+            
+           
+            
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             
        // print_r($result );
- // $imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;
+ //$imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;
 	//print_r($imgData);
   //*   echo '<img src="data:image/png;base64,'.$imgData.'" alt="My image alt" />'.$result [2]['OkulAdi'];
   //   echo '<img src="'.$imgData.'" alt="My image alt" />'.$result [1]['OkulAdi'];
@@ -4305,10 +4307,6 @@ class MblLogin extends \DAL\DalSlim {
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
-            $did = NULL;
-            if ((isset($params['Did']) && $params['Did'] != "")) {
-                $did = $params['Did'];
-            }
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
             $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
