@@ -5921,7 +5921,9 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
     $menus = array();
     foreach ($resDataMenu as $menu){
         $menus[]  = array(  
-            "Sira" =>  ($menu["Sira"]),  
+            "Sira" => '1111',  
+            
+         /*   "Sira" =>  ($menu["Sira"]),  
             "DersKodu" => html_entity_decode($menu["DersKodu"]),  
             "DugumAciklama" =>  html_entity_decode($menu["DugumAciklama"]),  
             "SoruPuani" =>  ($menu["SoruPuani"]),  
@@ -5948,7 +5950,7 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
               "SinifOrtalamasi" =>  ($menu["SinifOrtalamasi"]), 
               "OkulSira" =>  ($menu["okulSira"]), 
               "OkulOrtalamasi" =>  ($menu["OkulOrtalamasi"]),
-            
+            */
                
         );
     }
