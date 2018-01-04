@@ -745,8 +745,8 @@ class MblLogin extends \DAL\DalSlim {
             IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc.";
             IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc.";
             DECLARE @name nvarchar(200)= '' collate SQL_Latin1_General_CP1254_CI_AS;
-            declare @database_id int;
-            declare @tc bigint;
+            DECLARE @database_id int;
+            DECLARE @tc bigint;
             DECLARE @sqlx nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
             DECLARE @sqlxx nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
             DECLARE @sqlx1 nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
@@ -807,11 +807,11 @@ class MblLogin extends \DAL\DalSlim {
 
                 CREATE TABLE ##okimobilseconddata".$tc."
                     (
-                        [OkulKullaniciID] [uniqueidentifier],
-                        [OkulID] [uniqueidentifier],
-                        [KisiID] [uniqueidentifier],
-                        [RolID] int,
-                        [RolAdi] varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                        OkulKullaniciID uniqueidentifier,
+                        OkulID uniqueidentifier,
+                        KisiID uniqueidentifier,
+                        RolID int,
+                        RolAdi varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
                         OkulAdi varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
                         OkulAdiKisa varchar(200) collate SQL_Latin1_General_CP1254_CI_AS,
                         MEBKodu bigint,
@@ -831,7 +831,7 @@ class MblLogin extends \DAL\DalSlim {
                         OkulID [uniqueidentifier],
                         OkulLogo image);
 
-                declare @dbnamex  nvarchar(200) ='' collate SQL_Latin1_General_CP1254_CI_AS;
+                declare @dbnamex  nvarchar(200)='' collate SQL_Latin1_General_CP1254_CI_AS;
                 declare @KisiID  uniqueidentifier;
                 declare @KurumID  uniqueidentifier;
 
@@ -841,7 +841,7 @@ class MblLogin extends \DAL\DalSlim {
 
                 OPEN db_cursor
                 FETCH NEXT FROM db_cursor INTO @dbnamex,@KisiID,@KurumID,@MEBKodu,@database_id
-                WHILE @@FETCH_STATUS = 0
+                WHILE @@FETCH_STATUS=0
                 BEGIN
 
                 SET @sqlxx='
@@ -849,7 +849,6 @@ class MblLogin extends \DAL\DalSlim {
  
                 /* print(@sqlxx); */
                 EXEC sp_executesql @sqlxx;
-                /* select * from #okidbname;*/
                 update  #okidbname".$tc."
                     set MEBKodu=(select MEBKodu from ##okidetaydata".$tc." as xxx where xxx.dbnamex= #okidbname".$tc.".name)
                 where database_id = @database_id;
