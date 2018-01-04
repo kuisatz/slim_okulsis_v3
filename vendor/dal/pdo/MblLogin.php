@@ -10329,7 +10329,7 @@ class MblLogin extends \DAL\DalSlim {
                 "http://localhost:8081/jasperserver",
                 "jasperadmin",
                 "12345678oki",
-                ""
+                "organization_1"
               );
 
              $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
