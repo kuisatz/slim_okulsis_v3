@@ -10328,16 +10328,16 @@ class MblLogin extends \DAL\DalSlim {
            $c = new \Jaspersoft\Client\Client(
                 "http://localhost:8081/jasperserver",
                 "jasperadmin",
-                "12345678oki",
+                "jasperadmin",
                 "organization_1"
               );
            
-            $info = $c->serverInfo();
-            print_r($info);
+        //    $info = $c->serverInfo();
+        //    print_r($info);
 
-          //   $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
-              //   $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
-             //   echo $report; 
+             $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
+                 $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
+               echo $report; 
  
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
