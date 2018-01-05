@@ -5929,11 +5929,11 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
     $menus = array();
     foreach ($resDataMenu as $menu){
         $menus[]  = array(  
-            "Sira" => '1111',  
+            "lroad" => 'lroad',  
             
-         /*   "Sira" =>  ($menu["Sira"]),  
-            "DersKodu" => html_entity_decode($menu["DersKodu"]),  
-            "DugumAciklama" =>  html_entity_decode($menu["DugumAciklama"]),  
+             "proad" =>  ($menu["proad"]),  
+         /*   "DersKodu" => html_entity_decode($menu["DersKodu"]),  
+             "DugumAciklama" =>  html_entity_decode($menu["DugumAciklama"]),  
             "SoruPuani" =>  ($menu["SoruPuani"]),  
             "AldigiPuan" =>  ($menu["AldigiPuan"]),  
             "SoruKazanimlari" =>  html_entity_decode($menu["SoruKazanimlari"]),  
