@@ -4728,8 +4728,7 @@ $app->get("/Ogretmensubelistesi_mbllogin/", function () use ($app ) {
     if (isset($_GET['cid'])) {
         $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                 $app, $_GET['cid']));
-    } 
-     
+    }  
     $vKisiId = NULL;     
     if (isset($_GET['ogretmenID'])) {
         $stripper->offsetSet('ogretmenID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
@@ -4746,7 +4745,15 @@ $app->get("/Ogretmensubelistesi_mbllogin/", function () use ($app ) {
                                                                 $app, 
                                                                 $_GET['languageID']));
     } 
+    $vdersYiliID= NULL;     
+    if (isset($_GET['dersYiliID'])) {
+        $stripper->offsetSet('dersYiliID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['dersYiliID']));
+    }  
     $stripper->strip();
+    if ($stripper->offsetExists('dersYiliID')) {
+        $vdersYiliID = $stripper->offsetGet('dersYiliID')->getFilterValue();
+    }
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -4764,6 +4771,7 @@ $app->get("/Ogretmensubelistesi_mbllogin/", function () use ($app ) {
                                             'OgretmenID' => $vKisiId,  
                                             'Did' => $vDid,
                                             'LanguageID' => $vLanguageID, 
+                                            'DersYiliID' => $vdersYiliID, 
                                            ) ); 
     $menus = array();
     foreach ($resDataMenu as $menu){
