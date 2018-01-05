@@ -10326,7 +10326,7 @@ class MblLogin extends \DAL\DalSlim {
             
             //   http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki
            $c = new \Jaspersoft\Client\Client(
-                "http://localhost:8081/jasperserver",
+                "http://localhost:8000/jasperserver",
                 "jasperadmin",
                 "jasperadmin",
                 "organization_1"
@@ -10334,9 +10334,9 @@ class MblLogin extends \DAL\DalSlim {
            
         //    $info = $c->serverInfo();
         //    print_r($info);
-
-             $report = $c->reportService()->runReport('/bilsa/mobile/oppp', 'pdf');
-                 $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
+// http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/ddd.html
+             $report = $c->reportService()->runReport('/bilsa/ddd', 'pdf');
+             //    $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
                echo $report; 
  
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
