@@ -9361,7 +9361,8 @@ class MblLogin extends \DAL\DalSlim {
                     INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavDersID = SS.SinavDersID 
                     INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavKategoriID = SD.SinavKategoriID
                     LEFT JOIN ".$dbnamex."SNV_SinavOgrenciSoruCevaplari SOSC ON SOSC.SinavSoruID = SS.SinavSoruID 
-                    LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID
+                   /* LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID */ 
+                    INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID and SKS.SinavKitapcikID =SO.SinavKitapcikID
                     WHERE 
                             SS.SinavDersID = @SinavDersID1                            
                     ORDER BY 
@@ -10192,7 +10193,8 @@ class MblLogin extends \DAL\DalSlim {
                 KISI.Adi,
                 KISI.Soyadi,
                 SNV.EgitimYilID,
-                snv.SinavID
+                snv.SinavID,
+                SKIT.KitapcikAdi
             into #tempogrencibilgileri
             FROM ".$dbnamex."SNV_Sinavlar SNV
             INNER JOIN ".$dbnamex."SNV_SinavSiniflari ssf ON ssf.SinavID=SNV.SinavID AND ssf.SinavID=@SinavID
@@ -10296,7 +10298,8 @@ class MblLogin extends \DAL\DalSlim {
                      (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=5) as sinifSira,
                      (SELECT SinifOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=5) as SinifOrtalamasi,
                      (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=4) as okulSira,
-                     (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=4) as OkulOrtalamasi 
+                     (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=4) as OkulOrtalamasi ,
+                     t1.KitapcikAdi
 		 FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
 		 INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID=SO.SinavKitapcikID
 		 INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID=SKS.SinavSoruID
