@@ -5931,7 +5931,8 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
         $menus[]  = array(  
             "lroad" => 'lroad',  
             
-             "proad" =>  ($menu["proad"]),  
+            "proad" =>  ($menu["proad"]),  
+            "raporkey" =>  ($menu["raporkey"]),  
          /*   "DersKodu" => html_entity_decode($menu["DersKodu"]),  
              "DugumAciklama" =>  html_entity_decode($menu["DugumAciklama"]),  
             "SoruPuani" =>  ($menu["SoruPuani"]),  

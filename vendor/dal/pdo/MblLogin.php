@@ -10380,7 +10380,7 @@ class MblLogin extends \DAL\DalSlim {
            // $sql =  $sql +  $sql1;
        //    print_r($sql);
             $statement = $pdo->prepare($sql);   
-    // echo debugPDO($sql, $params);
+     echo debugPDO($sql, $params);
             $statement->execute();
             
             //   http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki
