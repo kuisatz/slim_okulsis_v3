@@ -10335,7 +10335,7 @@ class MblLogin extends \DAL\DalSlim {
         //    $info = $c->serverInfo();
         //    print_r($info);
 // http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/ddd.html
-             $report = $c->reportService()->runReport('/reports/bilsa/ddd', 'pdf');
+             $report = $c->reportService()->runReport('/reports/bilsa/ddd', 'html');
              //    $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
                echo $report; 
  
