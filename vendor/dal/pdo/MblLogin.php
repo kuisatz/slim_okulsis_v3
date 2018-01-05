@@ -962,7 +962,7 @@ class MblLogin extends \DAL\DalSlim {
                         isnull(mss.proxy collate SQL_Latin1_General_CP1254_CI_AS, (SELECT TOP 1 xxz.proxy collate SQL_Latin1_General_CP1254_CI_AS FROM BILSANET_MOBILE.dbo.Mobil_Settings xxz WHERE xxz.database_id = 57)) as serverproxy,
                         isnull(mss.id,(SELECT TOP 1 xxz.id FROM BILSANET_MOBILE.dbo.Mobil_Settings xxz WHERE xxz.database_id = 57 )) as cid,
                         '".$ip."' as ip,
-                        a.brans,
+                        COALESCE(NULLIF(a.brans,NULL),'') as brans,
                         a.cinsiyetID,
                         case a.CinsiyetID
                         WHEN 1 THEN case when RolID=8 THEN '/okulsis/image/okulsis/fotoE.jpg'
