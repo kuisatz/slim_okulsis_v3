@@ -10277,8 +10277,8 @@ class MblLogin extends \DAL\DalSlim {
                 PST.PuanSiralamaTipID IN (4,5)
              ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
             
-            declare @raporkey UNIQUEIDENTIFIER ;
-            set @raporkey = newID(); 
+            declare @raporkey varchar(50) ;
+            set @raporkey = 'OSS'+replace(newID(),'-','');
             
             INSERT INTO BILSANET_MOBILE.dbo.Mobile_tempRaporOgrenciSinavSonuclari
            (raporkey
