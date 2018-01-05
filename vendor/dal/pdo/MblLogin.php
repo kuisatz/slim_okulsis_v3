@@ -8564,6 +8564,12 @@ class MblLogin extends \DAL\DalSlim {
             $sql = "   
             SET NOCOUNT ON; 
            
+            SELECT * FROM (
+            SELECT    
+                NULL AS ID , 
+                'LUTFEN SEÇİNİZ' as aciklama, 
+                0 as kontrol
+                UNION 
             SELECT distinct  
                 OKL.KisiID as ID , 
                 upper(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) as aciklama, 
@@ -8579,8 +8585,9 @@ class MblLogin extends \DAL\DalSlim {
               cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) AND
                 ".$addSQLWhere."
                 OKR.RolID = ".$SendrolID."  
+                    ) as sssss 
             ORDER BY 
-                upper(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) ) ;
+               aciklama ;
  
             SET NOCOUNT OFF;   
                  "; 
