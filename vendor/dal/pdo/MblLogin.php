@@ -2496,11 +2496,12 @@ class MblLogin extends \DAL\DalSlim {
                 INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri so ON ss.SinifID = so.SinifID  
                 INNER JOIN ".$dbnamex."GNL_DersHavuzlari dh ON so.DersHavuzuID = dh.DersHavuzuID
                 WHERE 
-                    so.OgretmenID = '".$ogretmenID."' 
-                     AND ss.Sanal = 0  
+                    ss.DersYiliID = (SELECT top 1 DersYiliID FROM BILSANET_OKULSIS.dbo.GNL_DersYillari dyx  where dyx.AktifMi =1 and 
+                        dyx.EgitimYilID = (SELECT max(dyxy.EgitimYilID) FROM BILSANET_OKULSIS.dbo.GNL_DersYillari dyxy  where dyxy.AktifMi =1)) AND  
+                    so.OgretmenID = '".$ogretmenID."' AND 
+                    ss.Sanal = 0  
                  ) AS fdsa
-                ORDER BY SeviyeID, Aciklama;
- 
+                ORDER BY SeviyeID, Aciklama; 
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   
