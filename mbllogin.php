@@ -1393,8 +1393,8 @@ $app->get("/KySubeOgrenciDersListesi_mbllogin/", function () use ($app ) {
         //    "DonemID" =>   ($menu["DonemID"]), 
            
          //   "PuanOrtalamasi" =>   ($menu["PuanOrtalamasi"]),             
-        //    "Donem1_PuanOrtalamasi" =>   ($menu["Donem1_PuanOrtalamasi"]),             
-        //    "Donem2_PuanOrtalamasi" =>   ($menu["Donem2_PuanOrtalamasi"]),
+            "Donem1_PuanOrtalamasi" =>   ($menu["Donem1_PuanOrtalamasi"]),             
+            "Donem2_PuanOrtalamasi" =>   ($menu["Donem2_PuanOrtalamasi"]),
          //   "AktifDonemNotu" =>   ($menu["AktifDonemNotu"]),   
         //    "YetistirmeKursuNotu" =>   ($menu["YetistirmeKursuNotu"]),             
         //    "YetistirmeKursuNotu" =>   ($menu["YetistirmeKursuNotu"]), 
