@@ -10372,7 +10372,8 @@ class MblLogin extends \DAL\DalSlim {
                 SELECT  top 1 raporkey,
                     'http://195.244.55.69:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.pdf?raporkey='+@raporkey as proad,
                     'http://195.244.55.69:8000/jasperserver/rest/login??j_username=joeuser&j_password=joeuser' as lroad
-                FROM BILSANET_MOBILE.dbo.Mobile_tempRaporOgrenciSinavSonuclari;
+                FROM BILSANET_MOBILE.dbo.Mobile_tempRaporOgrenciSinavSonuclari
+                where raporkey = @raporkey;
              IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
              IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif;
              IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
