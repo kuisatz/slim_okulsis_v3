@@ -10327,7 +10327,10 @@ class MblLogin extends \DAL\DalSlim {
 		 INNER JOIN #puanlar p1 ON p1.SinavOgrenciID=SO.SinavOgrenciID
              ) AS sdasdasd
              ORDER BY BolumKategoriID, SoruSira;
-             SELECT count(*) FROM ".$dosyaID." 
+                SELECT  top 1 
+                    'http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.pdf&dosyaID=".$dosyaID."' as proad,
+                    'http://195.244.55.69:8000/jasperserver/rest/login?j_username=jasperadmin&j_password=jasperadmin' as lroad
+                FROM ".$dosyaID.";
              IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
              IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif;
              IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
@@ -10339,21 +10342,24 @@ class MblLogin extends \DAL\DalSlim {
             $statement->execute();
             
             //   http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki
-           $c = new \Jaspersoft\Client\Client(
+       /*    $c = new \Jaspersoft\Client\Client(
                 "http://localhost:8000/jasperserver",
                 "jasperadmin",
                 "jasperadmin",
                 "organization_1"
               );
-           
+         */  
         //    $info = $c->serverInfo();
         //    print_r($info);
 // http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/ddd.html
-             $report = $c->reportService()->runReport('/reports/bilsa/mobile/rapor/ogrenciSinavDetay', 'pdf');
-             print_r($c);
+          //   $report = $c->reportService()->runReport('/reports/bilsa/mobile/rapor/ogrenciSinavDetay', 'pdf');
+        //     print_r($c);
              //    $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
-               echo $report; 
+          //     echo $report; 
  
+          //  'http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.pdf&dosyaID=';
+            
+             
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
