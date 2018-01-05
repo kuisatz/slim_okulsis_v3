@@ -10190,6 +10190,7 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID=S.DersYiliID
             WHERE OgrenciSeviyeID=@OgrenciSeviyeID;
             SELECT
+                SO.OgrenciSeviyeID,
                 SO.SinavOgrenciID,
                 SO.SinifKodu,
                 SO.OgrenciNumarasi,
@@ -10275,42 +10276,83 @@ class MblLogin extends \DAL\DalSlim {
              WHERE SPT.SinavID=@SinavID AND
                 PST.PuanSiralamaTipID IN (4,5)
              ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
-            IF OBJECT_ID('tempdb..".$dosyaID."') IS NOT NULL DROP TABLE ".$dosyaID."; 
-             SELECT ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* 
-             into ".$dosyaID." FROM (
-                 SELECT distinct
-                     SKS.Sira,
-                     SDS.DersKodu,
-                     DUGUM.DugumAciklama,
-                     SS.SoruPuani,
-                     SOSC.AldigiPuan,
-                     ".$dbnamex."GetSoruKazanimlari(SS.SoruID) as SoruKazanimlari,
+            
+            declare @raporkey UNIQUEIDENTIFIER ;
+            set @raporkey = newID(); 
+            
+            INSERT INTO BILSANET_MOBILE.dbo.Mobile_tempRaporOgrenciSinavSonuclari
+           (raporkey
+           ,SoruSira
+           ,OgrenciSeviyeID
+           ,Sira
+           ,DersKodu
+           ,DugumAciklama
+           ,SoruPuani
+           ,AldigiPuan
+           ,SoruKazanimlari
+           ,BolumKategoriID
+           ,BolumKategoriAdi
+           ,SinavOgrenciID
+           ,SinifKodu
+           ,OgrenciNumarasi
+           ,OkulAdi
+           ,IlAdi
+           ,IlceAdi
+           ,SinavAciklamasi
+           ,SinavKodu
+           ,SinavTarihi
+           ,SinavTurID
+           ,SinavTurAdi
+           ,Adisoyadi
+           ,EgitimYilID
+           ,SinavID
+           ,PuanTipAdi
+           ,PuanTipKodu
+           ,Puan
+           ,sinifSinavaGirenSayisi
+           ,okulSinavaGirenSayisi
+           ,sinifSira
+           ,SinifOrtalamasi
+           ,okulSira
+           ,OkulOrtalamasi
+           ,KitapcikAdi
+            )  
+            SELECT @raporkey, ROW_NUMBER() OVER (PARTITION BY SinavOgrenciID ORDER BY BolumKategoriID, Sira) AS SoruSira,* 
+            FROM (
+                 SELECT distinct 
+                    t1.OgrenciSeviyeID,
+                    SKS.Sira,
+                    SDS.DersKodu,
+                    DUGUM.DugumAciklama,
+                    SS.SoruPuani,
+                    SOSC.AldigiPuan,
+                    ".$dbnamex."GetSoruKazanimlari(SS.SoruID) as SoruKazanimlari,
                     BKS.BolumKategoriID,
-                     BKS.BolumKategoriAdi,
+                    BKS.BolumKategoriAdi,
                     t1.SinavOgrenciID,
-                     t1.SinifKodu,
-                     t1.OgrenciNumarasi,
-                     t1.OkulAdi,
+                    t1.SinifKodu,
+                    t1.OgrenciNumarasi,
+                    t1.OkulAdi,
                     t1.IlAdi,
-                     t1.IlceAdi,
-                     t1.SinavAciklamasi,
-                     t1.SinavKodu,
-                     FORMAT(t1.SinavTarihi,'dd-MM-yyyy hh:mm') as SinavTarihi,
-                     t1.SinavTurID,
-                     t1.SinavTurAdi,
-                     concat(t1.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',t1.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as Adisoyadi,
-                     t1.EgitimYilID,
-                     t1.SinavID,
-                     p1.PuanTipAdi,
-                     p1.PuanTipKodu,
-                     p1.Puan,
-                     (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID=5) as sinifSinavaGirenSayisi,
-                     (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID=4) as okulSinavaGirenSayisi,
-                     (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=5) as sinifSira,
-                     (SELECT SinifOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=5) as SinifOrtalamasi,
-                     (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=4) as okulSira,
-                     (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=4) as OkulOrtalamasi ,
-                     t1.KitapcikAdi
+                    t1.IlceAdi,
+                    t1.SinavAciklamasi,
+                    t1.SinavKodu,
+                    FORMAT(t1.SinavTarihi,'dd-MM-yyyy hh:mm') as SinavTarihi,
+                    t1.SinavTurID,
+                    t1.SinavTurAdi,
+                    concat(t1.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',t1.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as Adisoyadi,
+                    t1.EgitimYilID,
+                    t1.SinavID,
+                    p1.PuanTipAdi,
+                    p1.PuanTipKodu,
+                    p1.Puan,
+                    (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID=5) as sinifSinavaGirenSayisi,
+                    (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID=4) as okulSinavaGirenSayisi,
+                    (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=5) as sinifSira,
+                    (SELECT SinifOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=5) as SinifOrtalamasi,
+                    (SELECT Sira FROM #puanlar px1 where PuanSiralamaTipID=4) as okulSira,
+                    (SELECT OkulOrtalamasi FROM #puanlar px1 where PuanSiralamaTipID=4) as OkulOrtalamasi ,
+                    t1.KitapcikAdi
 		 FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
 		 INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SKS.SinavKitapcikID=SO.SinavKitapcikID
 		 INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID=SKS.SinavSoruID
@@ -10327,8 +10369,8 @@ class MblLogin extends \DAL\DalSlim {
 		 INNER JOIN #puanlar p1 ON p1.SinavOgrenciID=SO.SinavOgrenciID
              ) AS sdasdasd
              ORDER BY BolumKategoriID, SoruSira;
-                SELECT  top 1 
-                    'http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.pdf&dosyaID=".$dosyaID."' as proad,
+                SELECT  top 1 raporkey,
+                    'http://195.244.55.69:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.pdf&dosyaID='+@raporkey as proad,
                     'http://195.244.55.69:8000/jasperserver/rest/login?j_username=jasperadmin&j_password=jasperadmin' as lroad
                 FROM ".$dosyaID.";
              IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
