@@ -990,7 +990,8 @@ class MblLogin extends \DAL\DalSlim {
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             $okullogoURL =NULL;
-            $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul.png"; ; 
+            $dosya = NULL; 
+            $dosya1 = "C:/xampp/htdocs/okulsis/image/okullogo/okul.png";  
             
             $menus = array();
             foreach ($result as $menu){ 
