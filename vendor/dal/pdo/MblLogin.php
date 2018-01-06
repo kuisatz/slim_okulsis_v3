@@ -10474,7 +10474,7 @@ class MblLogin extends \DAL\DalSlim {
              ) AS sdasdasd
              ORDER BY BolumKategoriID, SoruSira;
                 SELECT  top 1 raporkey,
-                    'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.html?raporkey='+@raporkey as proad,
+                    'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.html?raporkey='+@raporkey+'&j_username=joeuser&j_password=joeuser' as proad,
                     'http://mobile.okulsis.net:8000/jasperserver/rest/login?j_username=joeuser&j_password=joeuser' as lroad
                 FROM BILSANET_MOBILE.dbo.Mobile_tempRaporOgrenciSinavSonuclari
                 where raporkey = @raporkey;
