@@ -1023,7 +1023,7 @@ class MblLogin extends \DAL\DalSlim {
                     "EgitimYili" =>  ($menu["EgitimYili"]), 
                     "DonemID" =>  ($menu["DonemID"]), 
                     "KurumID" =>  ($menu["KurumID"]), 
-                    "proxy" =>  ($menu["serverproxy"]), 
+                    "serverproxy" =>  ($menu["serverproxy"]), 
                     "cid" =>  ($menu["cid"]),
                     "did" =>  ($menu["database_id"]),
                     "ip" =>  ($menu["ip"]),
