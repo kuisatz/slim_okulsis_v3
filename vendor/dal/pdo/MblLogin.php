@@ -994,16 +994,16 @@ class MblLogin extends \DAL\DalSlim {
             
             $menus = array();
             foreach ($result as $menu){ 
-                if (isset($menu[0]["OkulID"]) && $menu[0]['OkulID'] != "") {
+                if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
                        $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
                     }
                     if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
                     else { 
-                     if (isset($menu[0]['OkulID']) && $menu[0]['OkulID'] != "") {
-                        $OkulLogo = $menu[0]['OkulLogo'];
-                        $OkulID = $menu[0]['OkulID']; 
+                     if (isset($menu['OkulID']) && $menu['OkulID'] != "") {
+                        $OkulLogo = $menu['OkulLogo'];
+                        $OkulID = $menu['OkulID']; 
                         $operationId = $this->getLogo(
                                     array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
                         if (\Utill\Dal\Helper::haveRecord($operationId)) {
@@ -1014,28 +1014,28 @@ class MblLogin extends \DAL\DalSlim {
                  
                 
                 $menus[]  = array( 
-                    "OkulKullaniciID" => $menu[0]["OkulKullaniciID"],
-                    "OkulID" => $menu[0]["OkulID"],
-                    "KisiID" => $menu[0]["KisiID"],
-                    "RolID" =>  ($menu[0]["RolID"]),
-                    "OkulAdi" =>  ($menu[0]["OkulAdi"]), 
-                    "MEBKodu" =>  ($menu[0]["MEBKodu"]), 
-                    "ePosta" =>  ($menu[0]["ePosta"]),
-                    "DersYiliID" =>  ($menu[0]["DersYiliID"]),
-                    "EgitimYilID" =>  ($menu[0]["EgitimYilID"]),
-                    "EgitimYili" =>  ($menu[0]["EgitimYili"]), 
-                    "DonemID" =>  ($menu[0]["DonemID"]), 
-                    "KurumID" =>  ($menu[0]["KurumID"]), 
-                    "proxy" =>  ($menu[0]["serverproxy"]), 
-                    "cid" =>  ($menu[0]["cid"]),
-                    "did" =>  ($menu[0]["database_id"]),
-                    "ip" =>  ($menu[0]["ip"]),
+                    "OkulKullaniciID" => $menu["OkulKullaniciID"],
+                    "OkulID" => $menu["OkulID"],
+                    "KisiID" => $menu["KisiID"],
+                    "RolID" =>  ($menu["RolID"]),
+                    "OkulAdi" =>  ($menu["OkulAdi"]), 
+                    "MEBKodu" =>  ($menu["MEBKodu"]), 
+                    "ePosta" =>  ($menu["ePosta"]),
+                    "DersYiliID" =>  ($menu["DersYiliID"]),
+                    "EgitimYilID" =>  ($menu["EgitimYilID"]),
+                    "EgitimYili" =>  ($menu["EgitimYili"]), 
+                    "DonemID" =>  ($menu["DonemID"]), 
+                    "KurumID" =>  ($menu["KurumID"]), 
+                    "proxy" =>  ($menu["serverproxy"]), 
+                    "cid" =>  ($menu["cid"]),
+                    "did" =>  ($menu["database_id"]),
+                    "ip" =>  ($menu["ip"]),
                     "OkulLogo" =>  '', // ($menu["OkulLogo"]) ,
                   //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
                  //   "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
-                    "brans" =>  ($menu[0]["brans"]), 
-                    "defaultFotoURL" =>  ($menu[0]["defaultFotoURL"]),
-                    "OkulAdiKisa" =>  ($menu[0]["OkulAdiKisa"]), 
+                    "brans" =>  ($menu["brans"]), 
+                    "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
+                    "OkulAdiKisa" =>  ($menu["OkulAdiKisa"]), 
                     "okullogoURL" =>  $okullogoURL,  
                     );
                     
@@ -2200,7 +2200,7 @@ class MblLogin extends \DAL\DalSlim {
 
             DECLARE @command VARCHAR(1000)
 
-            SET @command = \'BCP \"SELECT  top 1 ".$OkulLogo." \" queryout \"C:\xampp\htdocs\okulsis\image\okullogo\okul".$OkulID.".png\" -T -fC:\xampp\htdocs\okulsis\image\okullogo\PP.fmt \'
+            SET @command = \'BCP \"SELECT  top 1 ".$OkulLogo." \" queryout \"C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$OkulID.".png\" -T -fC:\\xampp\\htdocs\\okulsis\\image\\okullogo\\PP.fmt \'
  
             EXEC xp_cmdshell @command; 
             
@@ -2210,7 +2210,7 @@ class MblLogin extends \DAL\DalSlim {
 
             $statement = $pdo->prepare($sql);
             
-          // echo debugPDO($sql, $parameters);
+          // echo debugPDO($sql, $params);
             $statement->execute();
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
