@@ -2201,10 +2201,11 @@ class MblLogin extends \DAL\DalSlim {
             DECLARE @command VARCHAR(max), @d1 varbinary(max);
             update mobile.dbo.dd 
             set dosya1 = cast(0x".$OkulLogo." as varbinary(max))
-            select @d1 = dosya1 from mobile.dbo.dd 
-            select @d1 ; 
+            WHERE id =1;
+          /*  select @d1 = dosya1 from mobile.dbo.dd */
+          /*  select @d1; */
 
-            SET @command =  'BCP \"SELECT dosya1 from  mobile.dbo.dd  \" queryout \"C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$OkulID.".png\" -T -fC:\\xampp\\htdocs\\okulsis\\image\\okullogo\\PP.fmt '
+            SET @command =  'BCP \"SELECT dosya1 from  mobile.dbo.dd WHERE id =1 \" queryout \"C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$OkulID.".png\" -T -fC:\\xampp\\htdocs\\okulsis\\image\\okullogo\\PP.fmt '
   
             EXEC xp_cmdshell @command; 
             
