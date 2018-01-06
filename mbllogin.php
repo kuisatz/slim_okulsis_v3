@@ -219,7 +219,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
                 'LanguageID' => $vLanguageID, 
                 'ip'=> $ip,
         )); 
-  
+  header("Content-type: image/jpg");
     $menus = array();
     foreach ($resDataInsert as $menu){
         $menus[]  = array(
