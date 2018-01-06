@@ -991,13 +991,13 @@ class MblLogin extends \DAL\DalSlim {
             $errorInfo = $statement->errorInfo();
             $okullogoURL =NULL;
             $dosya = NULL; 
-            $dosya1 = "C:/xampp/htdocs/okulsis/image/okullogo/okul.png";  
+            $dosya1 = "/okulsis/image/okulsis/image/okullogo/okul.png";  
             
             $menus = array();
-            foreach ($result as $menu){     print_r("11111111111") ;  
+            foreach ($result as $menu){    
                 if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
-                       $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
-                    } print_r("cccccccccccccccccccccc") ; 
+                       $dosya = "/okulsis/image/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
+                    } 
                 if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
@@ -1039,7 +1039,8 @@ class MblLogin extends \DAL\DalSlim {
                 
             
             }
-         print_r($menus) ;    
+            $result = $menus;
+       //  print_r($menus) ;    
             
        // print_r($result );
  //$imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;

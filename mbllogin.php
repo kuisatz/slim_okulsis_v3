@@ -246,7 +246,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "brans" => html_entity_decode($menu["brans"]), 
             "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
             "OkulAdiKisa" => html_entity_decode($menu["OkulAdiKisa"]), 
-      //      "okullogoURL" =>  ($menu["okullogoURL"]),  
+            "okullogoURL" =>  ($menu["okullogoURL"]),  
             
             
         );
