@@ -991,6 +991,7 @@ class MblLogin extends \DAL\DalSlim {
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             $okullogoURL =NULL;
+            $dosya =NULL;
             if ((isset($result[0]['OkulLogo']))) {
                 $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$result[0]['OkulLogo'].".png"; 
              }
