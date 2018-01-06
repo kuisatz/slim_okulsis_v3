@@ -2395,22 +2395,22 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
              
                 SELECT 
-                    COALESCE(NULLIF(concat(zz.Adi,zz.Soyadi),NULL),'') as adsoyad,
-                    COALESCE(NULLIF(a.OgrenciDevamsizlikID),NULL),'') as OgrenciDevamsizlikID, 
-                    COALESCE(NULLIF(a.DersYiliID),NULL),'') as DersYiliID,  
-                    COALESCE(NULLIF(a.OgrenciID),NULL),'') as OgrenciID,
-                    COALESCE(NULLIF(a.DevamsizlikKodID),NULL),'') as DevamsizlikKodID, 
-                    COALESCE(NULLIF(a.DevamsizlikPeriyodID),NULL),'') as DevamsizlikPeriyodID, 
+                    concat(zz.Adi,zz.Soyadi)  as adsoyad,
+                    a.OgrenciDevamsizlikID , 
+                    a.DersYiliID,  
+                    a.OgrenciID,
+                    a.DevamsizlikKodID , 
+                    a.DevamsizlikPeriyodID , 
                     FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
-                    COALESCE(NULLIF(a.Aciklama),NULL),'') as Aciklama, 
-                    COALESCE(NULLIF(b.OgrenciseviyeID ),NULL),'') as OgrenciseviyeID ,
+                    COALESCE(NULLIF(a.Aciklama,NULL),'') as Aciklama, 
+                    b.OgrenciseviyeID  ,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
                     cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz1,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz2,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz2,
                     cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz2,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz2 ,
                     ROW_NUMBER() OVER(ORDER BY Tarih) AS rownum  ,
                     concat(cast(a.DevamsizlikKodID AS varchar(2)),' - ', COALESCE(NULLIF(ddx.DevamsizlikAdi,''),ddx.DevamsizlikAdi_eng) collate SQL_Latin1_General_CP1254_CI_AS) AS DevamsizlikAdi,
-                    cast(cast(dd.GunKarsiligi AS numeric(10,2)) AS varchar(5)) AS GunKarsiligi
+                    cast(cast(COALESCE(NULLIF(dd.GunKarsiligi,NULL),0) AS numeric(10,2)) AS varchar(5)) AS GunKarsiligi
                 FROM ".$dbnamex."GNL_Kisiler zz 
                 INNER JOIN ".$dbnamex."GNL_DersYillari yy on yy.DersYiliID =  '".$dersYiliID."'
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDevamsizliklari  a on a.OgrenciID = zz.KisiID and yy.DersYiliID =a.DersYiliID
