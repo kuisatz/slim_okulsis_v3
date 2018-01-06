@@ -239,8 +239,9 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             "cid" =>  ($menu["cid"]),
             "did" =>  ($menu["database_id"]),
             "ip" =>  ($menu["ip"]),
-            "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
-            "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
+            "OkulLogo" =>   ($menu["OkulLogo"]) ,
+          //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
+         //   "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
             "brans" => html_entity_decode($menu["brans"]), 
             "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
             "OkulAdiKisa" => html_entity_decode($menu["OkulAdiKisa"]), 
@@ -248,7 +249,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             
         );
         
-         $decoded_image=base64_decode($menu["OkulLogo"]);
+       //  $decoded_image=base64_decode($menu["OkulLogo"]);
       //     header("Content-type: image/jpg");
       //     echo  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"]));
           

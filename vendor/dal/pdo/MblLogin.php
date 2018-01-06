@@ -988,10 +988,18 @@ class MblLogin extends \DAL\DalSlim {
             $statement->execute();
             
            
-            
-           
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
+            
+            
+              
+             if ((isset($result['OkulLogo']) && $params['OkulLogo'] != "")) {
+                $OkulLogo = $params['OkulLogo'];
+                print_r("zzzzzzzzz") ; 
+            } 
+            
+            
+            
             
        // print_r($result );
  //$imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;
@@ -999,7 +1007,7 @@ class MblLogin extends \DAL\DalSlim {
   //*   echo '<img src="data:image/png;base64,'.$imgData.'" alt="My image alt" />'.$result [2]['OkulAdi'];
   //   echo '<img src="'.$imgData.'" alt="My image alt" />'.$result [1]['OkulAdi'];
 	// $imgData =$result[0]['OkulLogo'];
-	  header("Content-type: image/png"); 
+//	  header("Content-type: image/png"); 
  	//   $image = sqlsrv_get_field( $result  , 10 );
      //               // SQLSRV_PHPTYPE_STREAM(SQLSRV_ENC_BINARY));  
    //  header("Content-Type: image/png");  
