@@ -219,7 +219,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
                 'LanguageID' => $vLanguageID, 
                 'ip'=> $ip,
         )); 
-  header("Content-type: image/jpg");
+ 
     $menus = array();
     foreach ($resDataInsert as $menu){
         $menus[]  = array(
@@ -247,6 +247,9 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             
             
         );
+         header("Content-type: image/jpg");
+         '<img src="data:image/jpg;base64,='.base64_encode( ($menu["OkulLogo"]));
+          header("Content-type: image/jpg");
     }
     
     $app->response()->header("Content-Type", "application/json"); 
