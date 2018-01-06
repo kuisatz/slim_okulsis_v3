@@ -3326,7 +3326,7 @@ class MblLogin extends \DAL\DalSlim {
                         SNV.SinavSuresi, 
                         SOGR.SinavOgrenciID,
                         concat(ogt.Adi  collate SQL_Latin1_General_CP1254_CI_AS,'' ,ogt.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen
-                    
+                       ,SNV.YaziliStsSinavDersiDersHavuzuID
                     FROM ".$dbnamex."SNV_Sinavlar SNV
                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
                     INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
@@ -3359,7 +3359,7 @@ class MblLogin extends \DAL\DalSlim {
                         SNV.SinavSuresi, 
                         SOGR.SinavOgrenciID,
                         concat(ogt.Adi collate SQL_Latin1_General_CP1254_CI_AS ,'' ,ogt.Soyadi  collate SQL_Latin1_General_CP1254_CI_AS) as ogretmen
-                  
+                        ,SNV.YaziliStsSinavDersiDersHavuzuID
                     FROM ".$dbnamex."SNV_Sinavlar SNV
                     INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID	
                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
@@ -3374,7 +3374,7 @@ class MblLogin extends \DAL\DalSlim {
                         AND SNV.isAltKurumHidden = 0
                         AND SNV.isOgrenciVeliSinavVisible = 1    
  
-                ) as ssss  ORDER BY ssss.SinavTarihiorder  DESC  
+                ) as ssss  ORDER BY  ssss.YaziliStsSinavDersiDersHavuzuID,  ssss.SinavTarihiorder  DESC  
                 
                 SET NOCOUNT OFF;  
  
