@@ -997,7 +997,7 @@ class MblLogin extends \DAL\DalSlim {
             foreach ($result as $menu){     print_r("11111111111") ;  
                 if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
                        $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
-                    }
+                    } print_r("cccccccccccccccccccccc") ; 
                 if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
