@@ -9268,7 +9268,7 @@ class MblLogin extends \DAL\DalSlim {
             set @SinavID='".$SinavID."';
            
            
-            SELECT
+            SELECT Os.OgrenciID,SS.SinavID , 
                 oob.Numarasi ,
                 concat(k.Adi collate SQL_Latin1_General_CP1254_CI_AS ,' ',k.Soyadi collate SQL_Latin1_General_CP1254_CI_AS) as adsoyad,
                 SINAV.SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS as SinavAciklamasi,

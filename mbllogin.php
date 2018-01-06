@@ -5224,6 +5224,9 @@ $app->get("/OgrencilerinAldigiNotlarSinavBazli_mbllogin/", function () use ($app
             "adsoyad" => html_entity_decode($menu["adsoyad"]),  
             "Aciklamasi" => html_entity_decode($menu["SinavAciklamasi"]),  
             "Puan" => html_entity_decode($menu["Puan"]),  
+            "OgrenciID" => html_entity_decode($menu["OgrenciID"]),  
+            "SinavID" => html_entity_decode($menu["SinavID"]),   
+          
         );
     }
     
@@ -5932,34 +5935,6 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
             "lroad" => ($menu["lroad"]),  
             "proad" =>  ($menu["proad"]),  
             "raporkey" =>  ($menu["raporkey"]),  
-         /*   "DersKodu" => html_entity_decode($menu["DersKodu"]),  
-             "DugumAciklama" =>  html_entity_decode($menu["DugumAciklama"]),  
-            "SoruPuani" =>  ($menu["SoruPuani"]),  
-            "AldigiPuan" =>  ($menu["AldigiPuan"]),  
-            "SoruKazanimlari" =>  html_entity_decode($menu["SoruKazanimlari"]),  
-            "BolumKategoriAdi" => html_entity_decode($menu["BolumKategoriAdi"]),  
-            "SinifKodu" => html_entity_decode($menu["SinifKodu"]),  
-            "OgrenciNumarasi" =>  ($menu["OgrenciNumarasi"]),  
-            "OkulAdi" =>  html_entity_decode($menu["OkulAdi"]),  
-            "IlAdi" =>  html_entity_decode($menu["IlAdi"]),  
-            "IlceAdi" => html_entity_decode($menu["IlceAdi"]),  
-            "SinavKodu" => html_entity_decode($menu["SinavKodu"]), 
-            
-              "SinavTarihi" =>  ($menu["SinavTarihi"]), 
-              "SinavTurAdi" => html_entity_decode($menu["SinavTurAdi"]), 
-              "Adisoyadi" => html_entity_decode($menu["Adisoyadi"]), 
-              "PuanTipAdi" => html_entity_decode($menu["PuanTipAdi"]), 
-              "PuanTipKodu" => html_entity_decode($menu["PuanTipKodu"]), 
-              "Puan" =>  ($menu["Puan"]), 
-            
-              "SinifSinavaGirenSayisi" =>  ($menu["sinifSinavaGirenSayisi"]), 
-              "OkulSinavaGirenSayisi" =>  ($menu["okulSinavaGirenSayisi"]), 
-              "SinifSira" =>  ($menu["sinifSira"]), 
-              "SinifOrtalamasi" =>  ($menu["SinifOrtalamasi"]), 
-              "OkulSira" =>  ($menu["okulSira"]), 
-              "OkulOrtalamasi" =>  ($menu["OkulOrtalamasi"]),
-            */
-               
         );
     }
     
