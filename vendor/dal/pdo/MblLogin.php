@@ -976,6 +976,7 @@ class MblLogin extends \DAL\DalSlim {
                 ) as ssdds
                 ) as ssddsdsdsd
                 LEFT join ##okiokullogo".$tc." logo on logo.OkulID = ssddsdsdsd.OkulID
+                    
                 IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";
                 IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";
                 IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc.";
@@ -1034,6 +1035,7 @@ class MblLogin extends \DAL\DalSlim {
                     "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
                     "OkulAdiKisa" =>  ($menu["OkulAdiKisa"]), 
                     "okullogoURL" =>  $okullogoURL,  
+                    "rowID" =>  ($menu["rowID"]), 
                     );
                       
                 
