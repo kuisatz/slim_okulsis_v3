@@ -829,7 +829,7 @@ class MblLogin extends \DAL\DalSlim {
                      CREATE TABLE ##okiokullogo".$tc."
                         (LogoDosyaID [uniqueidentifier],
                         OkulID [uniqueidentifier],
-                        OkulLogo image);
+                        OkulLogo varbinary(max));
 
                 declare @dbnamex  nvarchar(200)='' collate SQL_Latin1_General_CP1254_CI_AS;
                 declare @KisiID  uniqueidentifier;
