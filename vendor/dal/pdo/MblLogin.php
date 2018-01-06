@@ -2215,7 +2215,7 @@ class MblLogin extends \DAL\DalSlim {
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
-            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+            return array("found" => true, "errorInfo" => $errorInfo,  );
         } catch (\PDOException $e /* Exception $e */) {      
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
