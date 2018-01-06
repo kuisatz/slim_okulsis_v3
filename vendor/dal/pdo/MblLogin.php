@@ -990,25 +990,30 @@ class MblLogin extends \DAL\DalSlim {
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
+            $okullogoURL =NULL;
+            if ((isset($result[0]['OkulLogo']))) {
+                $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$result[0]['OkulLogo'].".png"; 
+             }
+            if (file_exists($dosya)) {
+            $okullogoURL =$dosya ; 
+            }
+            else {
             
-            
-              
-            if ((isset($result['OkulLogo']) && $params['OkulLogo'] != "")) {
-                $OkulLogo = $params['OkulLogo'];
-                $OkulID = $params['OkulID'];
+            if ((isset($result[0]['OkulLogo']))) {
+                $OkulLogo = $result[0]['OkulLogo'];
+                $OkulID = $result[0]['OkulID'];
                 
                 $operationId = $this->getLogo(
                             array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
                 if (\Utill\Dal\Helper::haveRecord($operationId)) {
-                    $okullogoURL = $operationId ['resultSet'][0]['okullogoURL'];
-                    print_r($okullogoURL) ; 
+                    $okullogoURL = $operationId ['resultSet']['okullogoURL']; 
                 }   
                 
               //  print_r("zzzzzzzzz") ; 
             } 
             
-            
-            
+          }
+           print_r($okullogoURL) ;    
             
        // print_r($result );
  //$imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;
