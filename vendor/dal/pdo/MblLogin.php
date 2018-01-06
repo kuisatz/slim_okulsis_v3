@@ -994,21 +994,21 @@ class MblLogin extends \DAL\DalSlim {
             $dosya1 = "C:/xampp/htdocs/okulsis/image/okullogo/okul.png";  
             
             $menus = array();
-            foreach ($result as $menu){ 
+            foreach ($result as $menu){     print_r("11111111111") ;  
                 if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
                        $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
                     }
                 if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
-                    else { 
+                    else { print_r("222222222222") ;  
                      if (isset($menu['OkulID']) && $menu['OkulID'] != "") {
                         $OkulLogo = $menu['OkulLogo'];
                         $OkulID = $menu['OkulID']; 
                         $this->getLogo(array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, )); 
                         $okullogoURL = $dosya;   
                     } 
-                 
+                 print_r("3333333333") ;  
                 
                 $menus[]  = array( 
                     "OkulKullaniciID" => $menu["OkulKullaniciID"],
@@ -1035,7 +1035,7 @@ class MblLogin extends \DAL\DalSlim {
                     "OkulAdiKisa" =>  ($menu["OkulAdiKisa"]), 
                     "okullogoURL" =>  $okullogoURL,  
                     );
-                    
+                    $dosya = NULL; 
 
                 }
             
