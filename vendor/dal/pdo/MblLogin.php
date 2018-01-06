@@ -986,21 +986,54 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);   
      // echo debugPDO($sql, $params);
             $statement->execute();
-            
            
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             $okullogoURL =NULL;
-            $dosya =NULL;
-            if ((isset($result[0]['OkulLogo']))) {
-                $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$result[0]['OkulLogo'].".png"; 
+            $dosya =NULL; 
+            
+            $menus = array();
+            foreach ($result as $menu){
+                
+                
+                
+                $menus[]  = array( 
+                     "OkulKullaniciID" => $menu["OkulKullaniciID"],
+            "OkulID" => $menu["OkulID"],
+            "KisiID" => $menu["KisiID"],
+            "RolID" =>  ($menu["RolID"]),
+            "OkulAdi" => html_entity_decode($menu["OkulAdi"]), 
+            "MEBKodu" => html_entity_decode($menu["MEBKodu"]), 
+            "ePosta" => html_entity_decode($menu["ePosta"]),
+            "DersYiliID" =>  ($menu["DersYiliID"]),
+            "EgitimYilID" =>  ($menu["EgitimYilID"]),
+            "EgitimYili" =>  ($menu["EgitimYili"]), 
+            "DonemID" =>  ($menu["DonemID"]), 
+            "KurumID" =>  ($menu["KurumID"]), 
+            "proxy" =>  ($menu["serverproxy"]), 
+            "cid" =>  ($menu["cid"]),
+            "did" =>  ($menu["database_id"]),
+            "ip" =>  ($menu["ip"]),
+            "OkulLogo" =>  '', // ($menu["OkulLogo"]) ,
+          //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
+         //   "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
+            "brans" => html_entity_decode($menu["brans"]), 
+            "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
+            "OkulAdiKisa" => html_entity_decode($menu["OkulAdiKisa"]), 
+      //      "okullogoURL" =>  ($menu["okullogoURL"]),  
+                );
+            
+            }
+            
+            if (isset($result[0]['OkulID']) && $result[0]['OkulID'] != "") {
+                $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$result[0]['OkulID'].".png"; 
              }
             if (file_exists($dosya)) {
             $okullogoURL =$dosya ; 
             }
             else {
             
-            if ((isset($result[0]['OkulLogo']))) {
+             if (isset($result[0]['OkulID']) && $result[0]['OkulID'] != "") {
                 $OkulLogo = $result[0]['OkulLogo'];
                 $OkulID = $result[0]['OkulID'];
                 
@@ -2362,15 +2395,15 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT ON;  
              
                 SELECT 
-                    concat(zz.Adi,zz.Soyadi) as adsoyad,
-                    a.OgrenciDevamsizlikID, 
-                    a.DersYiliID,  
-                    a.OgrenciID,
-                    a.DevamsizlikKodID, 
-                    a.DevamsizlikPeriyodID, 
+                    COALESCE(NULLIF(concat(zz.Adi,zz.Soyadi),NULL),'') as adsoyad,
+                    COALESCE(NULLIF(a.OgrenciDevamsizlikID),NULL),'') as OgrenciDevamsizlikID, 
+                    COALESCE(NULLIF(a.DersYiliID),NULL),'') as DersYiliID,  
+                    COALESCE(NULLIF(a.OgrenciID),NULL),'') as OgrenciID,
+                    COALESCE(NULLIF(a.DevamsizlikKodID),NULL),'') as DevamsizlikKodID, 
+                    COALESCE(NULLIF(a.DevamsizlikPeriyodID),NULL),'') as DevamsizlikPeriyodID, 
                     FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
-                    a.Aciklama, 
-                    b.OgrenciseviyeID ,
+                    COALESCE(NULLIF(a.Aciklama),NULL),'') as Aciklama, 
+                    COALESCE(NULLIF(b.OgrenciseviyeID ),NULL),'') as OgrenciseviyeID ,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
                     cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz1,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz2,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz2,
