@@ -990,26 +990,22 @@ class MblLogin extends \DAL\DalSlim {
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
             $errorInfo = $statement->errorInfo();
             $okullogoURL =NULL;
-            $dosya =NULL; 
+            $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul.png"; ; 
             
             $menus = array();
             foreach ($result as $menu){ 
                 if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
                        $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
                     }
-                    if (file_exists($dosya)) {
+                if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
                     else { 
                      if (isset($menu['OkulID']) && $menu['OkulID'] != "") {
                         $OkulLogo = $menu['OkulLogo'];
                         $OkulID = $menu['OkulID']; 
-                        $operationId = $this->getLogo(
-                                    array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
-                        if (\Utill\Dal\Helper::haveRecord($operationId)) {
-                            $okullogoURL = $operationId ['resultSet']['okullogoURL']; 
-                        }  
-                      //  print_r("zzzzzzzzz") ; 
+                        $this->getLogo(array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, )); 
+                        $okullogoURL = $dosya;   
                     } 
                  
                 
@@ -2207,7 +2203,7 @@ class MblLogin extends \DAL\DalSlim {
   
             EXEC xp_cmdshell @command; 
             
-            select 'okul".$OkulID.".png' as okullogoURL , 1 as control; 
+          /*  select 'okul".$OkulID.".png' as okullogoURL , 1 as control; */
 
              ";
 
@@ -2215,7 +2211,8 @@ class MblLogin extends \DAL\DalSlim {
             
           // echo debugPDO($sql, $params);
             $statement->execute();
-            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+         //   $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            
             $errorInfo = $statement->errorInfo();
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
