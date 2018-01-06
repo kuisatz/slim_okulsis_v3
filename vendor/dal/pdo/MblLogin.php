@@ -995,6 +995,15 @@ class MblLogin extends \DAL\DalSlim {
               
             if ((isset($result['OkulLogo']) && $params['OkulLogo'] != "")) {
                 $OkulLogo = $params['OkulLogo'];
+                $OkulID = $params['OkulID'];
+                
+                $operationId = $this->getLogo(
+                            array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
+                if (\Utill\Dal\Helper::haveRecord($operationId)) {
+                    $okullogoURL = $operationId ['resultSet'][0]['okullogoURL'];
+                    print_r($okullogoURL) ; 
+                }   
+                
               //  print_r("zzzzzzzzz") ; 
             } 
             
@@ -2116,6 +2125,54 @@ class MblLogin extends \DAL\DalSlim {
             $statement = $pdo->prepare($sql);
             $statement->bindValue(':username', $params['username'], \PDO::PARAM_STR);
             $statement->bindValue(':password', $params['password'], \PDO::PARAM_STR);
+          // echo debugPDO($sql, $parameters);
+            $statement->execute();
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {      
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+    
+    /**
+     * 
+     * @author Okan CIRAN
+     * @   local server da image yaratır yolunun dondurur  !!
+     * @version v 1.0  25.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function getLogo($params = array()) {
+        try {  
+            $dbConfigValue = 'pgConnectMobileLocalFactory'; 
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue); 
+            $OkulLogo = '111111111111111111';
+            if ((isset($params['OkulLogo']) && $params['OkulLogo'] != "")) {
+                $OkulLogo = $params['OkulLogo'];
+            } 
+            $OkulID = '';
+            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
+                $OkulID = $params['OkulID'];
+            } 
+            
+            $sql = "   
+
+            DECLARE @command VARCHAR(1000)
+
+            SET @command = \'BCP \"SELECT  top 1 ".$OkulLogo." \" queryout \"C:\xampp\htdocs\okulsis\image\okullogo\okul".$OkulID.".png\" -T -fC:\xampp\htdocs\okulsis\image\okullogo\PP.fmt \'
+ 
+            EXEC xp_cmdshell @command; 
+            
+            select 'okul".$OkulID.".png' as okullogoURL , 1 as control; 
+
+             ";
+
+            $statement = $pdo->prepare($sql);
+            
           // echo debugPDO($sql, $parameters);
             $statement->execute();
             $result = $statement->fetchAll(\PDO::FETCH_ASSOC);

@@ -33,7 +33,8 @@ class config {
             'invokables' => array(
                 'test' => 'Utill\BLL\Test\Test'
             ),
-            'factories' => [
+            'factories' => [ 
+                'pgConnectMobileLocalFactory' => 'Services\Database\Postgresql\PostgreSQLConnectPDOMobileLocal',
                 'pgConnectFactory' => 'Services\Database\Postgresql\PostgreSQLConnectPDO',
                 'pgConnectLogFactory' => 'Services\Database\Postgresql\PostgreSQLConnectLogPDO',
                 'filterDefault' => 'Services\Filter\FilterDefault',
