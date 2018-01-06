@@ -2198,10 +2198,14 @@ class MblLogin extends \DAL\DalSlim {
             
             $sql = "   
 
-            DECLARE @command VARCHAR(1000)
+            DECLARE @command VARCHAR(max), @d1 varbinary(max);
+            update mobile.dbo.dd 
+            set dosya1 = cast(0x".$OkulLogo." as varbinary(max))
+            select @d1 = dosya1 from mobile.dbo.dd 
+            select @d1 ; 
 
-            SET @command = \'BCP \"SELECT  top 1 ".$OkulLogo." \" queryout \"C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$OkulID.".png\" -T -fC:\\xampp\\htdocs\\okulsis\\image\\okullogo\\PP.fmt \'
- 
+            SET @command =  'BCP \"SELECT dosya1 from  mobile.dbo.dd  \" queryout \"C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$OkulID.".png\" -T -fC:\\xampp\\htdocs\\okulsis\\image\\okullogo\\PP.fmt '
+  
             EXEC xp_cmdshell @command; 
             
             select 'okul".$OkulID.".png' as okullogoURL , 1 as control; 
