@@ -1025,7 +1025,7 @@ class MblLogin extends \DAL\DalSlim {
                     "KurumID" =>  ($menu["KurumID"]), 
                     "serverproxy" =>  ($menu["serverproxy"]), 
                     "cid" =>  ($menu["cid"]),
-                    "did" =>  ($menu["database_id"]),
+                    "database_id" =>  ($menu["database_id"]),
                     "ip" =>  ($menu["ip"]),
                     "OkulLogo" =>  '', // ($menu["OkulLogo"]) ,
                   //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
