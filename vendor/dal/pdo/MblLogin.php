@@ -993,60 +993,55 @@ class MblLogin extends \DAL\DalSlim {
             $dosya =NULL; 
             
             $menus = array();
-            foreach ($result as $menu){
-                
-                
-                
+            foreach ($result as $menu){ 
                 $menus[]  = array( 
-                     "OkulKullaniciID" => $menu["OkulKullaniciID"],
-            "OkulID" => $menu["OkulID"],
-            "KisiID" => $menu["KisiID"],
-            "RolID" =>  ($menu["RolID"]),
-            "OkulAdi" => html_entity_decode($menu["OkulAdi"]), 
-            "MEBKodu" => html_entity_decode($menu["MEBKodu"]), 
-            "ePosta" => html_entity_decode($menu["ePosta"]),
-            "DersYiliID" =>  ($menu["DersYiliID"]),
-            "EgitimYilID" =>  ($menu["EgitimYilID"]),
-            "EgitimYili" =>  ($menu["EgitimYili"]), 
-            "DonemID" =>  ($menu["DonemID"]), 
-            "KurumID" =>  ($menu["KurumID"]), 
-            "proxy" =>  ($menu["serverproxy"]), 
-            "cid" =>  ($menu["cid"]),
-            "did" =>  ($menu["database_id"]),
-            "ip" =>  ($menu["ip"]),
-            "OkulLogo" =>  '', // ($menu["OkulLogo"]) ,
-          //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
-         //   "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
-            "brans" => html_entity_decode($menu["brans"]), 
-            "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
-            "OkulAdiKisa" => html_entity_decode($menu["OkulAdiKisa"]), 
-      //      "okullogoURL" =>  ($menu["okullogoURL"]),  
-                );
+                    "OkulKullaniciID" => $menu["OkulKullaniciID"],
+                    "OkulID" => $menu["OkulID"],
+                    "KisiID" => $menu["KisiID"],
+                    "RolID" =>  ($menu["RolID"]),
+                    "OkulAdi" => html_entity_decode($menu["OkulAdi"]), 
+                    "MEBKodu" => html_entity_decode($menu["MEBKodu"]), 
+                    "ePosta" => html_entity_decode($menu["ePosta"]),
+                    "DersYiliID" =>  ($menu["DersYiliID"]),
+                    "EgitimYilID" =>  ($menu["EgitimYilID"]),
+                    "EgitimYili" =>  ($menu["EgitimYili"]), 
+                    "DonemID" =>  ($menu["DonemID"]), 
+                    "KurumID" =>  ($menu["KurumID"]), 
+                    "proxy" =>  ($menu["serverproxy"]), 
+                    "cid" =>  ($menu["cid"]),
+                    "did" =>  ($menu["database_id"]),
+                    "ip" =>  ($menu["ip"]),
+                    "OkulLogo" =>  '', // ($menu["OkulLogo"]) ,
+                  //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
+                 //   "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
+                    "brans" => html_entity_decode($menu["brans"]), 
+                    "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
+                    "OkulAdiKisa" => html_entity_decode($menu["OkulAdiKisa"]), 
+              //      "okullogoURL" =>  ($menu["okullogoURL"]),  
+                    );
+                    if (isset($result[0]['OkulID']) && $result[0]['OkulID'] != "") {
+                       $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$result[0]['OkulID'].".png"; 
+                    }
+                    if (file_exists($dosya)) {
+                    $okullogoURL =$dosya ; 
+                    }
+                    else { 
+                     if (isset($result[0]['OkulID']) && $result[0]['OkulID'] != "") {
+                        $OkulLogo = $result[0]['OkulLogo'];
+                        $OkulID = $result[0]['OkulID']; 
+                        $operationId = $this->getLogo(
+                                    array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
+                        if (\Utill\Dal\Helper::haveRecord($operationId)) {
+                            $okullogoURL = $operationId ['resultSet']['okullogoURL']; 
+                        }  
+                      //  print_r("zzzzzzzzz") ; 
+                    } 
+
+                }
+            
+               
             
             }
-            
-            if (isset($result[0]['OkulID']) && $result[0]['OkulID'] != "") {
-                $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$result[0]['OkulID'].".png"; 
-             }
-            if (file_exists($dosya)) {
-            $okullogoURL =$dosya ; 
-            }
-            else {
-            
-             if (isset($result[0]['OkulID']) && $result[0]['OkulID'] != "") {
-                $OkulLogo = $result[0]['OkulLogo'];
-                $OkulID = $result[0]['OkulID'];
-                
-                $operationId = $this->getLogo(
-                            array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
-                if (\Utill\Dal\Helper::haveRecord($operationId)) {
-                    $okullogoURL = $operationId ['resultSet']['okullogoURL']; 
-                }   
-                
-              //  print_r("zzzzzzzzz") ; 
-            } 
-            
-          }
          //  print_r($okullogoURL) ;    
             
        // print_r($result );
