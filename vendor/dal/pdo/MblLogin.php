@@ -7887,7 +7887,6 @@ class MblLogin extends \DAL\DalSlim {
             if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
                 $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID'];
             }   
-           
             $DonemID = 1;
             if ((isset($params['DonemID']) && $params['DonemID'] != "")) {
                 $DonemID = $params['DonemID'];
@@ -7906,6 +7905,8 @@ class MblLogin extends \DAL\DalSlim {
                     Adi ,
                     Soyadi ,
                     (Adi + ' ' + Soyadi) AS AdiSoyadi ,
+                    gg.TCKimlikNo, 
+                    ss.SinifKodu,
                     DersKodu ,
                     DersAdi ,
                     DonemID ,
@@ -8052,6 +8053,8 @@ class MblLogin extends \DAL\DalSlim {
                         AgirlikliYilsonuPuani ,
                         PBYCOrtalama, 
                         DersSabitID,
+                        gg.TCKimlikNo, 
+                        ss.SinifKodu,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",1))  AS K1,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",2)) AS K2,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",3)) AS K3,
@@ -8082,6 +8085,8 @@ class MblLogin extends \DAL\DalSlim {
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",45)) AS K45
             
                 FROM ".$dbnamex."OgrenciDersNotBilgileri_Donem".$DonemID." ODNB
+                INNER JOIN ".$dbnamex."GNL_Kisiler gg on gg.KisiID = ODNB.OgrenciID   
+                INNER JOIN ".$dbnamex."GNL_Siniflar ss on ss.SinifID = ODNB.SinifID 
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDersGruplari ODG ON ODG.OgrenciDersID = ODNB.OgrenciDersID
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDersGrupTanimlari ODGT ON ODGT.OgrenciDersGrupTanimID=ODG.OgrenciDersGrupTanimID AND ODG.OgrenciDersID = ODNB.OgrenciDersID
                 WHERE isPuanNotGirilsin = 1
