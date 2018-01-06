@@ -31,7 +31,7 @@ class PostgreSQLConnectPDOMobileLocal implements \Zend\ServiceManager\FactoryInt
            */
               $pdo = new \PDO("sqlsrv:Server=.;Database=mobile", 
                             "sa", 
-                            "12345678oki"
+                            "12345678Oki."
                             );
      
             return $pdo;
