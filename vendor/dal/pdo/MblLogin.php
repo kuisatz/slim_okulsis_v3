@@ -994,16 +994,16 @@ class MblLogin extends \DAL\DalSlim {
             
             $menus = array();
             foreach ($result as $menu){ 
-                if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
+                if (isset($menu[0]["OkulID"]) && $menu[0]['OkulID'] != "") {
                        $dosya = "C:/xampp/htdocs/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
                     }
                     if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
                     else { 
-                     if (isset($menu['OkulID']) && $menu['OkulID'] != "") {
-                        $OkulLogo = $menu['OkulLogo'];
-                        $OkulID = $menu['OkulID']; 
+                     if (isset($menu[0]['OkulID']) && $menu[0]['OkulID'] != "") {
+                        $OkulLogo = $menu[0]['OkulLogo'];
+                        $OkulID = $menu[0]['OkulID']; 
                         $operationId = $this->getLogo(
                                     array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, ));
                         if (\Utill\Dal\Helper::haveRecord($operationId)) {
@@ -1014,28 +1014,28 @@ class MblLogin extends \DAL\DalSlim {
                  
                 
                 $menus[]  = array( 
-                    "OkulKullaniciID" => $menu["OkulKullaniciID"],
-                    "OkulID" => $menu["OkulID"],
-                    "KisiID" => $menu["KisiID"],
-                    "RolID" =>  ($menu["RolID"]),
-                    "OkulAdi" =>  ($menu["OkulAdi"]), 
-                    "MEBKodu" =>  ($menu["MEBKodu"]), 
-                    "ePosta" =>  ($menu["ePosta"]),
-                    "DersYiliID" =>  ($menu["DersYiliID"]),
-                    "EgitimYilID" =>  ($menu["EgitimYilID"]),
-                    "EgitimYili" =>  ($menu["EgitimYili"]), 
-                    "DonemID" =>  ($menu["DonemID"]), 
-                    "KurumID" =>  ($menu["KurumID"]), 
-                    "proxy" =>  ($menu["serverproxy"]), 
-                    "cid" =>  ($menu["cid"]),
-                    "did" =>  ($menu["database_id"]),
-                    "ip" =>  ($menu["ip"]),
+                    "OkulKullaniciID" => $menu[0]["OkulKullaniciID"],
+                    "OkulID" => $menu[0]["OkulID"],
+                    "KisiID" => $menu[0]["KisiID"],
+                    "RolID" =>  ($menu[0]["RolID"]),
+                    "OkulAdi" =>  ($menu[0]["OkulAdi"]), 
+                    "MEBKodu" =>  ($menu[0]["MEBKodu"]), 
+                    "ePosta" =>  ($menu[0]["ePosta"]),
+                    "DersYiliID" =>  ($menu[0]["DersYiliID"]),
+                    "EgitimYilID" =>  ($menu[0]["EgitimYilID"]),
+                    "EgitimYili" =>  ($menu[0]["EgitimYili"]), 
+                    "DonemID" =>  ($menu[0]["DonemID"]), 
+                    "KurumID" =>  ($menu[0]["KurumID"]), 
+                    "proxy" =>  ($menu[0]["serverproxy"]), 
+                    "cid" =>  ($menu[0]["cid"]),
+                    "did" =>  ($menu[0]["database_id"]),
+                    "ip" =>  ($menu[0]["ip"]),
                     "OkulLogo" =>  '', // ($menu["OkulLogo"]) ,
                   //   "OkulLogo" => base64_encode( ($menu["OkulLogo"])),
                  //   "OkulLogo1" =>  '<img src="data:image/png;base64,='.base64_encode( ($menu["OkulLogo"])),
-                    "brans" =>  ($menu["brans"]), 
-                    "defaultFotoURL" =>  ($menu["defaultFotoURL"]),
-                    "OkulAdiKisa" =>  ($menu["OkulAdiKisa"]), 
+                    "brans" =>  ($menu[0]["brans"]), 
+                    "defaultFotoURL" =>  ($menu[0]["defaultFotoURL"]),
+                    "OkulAdiKisa" =>  ($menu[0]["OkulAdiKisa"]), 
                     "okullogoURL" =>  $okullogoURL,  
                     );
                     
@@ -1065,7 +1065,7 @@ class MblLogin extends \DAL\DalSlim {
    //    echo '<img src="data:image/png;base64,'.base64_encode($result [1]['OkulLogo']).'" alt="My image alt" />'.$fresim;
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
-            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result, "okullogoURL" => $okullogoURL);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result, );
         } catch (\PDOException $e /* Exception $e */) {    
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
