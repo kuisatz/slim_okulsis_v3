@@ -3320,6 +3320,7 @@ class MblLogin extends \DAL\DalSlim {
                         SNV.KitapcikTurID,
                         SNV.SinavKodu,
                         SNV.SinavAciklamasi, 
+                        SNV.SinavTarihi as  SinavTarihiorder,
                         FORMAT(SNV.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
                         FORMAT(SNV.SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi,
                         SNV.SinavSuresi, 
@@ -3352,6 +3353,7 @@ class MblLogin extends \DAL\DalSlim {
                         SNV.KitapcikTurID,
                         SNV.SinavKodu,
                         SNV.SinavAciklamasi, 
+                        SNV.SinavTarihi as  SinavTarihiorder,
                         FORMAT(SNV.SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi,
                         FORMAT(SNV.SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi, 
                         SNV.SinavSuresi, 
@@ -3372,7 +3374,7 @@ class MblLogin extends \DAL\DalSlim {
                         AND SNV.isAltKurumHidden = 0
                         AND SNV.isOgrenciVeliSinavVisible = 1    
  
-                ) as ssss  ORDER BY  SinavTarihi DESC  
+                ) as ssss  ORDER BY ssss.SinavTarihiorder  DESC  
                 
                 SET NOCOUNT OFF;  
  
