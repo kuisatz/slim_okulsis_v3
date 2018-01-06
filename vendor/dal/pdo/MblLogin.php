@@ -910,7 +910,7 @@ class MblLogin extends \DAL\DalSlim {
                 SET NOCOUNT OFF;
 
         SET NOCOUNT ON;
-            SELECT ssddsdsdsd.*,logo.OkulLogo , ROW_NUMBER() OVER(ORDER BY KisiID) AS rowID  from (
+            SELECT ssddsdsdsd.*,logo.OkulLogo , ROW_NUMBER() OVER(ORDER BY KisiID) AS rowID  from ( 
                 SELECT
                     null AS OkulKullaniciID,
                     null AS OkulID,
