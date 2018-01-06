@@ -1013,7 +1013,7 @@ class MblLogin extends \DAL\DalSlim {
             } 
             
           }
-           print_r($okullogoURL) ;    
+         //  print_r($okullogoURL) ;    
             
        // print_r($result );
  //$imgData="data:image/png;base64,{{base64_encode(".$result[1]['OkulLogo'].")}}" ;
@@ -1033,7 +1033,7 @@ class MblLogin extends \DAL\DalSlim {
    //    echo '<img src="data:image/png;base64,'.base64_encode($result [1]['OkulLogo']).'" alt="My image alt" />'.$fresim;
             if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
                 throw new \PDOException($errorInfo[0]);
-            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result, "okullogoURL" => $okullogoURL);
         } catch (\PDOException $e /* Exception $e */) {    
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
