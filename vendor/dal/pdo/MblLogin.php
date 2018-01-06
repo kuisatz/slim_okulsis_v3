@@ -992,12 +992,12 @@ class MblLogin extends \DAL\DalSlim {
             $errorInfo = $statement->errorInfo();
             $okullogoURL =NULL;
             $dosya = NULL; 
-            $dosya1 = "/okulsis/image/okulsis/image/okullogo/okul.png";  
+            $dosya1 = "okulsis/image/okullogo/okul.png";  
             
             $menus = array();
             foreach ($result as $menu){    
                 if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
-                       $dosya = "/okulsis/image/okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
+                       $dosya = "okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
                     } 
                 if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
