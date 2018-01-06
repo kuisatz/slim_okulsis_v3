@@ -248,7 +248,8 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
             
         );
          header("Content-type: image/jpg");
-         '<img src="data:image/jpg;base64,='.base64_encode( ($menu["OkulLogo"]));
+         $decoded_image=base64_decode($menu["OkulLogo"]);
+         echo $decoded_image;
           
     }
     
