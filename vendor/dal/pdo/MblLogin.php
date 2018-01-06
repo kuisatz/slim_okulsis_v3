@@ -993,9 +993,9 @@ class MblLogin extends \DAL\DalSlim {
             
             
               
-             if ((isset($result['OkulLogo']) && $params['OkulLogo'] != "")) {
+            if ((isset($result['OkulLogo']) && $params['OkulLogo'] != "")) {
                 $OkulLogo = $params['OkulLogo'];
-                print_r("zzzzzzzzz") ; 
+              //  print_r("zzzzzzzzz") ; 
             } 
             
             
