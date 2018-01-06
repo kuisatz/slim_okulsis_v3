@@ -254,7 +254,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
           
     }
      header("Content-type:image/jpeg;");
-     echo $decoded_image
+     echo $decoded_image ; 
      
     $app->response()->header("Content-Type", "application/json"); 
     $app->response()->body(json_encode($menus)); 
