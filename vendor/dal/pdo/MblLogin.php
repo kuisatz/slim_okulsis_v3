@@ -1001,14 +1001,14 @@ class MblLogin extends \DAL\DalSlim {
                 if (file_exists($dosya)) {
                     $okullogoURL =$dosya ; 
                     }
-                    else { print_r("222222222222") ;  
+                    else {  
                      if (isset($menu['OkulID']) && $menu['OkulID'] != "") {
                         $OkulLogo = $menu['OkulLogo'];
                         $OkulID = $menu['OkulID']; 
                         $this->getLogo(array( 'OkulLogo' =>$OkulLogo, 'OkulID' => $OkulID, )); 
                         $okullogoURL = $dosya;   
                     } 
-                 print_r("3333333333") ;  
+                    }
                 
                 $menus[]  = array( 
                     "OkulKullaniciID" => $menu["OkulKullaniciID"],
@@ -1035,11 +1035,8 @@ class MblLogin extends \DAL\DalSlim {
                     "OkulAdiKisa" =>  ($menu["OkulAdiKisa"]), 
                     "okullogoURL" =>  $okullogoURL,  
                     );
-                    $dosya = NULL; 
-
-                }
-            
-               
+                      
+                
             
             }
          print_r($menus) ;    
