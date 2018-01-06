@@ -220,6 +220,7 @@ $app->get("/mobilfirstdata_mbllogin/", function () use ($app ) {
                 'ip'=> $ip,
         )); 
  
+        print_r($resDataInsert) ; 
     $menus = array();
     foreach ($resDataInsert as $menu){
         $menus[]  = array(
