@@ -5604,7 +5604,7 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."GNL_DersHavuzlari AS DH ON DH.DersHavuzuID = SD.DersHavuzuID 
                                     INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = DH.DersYiliID 
                                     INNER JOIN ".$dbnamex."GNL_Dersler AS D ON D.DersID = DH.DersID 
-                                    WHERE OO.OgrenciID = '".$KisiID."' AND DY.EgitimYilID = cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) 
+                                    WHERE OO.OgrenciID = '".$KisiID."' AND cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) 
                                                 and OO.OgrenciGordu = 0) 
 
                         else NULL end as adet
@@ -5694,7 +5694,7 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."GNL_DersHavuzlari AS DH ON DH.DersHavuzuID = SD.DersHavuzuID 
                                     INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = DH.DersYiliID 
                                     INNER JOIN ".$dbnamex."GNL_Dersler AS D ON D.DersID = DH.DersID 
-                                    WHERE OO.OgrenciID = '".$KisiID."' AND DY.EgitimYilID = cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) 
+                                    WHERE OO.OgrenciID = '".$KisiID."' AND  cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) 
                                                 and OO.OgrenciGordu = 0) 
                         else NULL end as adet 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
