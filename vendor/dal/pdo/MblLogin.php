@@ -3340,7 +3340,8 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE 
                         SNV.OkulID = @OkulID AND 
                         SNV.EgitimYilID = @EgitimYilID AND 
-                        SNV.isOgrenciVeliSinavVisible  =1  
+                        SNV.isOgrenciVeliSinavVisible  =1  AND
+                        cast(getdate() AS date)  <= SNV.SinavTarihi 
                     
                     UNION 
 
