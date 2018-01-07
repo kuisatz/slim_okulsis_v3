@@ -5406,7 +5406,7 @@ $app->get("/OgrenciOdeviGordu_mbllogin/", function () use ($app ) {
         $vCid = $stripper->offsetGet('cid')->getFilterValue();
     }
     if ($stripper->offsetExists('ogrenciOdevID')) 
-        {$vSinifDersID = $stripper->offsetGet('ogrenciOdevID')->getFilterValue();         
+        {$vOgrenciOdevID = $stripper->offsetGet('ogrenciOdevID')->getFilterValue();         
     }   
     
     $resDataInsert = $BLL->ogrenciOdeviGordu(array(
