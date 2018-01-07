@@ -3896,6 +3896,9 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
             "Donem_PuanOrtalamasi" =>  ($menu["Donem_PuanOrtalamasi"]),
             "AgirlikliYilSonuNotu" =>  ($menu["DonemPuanAgirliklariToplami"]),
             "AgirlikliYilsonuPuani" =>  ($menu["DonemPuanAgirliklariOrtalamasi"]), 
+            "YilSonuPuanAgirliklariToplami" =>  ($menu["YilSonuPuanAgirliklariToplami"]), 
+            "YilSonuPuanAgirliklariOrtalamasi" =>  ($menu["YilSonuPuanAgirliklariOrtalamasi"]), 
+            
   
         );
     }
