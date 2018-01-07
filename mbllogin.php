@@ -3891,11 +3891,12 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
             
             "OdevAldi" =>  ($menu["OdevAldi"]),
             "ProjeAldi" =>  ($menu["ProjeAldi"]),
+            "ProjeAldi" =>  ($menu["ProjeAldi"]),
             
             
             "Donem_PuanOrtalamasi" =>  ($menu["Donem_PuanOrtalamasi"]),
-          //  "Donem1_PuanOrtalamasi" =>  ($menu["Donem1_PuanOrtalamasi"]),
-         //   "Donem2_PuanOrtalamasi" =>  ($menu["Donem2_PuanOrtalamasi"]),
+            "AgirlikliYilSonuNotu" =>  ($menu["AgirlikliYilSonuNotu"]),
+            "AgirlikliYilsonuPuani" =>  ($menu["AgirlikliYilsonuPuani"]),
             
         
   
