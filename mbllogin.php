@@ -3893,12 +3893,16 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
             "ProjeAldi" =>  ($menu["ProjeAldi"]),
             "ProjeAldi" =>  ($menu["ProjeAldi"]), 
             
-            "Donem_PuanOrtalamasi" =>  ($menu["Donem_PuanOrtalamasi"]),
-            "AgirlikliYilSonuNotu" =>  ($menu["DonemPuanAgirliklariToplami"]),
-            "AgirlikliYilsonuPuani" =>  ($menu["DonemPuanAgirliklariOrtalamasi"]), 
-            "YilSonuPuanAgirliklariToplami" =>  ($menu["YilSonuPuanAgirliklariToplami"]), 
-            "YilSonuPuanAgirliklariOrtalamasi" =>  ($menu["YilSonuPuanAgirliklariOrtalamasi"]), 
+            "Donem_PuanOrtalamasi" =>  ($menu["Donem1_PuanOrtalamasi"]),
             
+            "Donem1PuanAgirliklariToplami" =>  ($menu["Donem1PuanAgirliklariToplami"]),
+            "Donem2PuanAgirliklariToplami" =>  ($menu["Donem2PuanAgirliklariToplami"]),
+            
+            "Donem1PuanAgirliklariOrtalamasi" =>  ($menu["Donem1PuanAgirliklariOrtalamasi"]), 
+            "Donem2PuanAgirliklariOrtalamasi" =>  ($menu["Donem2PuanAgirliklariOrtalamasi"]),  
+            
+            "YilSonuPuanAgirliklariToplami" =>  ($menu["YilSonuPuanAgirliklariToplami"]), 
+            "YilSonuPuanAgirliklariOrtalamasi" =>  ($menu["YilSonuPuanAgirliklariOrtalamasi"]),  
   
         );
     }
