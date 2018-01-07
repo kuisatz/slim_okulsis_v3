@@ -5590,7 +5590,23 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID  AND OS.OgrenciID = '".$KisiID."'
                                     WHERE
                                         SNV.isAltKurumHidden = 0 AND SNV.isOgrenciVeliSinavVisible =1 AND getdate() <= SNV.SinavTarihi
-                                    ) as dasdasd)
+                                    ) as dasdasd) 
+                            when 'odevler/ogrenci.html' then (
+                                    SELECT 
+                                        count( OO.OgrenciOdevID ) as adet 
+                                    FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
+                                    INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
+                                    INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
+                                    INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
+                                    INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID 
+                                    INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID AND OT.OgretmenID = SO.OgretmenID 
+                                    INNER JOIN ".$dbnamex."GNL_Siniflar AS S ON S.SinifID = SD.SinifID 
+                                    INNER JOIN ".$dbnamex."GNL_DersHavuzlari AS DH ON DH.DersHavuzuID = SD.DersHavuzuID 
+                                    INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = DH.DersYiliID 
+                                    INNER JOIN ".$dbnamex."GNL_Dersler AS D ON D.DersID = DH.DersID 
+                                    WHERE OO.OgrenciID = '".$KisiID."' AND DY.EgitimYilID = cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) 
+                                                and OO.OgrenciGordu = 0) 
+
                         else NULL end as adet
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
@@ -5665,6 +5681,21 @@ class MblLogin extends \DAL\DalSlim {
                                      	SNV.isOgrenciVeliSinavVisible =1 AND
                                         getdate() <= SNV.SinavTarihi
                                     ) as dasdasd)
+                                      when 'odevler/ogrenci.html' then (
+                                    SELECT 
+                                        count( OO.OgrenciOdevID ) as adet 
+                                    FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
+                                    INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
+                                    INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
+                                    INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
+                                    INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID 
+                                    INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID AND OT.OgretmenID = SO.OgretmenID 
+                                    INNER JOIN ".$dbnamex."GNL_Siniflar AS S ON S.SinifID = SD.SinifID 
+                                    INNER JOIN ".$dbnamex."GNL_DersHavuzlari AS DH ON DH.DersHavuzuID = SD.DersHavuzuID 
+                                    INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = DH.DersYiliID 
+                                    INNER JOIN ".$dbnamex."GNL_Dersler AS D ON D.DersID = DH.DersID 
+                                    WHERE OO.OgrenciID = '".$KisiID."' AND DY.EgitimYilID = cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date) 
+                                                and OO.OgrenciGordu = 0) 
                         else NULL end as adet 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
