@@ -5529,7 +5529,7 @@ class MblLogin extends \DAL\DalSlim {
                 collapse,
                 sira,
                 dashboardSira,
-                COALESCE(NULLIF(COALESCE(NULLIF(cast(adet as varchar(5)),NULL),''),'0'),'') as adet
+                COALESCE(NULLIF(COALESCE(NULLIF(cast(adet as varchar(5)),NULL),''),'0'),'0') as adet
                FROM (
                     SELECT
                         a.[ID],
@@ -8027,7 +8027,7 @@ class MblLogin extends \DAL\DalSlim {
                         end DonemPuanAgirliklariToplami , 
                     case ".$DonemID."
                         when 1 then isnull(cast(cast(Donem1PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'')
-                        else  isnull(cast(cast(Donem2PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'')
+                        else isnull(cast(cast(Donem2PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'')
                         end DonemPuanAgirliklariOrtalamasi , 
                     isnull(cast(cast(YilSonuPuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'') AS YilSonuPuanAgirliklariToplami ,
                     isnull(cast(cast(YilSonuPuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'') AS YilSonuPuanAgirliklariOrtalamasi ,
