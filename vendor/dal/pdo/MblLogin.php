@@ -7927,9 +7927,12 @@ class MblLogin extends \DAL\DalSlim {
                     [7] AS Sozlu1 ,
                     [8] AS Sozlu2 ,
                     [9] AS Sozlu3 ,
-                    [10] AS uygulama1 , /* AS Sozlu4*/
-                    [11] AS uygulama2 , /* AS Sozlu5 ,*/
-                    [12] AS uygulama3 , /* AS Sozlu6 ,*/
+                  /*  [10] AS uygulama1 ,  AS Sozlu4
+                    [11] AS uygulama2 ,  AS Sozlu5 ,
+                    [12] AS uygulama3 , AS Sozlu6 ,*/
+                    isnull(cast(cast([10] as numeric(8,2)) as varchar(10)),'') AS uygulama1 , 
+                    isnull(cast(cast([11] as numeric(8,2)) as varchar(10)),'') AS uygulama2 , 
+                    isnull(cast(cast([12] as numeric(8,2)) as varchar(10)),'') AS uygulama3 ,
                     isnull(cast(cast([1] as numeric(8,2)) as varchar(10)),'') AS Yazili1 ,
                     isnull(cast(cast([2] as numeric(8,2)) as varchar(10)),'') AS Yazili2 ,
                     isnull(cast(cast([3] as numeric(8,2)) as varchar(10)),'') AS Yazili3 ,
