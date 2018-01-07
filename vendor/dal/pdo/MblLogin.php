@@ -3374,8 +3374,8 @@ class MblLogin extends \DAL\DalSlim {
                         WHERE SO.OkulID = @OkulID 
                         AND SNV.EgitimYilID = @EgitimYilID
                         AND SNV.isAltKurumHidden = 0
-                        AND SNV.isOgrenciVeliSinavVisible = 1    
- 
+                        AND SNV.isOgrenciVeliSinavVisible = 1 AND 
+                        cast(getdate() AS date)  <= SNV.SinavTarihi
                 ) as ssss  ORDER BY  ssss.YaziliStsSinavDersiDersHavuzuID,  ssss.SinavTarihiorder  DESC  
                 
                 SET NOCOUNT OFF;  
