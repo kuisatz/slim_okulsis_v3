@@ -8011,6 +8011,18 @@ class MblLogin extends \DAL\DalSlim {
                     isPuanNotHesapDahil ,
                     isnull(cast(cast(AgirlikliYilSonuNotu as numeric(8,2)) as varchar(10)),'') AS AgirlikliYilSonuNotu ,
                     isnull(cast(cast(AgirlikliYilsonuPuani as numeric(8,2)) as varchar(10)),'') AS AgirlikliYilsonuPuani ,
+                    isnull(cast(cast(Donem1PuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'') AS Donem1PuanAgirliklariToplami ,
+                    isnull(cast(cast(Donem2PuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'') AS Donem2PuanAgirliklariToplami ,
+                    isnull(cast(cast(Donem1PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'') AS Donem1PuanAgirliklariOrtalamasi ,
+                    isnull(cast(cast(Donem2PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'') AS Donem2PuanAgirliklariOrtalamasi,
+                     case ".$DonemID."
+                        when 1 then isnull(cast(cast(Donem1PuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'') 
+                        else  isnull(cast(cast(Donem2PuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'')
+                        end DonemPuanAgirliklariToplami , 
+                    case ".$DonemID."
+                        when 1 then isnull(cast(cast(Donem1PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'')
+                        else  isnull(cast(cast(Donem2PuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'')
+                        end DonemPuanAgirliklariOrtalamasi , 
                     PBYCOrtalama, 
                     DersSabitID,
                     K1,
@@ -8094,6 +8106,10 @@ class MblLogin extends \DAL\DalSlim {
                         DersSabitID,
                         gg.TCKimlikNo, 
                         ss.SinifKodu,
+                        krm.Donem1PuanAgirliklariToplami,
+                        krm.Donem2PuanAgirliklariToplami,
+                        krm.Donem1PuanAgirliklariOrtalamasi ,
+                        krm.Donem2PuanAgirliklariOrtalamasi ,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",1))  AS K1,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",2)) AS K2,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",3)) AS K3,
@@ -8128,6 +8144,7 @@ class MblLogin extends \DAL\DalSlim {
                 INNER JOIN ".$dbnamex."GNL_Siniflar ss on ss.SinifID = ODNB.SinifID 
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDersGruplari ODG ON ODG.OgrenciDersID = ODNB.OgrenciDersID
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDersGrupTanimlari ODGT ON ODGT.OgrenciDersGrupTanimID=ODG.OgrenciDersGrupTanimID AND ODG.OgrenciDersID = ODNB.OgrenciDersID
+                LEFT JOIN ".$dbnamex."KRM_YilsonuOrtalamalari krm on krm.OgrenciSeviyeID = ODNB.OgrenciSeviyeID
                 WHERE isPuanNotGirilsin = 1
                 ) p PIVOT
                 ( MAX(Puan) FOR SinavTanimID IN (   [1], [2], [3], [4], [5], [6], [7], [8],
