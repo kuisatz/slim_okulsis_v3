@@ -2162,7 +2162,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         */ 
          
         $menus[]  = array(  
-            "OgrenciOdevID" =>   ($menu["OdevTanimID"]), 
+            "OgrenciOdevID" =>   ($menu["OgrenciOdevID"]), 
           //  "OgrenciID" =>   ($menu["OgrenciID"]), 
           // "OdevTanimID" =>   ($menu["OdevTanimID"]),   
             "OgrenciCevap" =>   html_entity_decode($menu["OgrenciCevap"]), 
