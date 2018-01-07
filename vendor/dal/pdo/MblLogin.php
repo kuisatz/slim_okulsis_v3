@@ -5568,7 +5568,7 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = '".$KisiID."' 
                                     INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID
                                     INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
-                                    WHERE '011-11-11' <= SNV.SinavTarihi  ) 
+                                    WHERE '2011-11-11' <= SNV.SinavTarihi  ) 
                             when 'sinav/ogrenci.html' then ( 
                                 SELECT count(distinct SinavID) as adet from (
                                     SELECT SNV.SinavID
