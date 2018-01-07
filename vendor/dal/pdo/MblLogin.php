@@ -5561,14 +5561,14 @@ class MblLogin extends \DAL\DalSlim {
                                         INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID
                                         INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
                                         WHERE OT.OgretmenID = '".$KisiID."' AND getdate() <= TeslimTarihi)
-                            when 'sinav/ogretmenSinavlar.html' then (SELECT 55 as adet   /* count(distinct SNV.SinavID ) */
+                            when 'sinav/ogretmenSinavlar.html' then (SELECT  count(distinct SNV.SinavID ) 
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
                                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
                                     INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
                                     INNER JOIN ".$dbnamex."OGT_OkulOgretmenleri oo ON oo.OgretmenID = '".$KisiID."' 
                                     INNER JOIN ".$dbnamex."SNV_SinavOkullari SO ON SO.SinavID = SNV.SinavID
                                     INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
-                                    WHERE  1 =1 )/* getdate() <= SNV.SinavTarihi )*/ 
+                                    WHERE '011-11-11' <= SNV.SinavTarihi  ) 
                             when 'sinav/ogrenci.html' then ( 
                                 SELECT count(distinct SinavID) as adet from (
                                     SELECT SNV.SinavID
