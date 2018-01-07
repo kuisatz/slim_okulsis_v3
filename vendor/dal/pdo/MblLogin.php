@@ -5547,12 +5547,12 @@ class MblLogin extends \DAL\DalSlim {
                         a.sira,
                         a.dashboardSira,
                         case a.URL
-                            when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                            when 'mesajlar/gelenMesaj.html' then (SELECT top 1 67 as adet  /*count(M.MesajID) as adet */ 
                                         FROM  ".$dbnamex."MSJ_Mesajlar M 
                                         INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
                                         INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' AND MK.Okundu = 0 AND M.Silindi=0 ) 
-                            when 'odevler/ogretmen_new.html' then (SELECT count(distinct OT.OdevTanimID) as adet  
+                            when 'odevler/ogretmen_new.html' then (SELECT top 1 55 as adet  /*count(distinct OT.OdevTanimID) as adet  */  
                                         FROM ".$dbnamex."ODV_OdevTanimlari AS OT
                                         INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID
                                         INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID
@@ -5561,7 +5561,7 @@ class MblLogin extends \DAL\DalSlim {
                                         INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID
                                         INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
                                         WHERE OT.OgretmenID = '".$KisiID."' AND getdate() <= TeslimTarihi)
-                            when 'sinav/ogretmenSinavlar.html' then (SELECT  count(distinct SNV.SinavID ) 
+                            when 'sinav/ogretmenSinavlar.html' then (SELECT  top 1 22 as adet  /* count(distinct SNV.SinavID ) */
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
                                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
                                     INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
@@ -5570,7 +5570,7 @@ class MblLogin extends \DAL\DalSlim {
                                     INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
                                     WHERE '2011-11-11' <= SNV.SinavTarihi  ) 
                             when 'sinav/ogrenci.html' then ( 
-                                SELECT count(distinct SinavID) as adet from (
+                                SELECT top 1 33 as adet  /* count(distinct SinavID) as adet */  from (
                                     SELECT SNV.SinavID
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
                                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
@@ -5593,7 +5593,7 @@ class MblLogin extends \DAL\DalSlim {
                                     ) as dasdasd) 
                             when 'odevler/ogrenci.html' then (
                                     SELECT 
-                                        count( OO.OgrenciOdevID ) as adet 
+                                        top 1 54 as adet  /* count( OO.OgrenciOdevID ) as adet */ 
                                     FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
                                     INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
                                     INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
@@ -5633,12 +5633,12 @@ class MblLogin extends \DAL\DalSlim {
                         a.sira,
                         a.dashboardSira,
                         case a.URL 
-                            when 'mesajlar/gelenMesaj.html' then (SELECT count(M.MesajID) 
+                            when 'mesajlar/gelenMesaj.html' then (SELECT top 1 67 as adet  /* count(M.MesajID)  */ 
                                         FROM ".$dbnamex."MSJ_Mesajlar M 
                                         INNER JOIN ".$dbnamex."MSJ_MesajKutulari MK ON M.MesajID = MK.MesajID  
                                         INNER JOIN ".$dbnamex."GNL_Kisiler K ON M.KisiID = K.KisiID 
                                         WHERE MK.KisiID = '".$KisiID."' AND MK.Okundu = 0 AND M.Silindi=0)
-                            when 'odevler/ogretmen_new.html' then (SELECT count(distinct OT.OdevTanimID) as adet  
+                            when 'odevler/ogretmen_new.html' then (SELECT top 1 88 as adet  /*count(distinct OT.OdevTanimID) as adet */  
                                         FROM ".$dbnamex."ODV_OdevTanimlari AS OT
                                         INNER JOIN ".$dbnamex."GNL_SinifDersleri AS SD ON SD.SinifDersID = OT.SinifDersID
                                         INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri AS SO ON SO.SinifID = SD.SinifID
@@ -5647,7 +5647,7 @@ class MblLogin extends \DAL\DalSlim {
                                         INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID
                                         INNER JOIN ".$dbnamex."GNL_Kisiler AS K ON K.KisiID = OGT.OgretmenID 
                                         WHERE OT.OgretmenID = '".$KisiID."' AND getdate() <= TeslimTarihi)
-                            when 'sinav/ogretmenSinavlar.html' then (SELECT count(distinct SNV.SinavID ) as adet 
+                            when 'sinav/ogretmenSinavlar.html' then (SELECT top 1 33 as adet  /* count(distinct SNV.SinavID ) as adet */ 
                                         FROM ".$dbnamex."SNV_Sinavlar SNV
                                         INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
                                         INNER JOIN ".$dbnamex."GNL_Seviyeler SVY ON SVY.SeviyeID = SNV.SeviyeID 
@@ -5656,7 +5656,7 @@ class MblLogin extends \DAL\DalSlim {
                                         INNER JOIN ".$dbnamex."GNL_OkulKullanicilari OK ON OK.OkulID = SO.OkulID  AND OK.KisiID = '".$KisiID."'
                                         WHERE '2011-11-11' <= SNV.SinavTarihi  ) 
                             when 'sinav/ogrenci.html' then ( 
-                                SELECT count(distinct SinavID) as adet from (
+                                SELECT top 1 23  as adet  /* count(distinct SinavID) as adet */  from (
                                     SELECT  SNV.SinavID
                                     FROM ".$dbnamex."SNV_Sinavlar SNV
                                     INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID = SNV.SinavTurID 
@@ -5683,7 +5683,7 @@ class MblLogin extends \DAL\DalSlim {
                                     ) as dasdasd)
                                       when 'odevler/ogrenci.html' then (
                                     SELECT 
-                                        count( OO.OgrenciOdevID ) as adet 
+                                        top 1 11 as adet  /* count( OO.OgrenciOdevID ) as adet */
                                     FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
                                     INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
                                     INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
