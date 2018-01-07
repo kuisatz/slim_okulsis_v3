@@ -3860,20 +3860,43 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
     $menus = array();
     foreach ($resDataMenu as $menu){
         $menus[]  = array(
-             "DersAdi" => html_entity_decode($menu["DersAdi"]),  
-             "HaftalikDersSaati" => $menu["HaftalikDersSaati"],  
-             "YilSonuPuani" =>  ($menu["YilSonuPuani"]),  
-             "Yazili1" =>  ($menu["Yazili1"]),
-             "Yazili2" =>  ($menu["Yazili2"]),
-             "Yazili3" =>  ($menu["Yazili3"]),
-             "Yazili4" =>  ($menu["Yazili4"]), 
-             "Yazili5" =>  ($menu["Yazili5"]),
+            "DersAdi" => html_entity_decode($menu["DersAdi"]),  
+            "HaftalikDersSaati" => $menu["HaftalikDersSaati"],  
+            "YilSonuPuani" =>  ($menu["YilSonuPuani"]),  
             
-             "Sozlu1" =>  ($menu["Sozlu1"]),
-             "Sozlu2" =>  ($menu["Sozlu2"]),
-             "Sozlu3" =>  ($menu["Sozlu3"]),
-             "Odev1" =>  ($menu["Odev1"]), 
-             "Odev2" =>  ($menu["Odev2"]),
+            "Yazili1" =>  ($menu["Yazili1"]),
+            "Yazili2" =>  ($menu["Yazili2"]),
+            "Yazili3" =>  ($menu["Yazili3"]),
+            "Yazili4" =>  ($menu["Yazili4"]), 
+            "Yazili5" =>  ($menu["Yazili5"]),
+
+            "Sozlu1" =>  ($menu["Sozlu1"]),
+            "Sozlu2" =>  ($menu["Sozlu2"]),
+            "Sozlu3" =>  ($menu["Sozlu3"]),
+            
+            "Odev1" =>  ($menu["Odev1"]), 
+            "Odev2" =>  ($menu["Odev2"]),
+            "Odev3" =>  ($menu["Odev3"]),
+            
+            "Proje1" =>  ($menu["Proje1"]),
+            "Proje2" =>  ($menu["Proje3"]),  
+            "Proje3" =>  ($menu["Proje3"]),
+            
+            "Perf1" =>  ($menu["Perf1"]),
+            "Perf2" =>  ($menu["Perf2"]),
+            "Perf3" =>  ($menu["Perf3"]),
+         //   "Perf4" =>  ($menu["Perf4"]),
+         //   "Perf5" =>  ($menu["Perf5"]),
+            
+            "OdevAldi" =>  ($menu["OdevAldi"]),
+            "ProjeAldi" =>  ($menu["ProjeAldi"]),
+            
+            
+            "Donem_PuanOrtalamasi" =>  ($menu["Donem_PuanOrtalamasi"]),
+          //  "Donem1_PuanOrtalamasi" =>  ($menu["Donem1_PuanOrtalamasi"]),
+         //   "Donem2_PuanOrtalamasi" =>  ($menu["Donem2_PuanOrtalamasi"]),
+            
+        
   
         );
     }

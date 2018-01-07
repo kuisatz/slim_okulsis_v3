@@ -7920,12 +7920,16 @@ class MblLogin extends \DAL\DalSlim {
                     isnull(cast(cast(YilSonuNotu as numeric(8,2)) as varchar(10)),'') AS YilSonuNotu ,  
                     isnull(cast(cast(YilSonuPuani as numeric(8,2)) as varchar(10)),'') AS YilSonuPuani ,  
                     isnull(cast(cast(YilsonuToplamAgirligi as numeric(8,2)) as varchar(10)),'') AS YilsonuToplamAgirligi , 
+                    case ".$DonemID."
+                        when 1 then isnull(cast(cast(Donem1_PuanOrtalamasi as numeric(8,2)) as varchar(10)),'') 
+                        else  isnull(cast(cast(Donem2_PuanOrtalamasi as numeric(8,2)) as varchar(10)),'')
+                        end Donem_PuanOrtalamasi , 
                     [7] AS Sozlu1 ,
                     [8] AS Sozlu2 ,
                     [9] AS Sozlu3 ,
-                    [10] AS Sozlu4 ,
-                    [11] AS Sozlu5 ,
-                    [12] AS Sozlu6 ,
+                    [10] AS uygulama1 , /* AS Sozlu4*/
+                    [11] AS uygulama2 , /* AS Sozlu5 ,*/
+                    [12] AS uygulama3 , /* AS Sozlu6 ,*/
                     isnull(cast(cast([1] as numeric(8,2)) as varchar(10)),'') AS Yazili1 ,
                     isnull(cast(cast([2] as numeric(8,2)) as varchar(10)),'') AS Yazili2 ,
                     isnull(cast(cast([3] as numeric(8,2)) as varchar(10)),'') AS Yazili3 ,
@@ -7949,8 +7953,8 @@ class MblLogin extends \DAL\DalSlim {
                     isnull(cast(cast([43] as numeric(8,2)) as varchar(10)),'') AS Perf3Odev ,
                     isnull(cast(cast([44] as numeric(8,2)) as varchar(10)),'') AS Perf4Odev ,
                     isnull(cast(cast([45] as numeric(8,2)) as varchar(10)),'') AS Perf5Odev ,
-                    OdevAldi ,
-                    ProjeAldi ,
+                    isnull(cast(cast(OdevAldi as bit) as varchar(1)),'0') AS OdevAldi , 
+                    isnull(cast(cast(ProjeAldi as bit) as varchar(1)),'0') AS ProjeAldi ,
                     OgrenciDersID ,
                     OgrenciDonemNotID ,  
                     PuanOrtalamasi ,
