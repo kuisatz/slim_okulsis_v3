@@ -9601,7 +9601,7 @@ class MblLogin extends \DAL\DalSlim {
             SET NOCOUNT OFF;   
                 "; 
             $statement = $pdo->prepare($sql); 
-             echo debugPDO($sql, $params);
+           //  echo debugPDO($sql, $params);
             $result = $statement->execute();
              $insertID =1;
             $errorInfo = $statement->errorInfo(); 
