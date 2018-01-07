@@ -3871,9 +3871,9 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
             "Yazili5" =>  ($menu["Yazili5"]),
             "Yazili6" =>  ($menu["Yazili6"]),
 
-            "Sozlu1" =>  ($menu["Sozlu1"]),
-            "Sozlu2" =>  ($menu["Sozlu2"]),
-            "Sozlu3" =>  ($menu["Sozlu3"]),
+            "uygulama1" =>  ($menu["uygulama1"]),
+            "uygulama2" =>  ($menu["uygulama2"]),
+            "uygulama3" =>  ($menu["uygulama3"]),
             
             "Odev1" =>  ($menu["Odev1"]), 
             "Odev2" =>  ($menu["Odev2"]),
