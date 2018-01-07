@@ -4659,8 +4659,7 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = DH.DersYiliID 
             INNER JOIN ".$dbnamex."GNL_Dersler AS D ON D.DersID = DH.DersID 
             WHERE OO.OgrenciID = '".$OgrenciID."' AND DY.EgitimYilID = ".intval($EgitimYilID)."
-            ORDER BY Tarih DESC
- 
+            ORDER BY OT.Tarih DESC 
                    
             SET NOCOUNT OFF;   
                  "; 
