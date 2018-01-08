@@ -2669,6 +2669,7 @@ class MblLogin extends \DAL\DalSlim {
              
             $sql = "  
              SET NOCOUNT ON; 
+             SELECT * FROM ( 
                 SELECT 
                     NULL AS OgrenciSeviyeID, 
                     NULL AS OgrenciID, 
@@ -2750,7 +2751,8 @@ class MblLogin extends \DAL\DalSlim {
                     WHERE  
                             GOS.SinifID = '".$SinifID."' AND
                             GOS.OgrenciArsivTurID = 1; 
-
+                        )  as asdasdasd
+                    order by [Numarasi]
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
