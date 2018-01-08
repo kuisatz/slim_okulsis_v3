@@ -8755,7 +8755,7 @@ class MblLogin extends \DAL\DalSlim {
                 OKR.RolID = ".$SendrolID."  
                     ) as sssss 
             ORDER BY 
-               ID , aciklama ;
+               aciklama ;
  
             SET NOCOUNT OFF;   
                  "; 
