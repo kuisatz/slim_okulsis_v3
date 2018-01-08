@@ -2713,7 +2713,7 @@ class MblLogin extends \DAL\DalSlim {
                     ".$dbnamex."FNC_GNL_AdayKayitUcretOdendiMi(GOS.[OgrenciID],DY.DersYiliID) AS OdendiMi,  	
                     S.[SeviyeID] ,
                     ff.Fotograf,
-                    concat(KISI.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS  , ' ', KISI.[Soyadi]  collate SQL_Latin1_General_CP1254_CI_AS ) as Aciklama
+                    concat(KISI.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS  , ' ', KISI.[Soyadi] collate SQL_Latin1_General_CP1254_CI_AS, '  (',OOB.[Numarasi],')'  ) as Aciklama
                     /* --	GOS.[DavranisNotu1], 
                     --	GOS.[DavranisNotu2], 
                     --	GOS.[DavranisPuani],                     
