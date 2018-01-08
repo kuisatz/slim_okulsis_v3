@@ -6660,7 +6660,7 @@ class MblLogin extends \DAL\DalSlim {
 		OD.OgrenciID,  
 		OD.DevamsizlikKodID,  
 		OD.DevamsizlikPeriyodID, 		
-		Aciklama, 
+		concat(DevamsizlikAdi  collate SQL_Latin1_General_CP1254_CI_AS, ' / ',Aciklama  collate SQL_Latin1_General_CP1254_CI_AS ) as aciklama , 
 		DevamsizlikKodu,  
 		DevamsizlikAdi, 
 		DevamsizlikPeriyodu,  
