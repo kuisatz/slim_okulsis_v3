@@ -7956,7 +7956,10 @@ class MblLogin extends \DAL\DalSlim {
                     isnull(cast(cast(YetistirmeKursuNotu as numeric(8,2)) as varchar(10)),'') AS YetistirmeKursuNotu,  
                     isnull(cast(cast(YilSonuNotu as numeric(8,2)) as varchar(10)),'') AS YilSonuNotu,  
                     isnull(cast(cast(YilSonuPuani as numeric(8,2)) as varchar(10)),'') AS YilSonuPuani,  
-                    isnull(cast(cast(YilsonuToplamAgirligi as numeric(8,2)) as varchar(10)),'') AS YilsonuToplamAgirligi, 
+                    isnull(cast(cast(YilsonuToplamAgirligi as numeric(8,2)) as varchar(10)),'') AS YilsonuToplamAgirligi,  
+                    isnull(cast(cast(YilSonuAlanDalAgirlikToplami as numeric(8,2)) as varchar(10)),'') AS YilSonuAlanDalAgirlikToplami , 
+                    isnull(cast(cast(YilSonuAlanDalPuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'') AS YilSonuAlanDalPuanAgirliklariOrtalamasi , 
+ 
                     case ".$DonemID."
                         when 1 then isnull(cast(cast(Donem1_PuanOrtalamasi as numeric(8,2)) as varchar(10)),'') 
                         else  isnull(cast(cast(Donem2_PuanOrtalamasi as numeric(8,2)) as varchar(10)),'')
@@ -8104,6 +8107,8 @@ class MblLogin extends \DAL\DalSlim {
                         krm.Donem2PuanAgirliklariOrtalamasi,
                         krm.YilSonuPuanAgirliklariToplami,
                         krm.YilSonuPuanAgirliklariOrtalamasi,
+                        krm.YilSonuAlanDalAgirlikToplami   , 
+                        krm.YilSonuAlanDalPuanAgirliklariOrtalamasi  ,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",1))  AS K1,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",2)) AS K2,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",3)) AS K3,

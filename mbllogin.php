@@ -3903,6 +3903,10 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
             
             "YilSonuPuanAgirliklariToplami" =>  ($menu["YilSonuPuanAgirliklariToplami"]), 
             "YilSonuPuanAgirliklariOrtalamasi" =>  ($menu["YilSonuPuanAgirliklariOrtalamasi"]),  
+            
+             "YilSonuAlanDalAgirlikToplami" =>  ($menu["YilSonuAlanDalAgirlikToplami"]), 
+            "YilSonuAlanDalPuanAgirliklariOrtalamasi" =>  ($menu["YilSonuAlanDalPuanAgirliklariOrtalamasi"]),  
+          
   
         );
     }
@@ -5408,7 +5412,7 @@ $app->get("/OgrenciOdeviGordu_mbllogin/", function () use ($app ) {
     if ($stripper->offsetExists('ogrenciOdevID')) 
         {$vOgrenciOdevID = $stripper->offsetGet('ogrenciOdevID')->getFilterValue();         
     }   
-    
+    k
     $resDataInsert = $BLL->ogrenciOdeviGordu(array(
             'OgrenciOdevID' => $vOgrenciOdevID,  
             'Cid' => $vCid,  
