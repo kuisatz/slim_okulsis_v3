@@ -1787,7 +1787,7 @@ class MblLogin extends \DAL\DalSlim {
                     tt.OgrenciID, 
                     FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
                     tt.Numarasi  ,   
-                    UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) AS adsoyad ,
+                    UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS,' (', tt.Numarasi,')'   )) AS adsoyad ,                  
                     tt.CinsiyetID ,
                     tt.DevamsizlikKodID,
                     tt.Aciklama,
@@ -2714,7 +2714,7 @@ class MblLogin extends \DAL\DalSlim {
                     ".$dbnamex."FNC_GNL_AdayKayitUcretOdendiMi(GOS.[OgrenciID],DY.DersYiliID) AS OdendiMi,  	
                     S.[SeviyeID] ,
                     ff.Fotograf,
-                    concat(KISI.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS  , ' ', KISI.[Soyadi] collate SQL_Latin1_General_CP1254_CI_AS, '  (',OOB.[Numarasi],')'  ) as Aciklama
+                    concat(KISI.[Adi]  collate SQL_Latin1_General_CP1254_CI_AS  , ' ', KISI.[Soyadi] collate SQL_Latin1_General_CP1254_CI_AS, '  (',cast(OOB.[Numarasi] as varchar(10)),')'  ) as Aciklama
                     /* --	GOS.[DavranisNotu1], 
                     --	GOS.[DavranisNotu2], 
                     --	GOS.[DavranisPuani],                     
