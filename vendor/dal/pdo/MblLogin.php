@@ -6660,7 +6660,7 @@ class MblLogin extends \DAL\DalSlim {
 		OD.OgrenciID,  
 		OD.DevamsizlikKodID,  
 		OD.DevamsizlikPeriyodID, 		
-		concat(DevamsizlikAdi  collate SQL_Latin1_General_CP1254_CI_AS, ' / ',Aciklama  collate SQL_Latin1_General_CP1254_CI_AS ) as aciklama , 
+		concat(DevamsizlikAdi  collate SQL_Latin1_General_CP1254_CI_AS, ' / ',Aciklama  collate SQL_Latin1_General_CP1254_CI_AS ) as Aciklama , 
 		DevamsizlikKodu,  
 		DevamsizlikAdi, 
 		DevamsizlikPeriyodu,  
@@ -6676,8 +6676,8 @@ class MblLogin extends \DAL\DalSlim {
 		LEFT JOIN ".$dbnamex."GNL_DevamsizlikPeriyodlari DP ON OD.DevamsizlikPeriyodID=DP.DevamsizlikPeriyodID  
             WHERE 
                     CONVERT (NVARCHAR(10),(CONVERT(DATETIME,Tarih,103)),120) =  CONVERT (NVARCHAR(10),(CONVERT(DATETIME,@Tarih,103)),120)    AND  
-                    OD.DersYiliID= cast(@DersYiliID AS NVARCHAR(50))    AND 
-                    S.DersYiliID= cast(@DersYiliID as nvarchar(50))   
+                    OD.DersYiliID= @DersYiliID  AND 
+                    S.DersYiliID= @DersYiliID   
             ORDER BY OOB.Numarasi,DevamsizlikPeriyodu DESC; 
             SET NOCOUNT OFF;  
                  "; 
