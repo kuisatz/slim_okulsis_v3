@@ -2675,7 +2675,7 @@ class MblLogin extends \DAL\DalSlim {
                     NULL AS OgrenciID, 
                     NULL AS SinifID, 
                     NULL AS OgrenciArsivTurID,  
-                    NULL AS OgrenciID,  
+                   /* NULL AS OgrenciID,  */
                     NULL AS Numarasi,  
                     NULL AS KisiID, 
                     NULL AS CinsiyetID, 
@@ -2702,7 +2702,7 @@ class MblLogin extends \DAL\DalSlim {
                     GOS.[OgrenciID], 
                     GOS.[SinifID], 
                     GOS.[OgrenciArsivTurID], 
-                    OGR.[OgrenciID], 
+                 /*   OGR.[OgrenciID], */
                     OOB.[Numarasi],
                     KISI.[KisiID], 
                     KISI.[CinsiyetID], 
