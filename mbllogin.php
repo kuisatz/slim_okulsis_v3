@@ -5412,7 +5412,7 @@ $app->get("/OgrenciOdeviGordu_mbllogin/", function () use ($app ) {
     if ($stripper->offsetExists('ogrenciOdevID')) 
         {$vOgrenciOdevID = $stripper->offsetGet('ogrenciOdevID')->getFilterValue();         
     }   
-    k
+  
     $resDataInsert = $BLL->ogrenciOdeviGordu(array(
             'OgrenciOdevID' => $vOgrenciOdevID,  
             'Cid' => $vCid,  
