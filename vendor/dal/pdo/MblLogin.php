@@ -9367,7 +9367,7 @@ class MblLogin extends \DAL\DalSlim {
             WHERE SINAV.isOgrenciVeliSinavVisible = 1 AND
                 OS.OgrenciSeviyeID = @OgrenciSeviyeID AND
                 SINAV.NotDonemID = @DonemID
-            ORDER BY SinavAciklamasi;
+            ORDER BY  SINAV.YaziliStsSinavDersiDersHavuzuID  ,  SINAV.SinavTarihi desc,    SinavAciklamasi;
             
             SET NOCOUNT OFF;   
                  "; 
