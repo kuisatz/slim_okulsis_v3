@@ -6662,7 +6662,8 @@ class MblLogin extends \DAL\DalSlim {
 		OD.DevamsizlikPeriyodID, 		
 		concat(DevamsizlikAdi  collate SQL_Latin1_General_CP1254_CI_AS, ' / ',Aciklama  collate SQL_Latin1_General_CP1254_CI_AS ) as Aciklama , 
 		DevamsizlikKodu,  
-		DevamsizlikAdi, 
+		/*DevamsizlikAdi, */
+                concat(DevamsizlikAdi  collate SQL_Latin1_General_CP1254_CI_AS, ' / ',Aciklama  collate SQL_Latin1_General_CP1254_CI_AS ) as DevamsizlikAdi ,
 		DevamsizlikPeriyodu,  
 		ROW_NUMBER() OVER(ORDER BY Tarih, Adi, Soyadi) AS rownum   
             FROM  ".$dbnamex."GNL_OgrenciDevamsizliklari OD  
