@@ -2750,9 +2750,9 @@ class MblLogin extends \DAL\DalSlim {
                     LEFT JOIN ".$dbnamex."GNL_Fotograflar ff on ff.KisiID =GOS.OgrenciID
                     WHERE  
                             GOS.SinifID = '".$SinifID."' AND
-                            GOS.OgrenciArsivTurID = 1; 
+                            GOS.OgrenciArsivTurID = 1
                         )  as asdasdasd
-                    order by [Numarasi]
+                    order by Numarasi
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   
