@@ -456,8 +456,17 @@ class MblLogin extends \DAL\DalSlim {
             CREATE TABLE ##okidetaydata".$tc." (KisiID uniqueidentifier, adsoyad  nvarchar(200)  collate SQL_Latin1_General_CP1254_CI_AS ,  TCKimlikNo nvarchar(11)  collate SQL_Latin1_General_CP1254_CI_AS, 
                 Fotograf varbinary, CinsiyetID int, tcID int );
 
+            DECLARE @KullaniciKontrol smallint ; 
             set @tc = ".$tc.";  
             set @sifre = N'".$sifre."';
+                
+            SELECT @KullaniciKontrol =count(tcdbb.tcID) FROM Sys.databases sss
+            INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active = 0 AND tcdbb.deleted =0   
+            INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active = 0 AND tcc.deleted =0
+            WHERE 
+                sss.state = 0 AND 
+                tcc.[tc]= @tc AND  
+                banTarihi is null;  
             
             DECLARE db_cursor CURSOR FOR  
                 SELECT sss.database_id, sss.name, tcdbb.KisiID, tcdbb.KurumID,tcdbb.tcID FROM Sys.databases sss
@@ -510,8 +519,24 @@ class MblLogin extends \DAL\DalSlim {
             FROM  ##okidetaydata".$tc."
             order by Fotograf; 
    
-            SELECT TOP 1 * FROM  ##okidetaydata".$tc."
-            order by Fotograf
+            SELECT * from ( 
+                SELECT top 1
+                    null as KisiID, '' as adsoyad,  null as TCKimlikNo, null as Fotograf, null as CinsiyetID, -99 , @KullaniciKontrol,
+                     COALESCE(NULLIF(spdx.description,''),spd.description_eng) as description  
+                FROM sys_specific_definitions spd 
+                INNER JOIN sys_specific_definitions spdx on (spdx.id = spd.id OR spdx.language_parent_id = spd.id) and spdx.language_id = ".$languageIdValue." 
+                WHERE 
+                    spd.main_group = 4 and 
+                    spd.language_id = 647 and 
+                    spd.active =0 and spd.deleted = 0 and 
+                    spd.first_group =@KullaniciKontrol 
+            union 
+                SELECT TOP 1 
+                    KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID, tcID, @KullaniciKontrol ,
+                    '' as description  
+                FROM ##okidetaydata".$tc." where Fotograf is not null 
+              ) as adsdsdasd  
+            order by tcID
 
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
             IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
