@@ -460,7 +460,7 @@ class MblLogin extends \DAL\DalSlim {
             set @tc = ".$tc.";  
             set @sifre = N'".$sifre."';
                 
-            SELECT @KullaniciKontrol =count(tcdbb.tcID) FROM Sys.databases sss
+            SELECT @KullaniciKontrol =count(distinct tcdbb.tcID) FROM Sys.databases sss
             INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tcdb] tcdbb on  sss.database_id = tcdbb.dbID AND tcdbb.active = 0 AND tcdbb.deleted =0   
             INNER JOIN [BILSANET_MOBILE].[dbo].[Mobile_tc] tcc ON tcdbb.tcID = tcc.id AND tcc.active = 0 AND tcc.deleted =0
             WHERE 
@@ -519,12 +519,12 @@ class MblLogin extends \DAL\DalSlim {
             FROM  ##okidetaydata".$tc."
             order by Fotograf; 
    
-            SELECT * from ( 
+             SELECT * from ( 
                 SELECT top 1
-                    null as KisiID, '' as adsoyad,  null as TCKimlikNo, null as Fotograf, null as CinsiyetID, -99 , @KullaniciKontrol,
+                    null as KisiID, '' as adsoyad,  null as TCKimlikNo, null as Fotograf, null as CinsiyetID, -99 as tcID, @KullaniciKontrol as KullaniciKontrol,
                      COALESCE(NULLIF(spdx.description,''),spd.description_eng) as description  
                 FROM sys_specific_definitions spd 
-                INNER JOIN sys_specific_definitions spdx on (spdx.id = spd.id OR spdx.language_parent_id = spd.id) and spdx.language_id = ".$languageIdValue." 
+                left JOIN sys_specific_definitions spdx on (spdx.id = spd.id OR spdx.language_parent_id = spd.id) and spdx.language_id = 647 
                 WHERE 
                     spd.main_group = 4 and 
                     spd.language_id = 647 and 
@@ -532,7 +532,7 @@ class MblLogin extends \DAL\DalSlim {
                     spd.first_group =@KullaniciKontrol 
             union 
                 SELECT TOP 1 
-                    KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID, tcID, @KullaniciKontrol ,
+                    KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID, tcID, @KullaniciKontrol as KullaniciKontrol ,
                     '' as description  
                 FROM ##okidetaydata".$tc." where Fotograf is not null 
               ) as adsdsdasd  
