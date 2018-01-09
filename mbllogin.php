@@ -3912,7 +3912,10 @@ $app->get("/OgrenciKarnesi_mbllogin/", function () use ($app ) {
              "YilSonuAlanDalAgirlikToplami" =>  ($menu["YilSonuAlanDalAgirlikToplami"]), 
             "YilSonuAlanDalPuanAgirliklariOrtalamasi" =>  ($menu["YilSonuAlanDalPuanAgirliklariOrtalamasi"]),  
           
-  
+            "puandegerlendirme" =>  html_entity_decode($menu["puandegerlendirme"]), 
+            "basaribelgesi" =>  html_entity_decode($menu["basaribelgesi"]),  
+            
+           
         );
     }
     

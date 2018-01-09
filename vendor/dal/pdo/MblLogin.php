@@ -8197,6 +8197,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 FROM ".$dbnamex."OgrenciDersNotBilgileri_Donem".$DonemID." ODNB
                 INNER JOIN ".$dbnamex."GNL_Kisiler gg on gg.KisiID = ODNB.OgrenciID   
                 INNER JOIN ".$dbnamex."GNL_Siniflar ss on ss.SinifID = ODNB.SinifID 
+                INNER JOIN ".$dbnamex."GNL_PuanNotTablolari  pnt on pnt.DersYiliID =ODNB.DersYiliID
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDersGruplari ODG ON ODG.OgrenciDersID = ODNB.OgrenciDersID
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDersGrupTanimlari ODGT ON ODGT.OgrenciDersGrupTanimID=ODG.OgrenciDersGrupTanimID AND ODG.OgrenciDersID = ODNB.OgrenciDersID
                 LEFT JOIN ".$dbnamex."KRM_YilsonuOrtalamalari krm on krm.OgrenciSeviyeID = ODNB.OgrenciSeviyeID
