@@ -2426,8 +2426,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     COALESCE(NULLIF(cast(a.OgrenciID as varchar(50)),NULL),'') as OgrenciID,
                     COALESCE(NULLIF(cast(a.DevamsizlikKodID as varchar(50)),NULL),'') as DevamsizlikKodID , 
                     COALESCE(NULLIF(cast(a.DevamsizlikPeriyodID as varchar(50)),NULL),'') as  DevamsizlikPeriyodID, 
-                    FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
-                    COALESCE(NULLIF(a.Aciklama,NULL),'') as Aciklama, 
+                    COALESCE(NULLIF(FORMAT(a.Tarih, 'dd-MM-yyyy hh:mm'),NULL),'') as Tarih, 
+                     case  when  COALESCE(NULLIF( len(a.Tarih),NULL),0) <6  Then 'Öğrencinin Devamsızlığı Yok'
+					 else COALESCE(NULLIF(a.Aciklama,NULL),'') end as Aciklama, 
                     COALESCE(NULLIF(cast(b.OgrenciseviyeID as varchar(50)),NULL),'') as OgrenciseviyeID  ,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
                     cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz1,
