@@ -519,7 +519,7 @@ class MblLogin extends \DAL\DalSlim {
             FROM  ##okidetaydata".$tc."
             order by Fotograf; 
    
-             SELECT * from ( 
+             SELECT top 1 * from ( 
                 SELECT top 1
                     null as KisiID, '' as adsoyad,  null as TCKimlikNo, null as Fotograf, null as CinsiyetID, -99 as tcID, @KullaniciKontrol as KullaniciKontrol,
                      COALESCE(NULLIF(spdx.description,''),spd.description_eng) as description  
@@ -534,9 +534,9 @@ class MblLogin extends \DAL\DalSlim {
                 SELECT TOP 1 
                     KisiID, adsoyad, TCKimlikNo, Fotograf, CinsiyetID, tcID, @KullaniciKontrol as KullaniciKontrol ,
                     '' as description  
-                FROM ##okidetaydata".$tc." where Fotograf is not null 
+                FROM ##okidetaydata".$tc."  
               ) as adsdsdasd  
-            order by tcID
+              order by tcID desc,KullaniciKontrol desc 
 
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";  
             IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc."; 
