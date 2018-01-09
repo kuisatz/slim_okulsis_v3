@@ -657,9 +657,9 @@ class MblLogin extends \DAL\DalSlim {
             }  
             $sql = "  
                     set nocount on;
-                    IF OBJECT_ID('tempdb..#okimobilfirstdata') IS NOT NULL DROP TABLE #okimobilfirstdata; 
+                    IF OBJECT_ID('tempdb..#omfd') IS NOT NULL DROP TABLE #omfd; 
     
-                    CREATE TABLE #okimobilfirstdata
+                    CREATE TABLE #omfd
                                     (
                                             [OkulKullaniciID]  [uniqueidentifier],
                                             [OkulID] [uniqueidentifier], 
@@ -668,7 +668,7 @@ class MblLogin extends \DAL\DalSlim {
                                             [RolAdi] varchar(100)  
                                     ) ;
                    
-                    INSERT #okimobilfirstdata  EXEC  [dbo].[PRC_GNL_Kisi_TumRoller_FindByID]  @KisiID= '".$kisiId."' ;
+                    INSERT #omfd  EXEC  [dbo].[PRC_GNL_Kisi_TumRoller_FindByID]  @KisiID= '".$kisiId."' ;
                       
                         SELECT  
                             null AS OkulKullaniciID ,
@@ -699,13 +699,13 @@ class MblLogin extends \DAL\DalSlim {
                             EY.EgitimYili,
                             DY.DonemID ,
                             '".$ip."' as ip
-                        FROM #okimobilfirstdata sss
+                        FROM #omfd sss
                         inner join [dbo].[GNL_Okullar] oo ON oo.[OkulID] = sss.[OkulID] 
                         inner join GNL_DersYillari DY ON DY.OkulID = sss.OkulID and DY.AktifMi =1 
                         inner join GNL_EgitimYillari EY ON EY.EgitimYilID = DY.EgitimYilID AND DY.AktifMi = 1
                         inner join [GNL_Roller] rr ON rr.[RolID] =  sss.[RolID];
 
-                    IF OBJECT_ID('tempdb..#okimobilfirstdata') IS NOT NULL DROP TABLE #okimobilfirstdata; 
+                    IF OBJECT_ID('tempdb..#omfd') IS NOT NULL DROP TABLE #omfd; 
                     SET NOCOUNT OFF;
 
                  "; 
@@ -766,7 +766,7 @@ class MblLogin extends \DAL\DalSlim {
             SET TEXTSIZE 2147483647;
             IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";
             IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc.";
-            IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";
+            IF OBJECT_ID('tempdb..##omfd".$tc."') IS NOT NULL DROP TABLE ##omfd".$tc.";
             IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc.";
             IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc.";
             DECLARE @name nvarchar(200)= '' collate SQL_Latin1_General_CP1254_CI_AS;
@@ -822,7 +822,7 @@ class MblLogin extends \DAL\DalSlim {
             CLOSE db_cursor;
             DEALLOCATE db_cursor;
 
-                CREATE TABLE ##okimobilfirstdata".$tc."
+                CREATE TABLE ##omfd".$tc."
                     (OkulKullaniciID uniqueidentifier,
                      OkulID uniqueidentifier,
                      KisiID uniqueidentifier,
@@ -870,7 +870,7 @@ class MblLogin extends \DAL\DalSlim {
                 BEGIN
 
                 SET @sqlxx='
-                    INSERT ##okimobilfirstdata".$tc." EXEC '+@dbnamex+'.dbo.PRC_GNL_Kisi_TumRoller_FindByID @KisiID= ''' + cast(@KisiID as varchar(50))+''' ';
+                    INSERT ##omfd".$tc." EXEC '+@dbnamex+'.dbo.PRC_GNL_Kisi_TumRoller_FindByID @KisiID= ''' + cast(@KisiID as varchar(50))+''' ';
  
                 /* print(@sqlxx); */
                 EXEC sp_executesql @sqlxx;
@@ -881,58 +881,43 @@ class MblLogin extends \DAL\DalSlim {
                 delete from #okidbname".$tc." where MEBKodu is null;
 
                 SET @sqlx =
-                'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,OkulAdiKisa,
-                            MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans,cinsiyetID)
+                'insert into ##okimobilseconddata".$tc."(OkulKullaniciID,OkulID,KisiID,RolID,RolAdi,OkulAdi,OkulAdiKisa,MEBKodu,ePosta,DersYiliID,EgitimYilID,EgitimYili,DonemID,KurumID,dbnamex,database_id,brans,cinsiyetID)
                 SELECT sss.OkulKullaniciID,sss.OkulID,sss.KisiID,sss.RolID,
                     COALESCE(NULLIF(COALESCE(NULLIF(rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,''''),rrx.RolAdieng collate SQL_Latin1_General_CP1254_CI_AS),''''),rr.RolAdi) as RolAdi,
                     upper(concat(golx.OkulAdi collate SQL_Latin1_General_CP1254_CI_AS,''('',rrx.RolAdi collate SQL_Latin1_General_CP1254_CI_AS,'')'' )) as OkulAdi,
-                    upper( golx.OkulBaslikKisaAdi collate SQL_Latin1_General_CP1254_CI_AS ) as OkulAdiKisa,
-                    oo.MEBKodu,
-                    oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS as ePosta,
+                    upper(golx.OkulBaslikKisaAdi collate SQL_Latin1_General_CP1254_CI_AS) as OkulAdiKisa,oo.MEBKodu,oo.ePosta collate SQL_Latin1_General_CP1254_CI_AS as ePosta,
                     DY.DersYiliID,DY.EgitimYilID,EY.EgitimYili,DY.DonemID,oo.KurumID,'''+@dbnamex+''' as dbnamex,
                     '+cast(@database_id as nvarchar(5))+' as database_id,
                     case sss.RolID
                         WHEN 4 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
-                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
-                                WHERE ogtix.OgretmenID=sss.KisiID)
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID WHERE ogtix.OgretmenID=sss.KisiID)
                         WHEN 5 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
-                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
-                                WHERE ogtix.OgretmenID=sss.KisiID)
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID WHERE ogtix.OgretmenID=sss.KisiID)
                         WHEN 6 THEN (SELECT Top 1 itx.Unvani FROM '+@dbnamex+'.dbo.OGT_IdareciTurleri itx
-                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID
-                                WHERE ogtix.OgretmenID  =sss.KisiID)
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Idareciler ogtix on ogtix.IdareciTurID=itx.IdareciTurID WHERE ogtix.OgretmenID=sss.KisiID)
                         WHEN 7 THEN (SELECT Top 1 concat(''('',mob.brans_kisa,'')'') as brans_kisa FROM BILSANET_MOBILE.dbo.Mobile_OGT_Branslar bx
-                                LEFT JOIN  '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
-                                LEFT JOIN BILSANET_MOBILE.dbo.Mobile_OGT_Branslar mob ON mob.Brans = bx.Brans 
-                                WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
-                        WHEN 8 THEN (
-                                SELECT top 1 concat(''('',S9.SinifKodu,''-'',OOB9.Numarasi'')'') as brans_kisa 
-                                FROM '+@dbnamex+'GNL_OgrenciSeviyeleri OS9
-                                INNER JOIN '+@dbnamex+'GNL_Siniflar S9 ON S9.SinifID = OS9.SinifID
-                                INNER JOIN '+@dbnamex+'GNL_DersYillari DY9 ON DY9.DersYiliID = S9.DersYiliID
-                                INNER JOIN '+@dbnamex+'GNL_Okullar OK9 ON OK9.OkulID = DY9.OkulID
-                                INNER JOIN '+@dbnamex+'GNL_OgrenciOkulBilgileri OOB9 ON OOB9.OkulID = OK9.OkulID AND OOB9.OgrenciID = OS9.OgrenciID
-                                INNER JOIN '+@dbnamex+'GNL_Kisiler K9 ON K9.KisiID = OS9.OgrenciID
-                                WHERE     
-                                    OS9.OgrenciID = sss.KisiID  )
-                    else '''' end as brans,gg.cinsiyetID
-                FROM ##okimobilfirstdata".$tc." sss
-                inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
-                inner join '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=sss.OkulID and DY.AktifMi=1
-                inner join '+@dbnamex+'.dbo.GNL_EgitimYillari EY ON EY.EgitimYilID=DY.EgitimYilID AND DY.AktifMi=1
-                inner join '+@dbnamex+'.dbo.GNL_Roller rr ON rr.[RolID]=sss.RolID
-                inner join '+@dbnamex+'.dbo.GNL_Kisiler gg ON gg.KisiID=sss.KisiID
-                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id=".$languageIdValue." AND lx.deleted =0 AND lx.active =0
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID=sss.OkulID and golx.language_id=lx.id
-                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id=sss.RolID or rrx.RolID=sss.RolID) and rrx.language_id= lx.id
-                WHERE
-                    cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)';
+                                LEFT JOIN '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
+                                LEFT JOIN BILSANET_MOBILE.dbo.Mobile_OGT_Branslar mob ON mob.Brans = bx.Brans WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
+                         WHEN 8 THEN (SELECT top 1 concat(''('',S9.SinifKodu collate SQL_Latin1_General_CP1254_CI_AS,''-'',OOB9.Numarasi,'')'') as brans_kisa 
+                                FROM '+@dbnamex+'.dbo.GNL_OgrenciSeviyeleri OS9
+                                INNER JOIN '+@dbnamex+'.dbo.GNL_Siniflar S9 ON S9.SinifID=OS9.SinifID AND  S9.DersYiliID=DY.DersYiliID
+                                INNER JOIN '+@dbnamex+'.dbo.GNL_OgrenciOkulBilgileri OOB9 ON OOB9.OkulID=sss.OkulID AND OOB9.OgrenciID=OS9.OgrenciID WHERE OS9.OgrenciID=sss.KisiID)
+                    else '''' end as brans,gg.cinsiyetID FROM ##omfd".$tc." sss
+inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
+inner join '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=sss.OkulID and DY.AktifMi=1
+inner join '+@dbnamex+'.dbo.GNL_EgitimYillari EY ON EY.EgitimYilID=DY.EgitimYilID AND DY.AktifMi=1
+inner join '+@dbnamex+'.dbo.GNL_Roller rr ON rr.RolID=sss.RolID
+inner join '+@dbnamex+'.dbo.GNL_Kisiler gg ON gg.KisiID=sss.KisiID
+LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id=".$languageIdValue." AND lx.deleted=0 AND lx.active=0
+LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Okullar_Lng golx ON golx.OkulID=sss.OkulID and golx.language_id=lx.id
+LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Roller_lng rrx on (rrx.language_parent_id=sss.RolID or rrx.RolID=sss.RolID) and rrx.language_id=lx.id
+WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)';
                 SET @sqlx1 = '
                 INSERT INTO ##okiokullogo".$tc." (LogoDosyaID,OkulLogo,OkulID)
                 SELECT dx.DosyaID, dx.Dosya ,oox.OkulID
                 FROM '+@dbnamex+'.dbo.GNL_Okullar oox
                 INNER JOIN ['+@dbnamex+'].[dbo].GNL_Dosyalar dx ON dx.DosyaID = oox.LogoDosyaID
-                WHERE oox.[OkulID] IN (SELECT DISTINCT OkulID FROM ##okimobilfirstdata".$tc.");
+                WHERE oox.[OkulID] IN (SELECT DISTINCT OkulID FROM ##omfd".$tc.");
                 ';
                 /* print(@sqlx); */
                 EXEC sp_executesql @sqlx;
@@ -1013,7 +998,7 @@ class MblLogin extends \DAL\DalSlim {
                 LEFT join ##okiokullogo".$tc." logo on logo.OkulID = ssddsdsdsd.OkulID
                     
                 IF OBJECT_ID('tempdb..#okidbname".$tc."') IS NOT NULL DROP TABLE #okidbname".$tc.";
-                IF OBJECT_ID('tempdb..##okimobilfirstdata".$tc."') IS NOT NULL DROP TABLE ##okimobilfirstdata".$tc.";
+                IF OBJECT_ID('tempdb..##omfd".$tc."') IS NOT NULL DROP TABLE ##omfd".$tc.";
                 IF OBJECT_ID('tempdb..##okidetaydata".$tc."') IS NOT NULL DROP TABLE ##okidetaydata".$tc.";
                 IF OBJECT_ID('tempdb..##okimobilseconddata".$tc."') IS NOT NULL DROP TABLE ##okimobilseconddata".$tc.";
                 IF OBJECT_ID('tempdb..##okiokullogo".$tc."') IS NOT NULL DROP TABLE  ##okiokullogo".$tc.";
