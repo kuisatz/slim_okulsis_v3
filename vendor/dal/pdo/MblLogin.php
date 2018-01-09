@@ -906,9 +906,7 @@ class MblLogin extends \DAL\DalSlim {
                                 LEFT JOIN BILSANET_MOBILE.dbo.Mobile_OGT_Branslar mob ON mob.Brans = bx.Brans 
                                 WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
                         WHEN 8 THEN (
-                                SELECT top 1 concat(''('',S9.SinifKodu,''-'',OOB9.Numarasi'')'') as brans_kisa
-                                    S9.SinifKodu,
-                                    OOB9.Numarasi 
+                                SELECT top 1 concat(''('',S9.SinifKodu,''-'',OOB9.Numarasi'')'') as brans_kisa 
                                 FROM '+@dbnamex+'GNL_OgrenciSeviyeleri OS9
                                 INNER JOIN '+@dbnamex+'GNL_Siniflar S9 ON S9.SinifID = OS9.SinifID
                                 INNER JOIN '+@dbnamex+'GNL_DersYillari DY9 ON DY9.DersYiliID = S9.DersYiliID
