@@ -2428,7 +2428,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     COALESCE(NULLIF(cast(a.DevamsizlikPeriyodID as varchar(50)),NULL),'') as  DevamsizlikPeriyodID, 
                     COALESCE(NULLIF(FORMAT(a.Tarih,'dd-MM-yyyy hh:mm'),NULL),'') as Tarih, 
                     case when COALESCE(NULLIF( len(a.Tarih),NULL),0) <6  Then spdx.description  collate SQL_Latin1_General_CP1254_CI_AS
-			else COALESCE(NULLIF(a.Aciklama collate SQL_Latin1_General_CP1254_CI_AS,NULL),'') end as Aciklama, 
+			 else COALESCE(NULLIF(a.Aciklama collate SQL_Latin1_General_CP1254_CI_AS,NULL),'') end as Aciklama, 
                     COALESCE(NULLIF(cast(b.OgrenciseviyeID as varchar(50)),NULL),'') as OgrenciseviyeID  ,
                     cast(cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzurluDevamsiz1,
                     cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz1,
@@ -8073,6 +8073,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         end DonemPuanAgirliklariOrtalamasi, 
                     isnull(cast(cast(YilSonuPuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'') AS YilSonuPuanAgirliklariToplami,
                     isnull(cast(cast(YilSonuPuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'') AS YilSonuPuanAgirliklariOrtalamasi,
+                    puandegerlendirme,
                     PBYCOrtalama, 
                     DersSabitID,
                     K1,K2,
@@ -8149,6 +8150,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         krm.YilSonuPuanAgirliklariOrtalamasi,
                         krm.YilSonuAlanDalAgirlikToplami   , 
                         krm.YilSonuAlanDalPuanAgirliklariOrtalamasi  ,
+                        (SELECT top 1 pntx.Aciklama FROM ".$dbnamex."GNL_PuanNotTablolari pntx 
+                        WHERE pntx.DersYiliID =ODNB.DersYiliID and krm.YilSonuPuanAgirliklariToplami between pntx.BaslangicPuan and pntx.BitisPuan ) as puandegerlendirme,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",1))  AS K1,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",2)) AS K2,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",3)) AS K3,
