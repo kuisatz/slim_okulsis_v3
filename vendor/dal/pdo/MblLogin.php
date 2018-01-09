@@ -1115,13 +1115,14 @@ class MblLogin extends \DAL\DalSlim {
                 iconcolor,
                 iconclass,
                 collapse,
-                sira
+                sira,
+                header
                FROM  (  
                     SELECT 
                         a.[ID]
                         ,a.[MenuID]
                         ,a.[ParentID],  
-                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi 
+                        COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
                         ,a.[Aciklama]
                         ,a.[URL]
                         ,a.[RolID]
@@ -1131,7 +1132,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.iconcolor,
                         a.[iconclass],
                         a.collapse ,
-                        a.sira  
+                        a.sira,
+                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -1145,7 +1147,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.[ID]
                         ,a.[MenuID]
                         ,a.[ParentID],  
-                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi 
+                        COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
                         ,a.[Aciklama]
                         ,a.[URL]
                         ,a.[RolID]
@@ -1155,7 +1157,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.iconcolor,
                         a.[iconclass],
                         a.collapse ,
-                        a.sira  
+                        a.sira,
+                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header 
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -5531,7 +5534,8 @@ class MblLogin extends \DAL\DalSlim {
                 collapse,
                 sira,
                 dashboardSira,
-                COALESCE(NULLIF(COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'00'),'00'),'00') as adet
+                COALESCE(NULLIF(COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'00'),'00'),'00') as adet,
+                header 
                FROM (
                     SELECT
                         a.[ID],
@@ -5548,6 +5552,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.collapse,
                         a.sira,
                         a.dashboardSira,
+                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header ,
                         case a.URL
                             when 'mesajlar/gelenMesaj.html' then (SELECT  count(M.MesajID) as adet  
                                         FROM  ".$dbnamex."MSJ_Mesajlar M 
@@ -5636,6 +5641,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.collapse ,
                         a.sira,
                         a.dashboardSira,
+                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header,
                         case a.URL 
                             when 'mesajlar/gelenMesaj.html' then (SELECT  count(M.MesajID) 
                                         FROM ".$dbnamex."MSJ_Mesajlar M 
