@@ -1116,7 +1116,8 @@ class MblLogin extends \DAL\DalSlim {
                 iconclass,
                 collapse,
                 sira,
-                header
+                header,
+                description ,  
                FROM  (  
                     SELECT 
                         a.[ID]
@@ -1133,7 +1134,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.[iconclass],
                         a.collapse ,
                         a.sira,
-                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header 
+                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header,
+                        COALESCE(NULLIF(ax.description,''),a.descriptionEng) as description    
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -1158,7 +1160,8 @@ class MblLogin extends \DAL\DalSlim {
                         a.[iconclass],
                         a.collapse ,
                         a.sira,
-                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header 
+                        COALESCE(NULLIF(ax.header,''),a.headerEng) as header,
+                        COALESCE(NULLIF(ax.description,''),a.descriptionEng) as description
                     FROM BILSANET_MOBILE.dbo.[Mobil_Menuleri] a 
                     INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = a.language_id AND l.deleted =0 AND l.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".intval($languageIdValue)." AND lx.deleted =0 AND lx.active =0
@@ -3306,7 +3309,7 @@ class MblLogin extends \DAL\DalSlim {
                 declare  
                     @EgitimYilID int,
                     @OkulID uniqueidentifier,
-                    @KisiID UNIQUEIDENTIFIER
+                    @KisiID UNIQUEIDENTIFIER;
 
                 set @OkulID ='".$OkulID."';
                 set @KisiID ='".$KisiID."'
@@ -3314,7 +3317,7 @@ class MblLogin extends \DAL\DalSlim {
                 IF OBJECT_ID('tempdb..#OgrencininKendiOkulundaGirdigiSinavlar') IS NOT NULL DROP TABLE #OgrencininKendiOkulundaGirdigiSinavlar; 
                 IF OBJECT_ID('tempdb..#OgrencininOlcmeDegerlendirmedeGirdigiSinavlar') IS NOT NULL DROP TABLE #OgrencininOlcmeDegerlendirmedeGirdigiSinavlar; 
                  
-                set @EgitimYilID =  (SELECT max(EgitimYilID) FROM  ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = @OkulID and dyx.AktifMi =1)   ;
+                set @EgitimYilID = (SELECT max(EgitimYilID) FROM ".$dbnamex."GNL_DersYillari dyx  where dyx.OkulID = @OkulID and dyx.AktifMi =1)   ;
                 SELECT * FROM (
                     SELECT 
                         /* -- OS.OgrenciID ,SNV.EgitimYilID, */ 
@@ -3377,12 +3380,13 @@ class MblLogin extends \DAL\DalSlim {
                     INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID = SOGR.OgrenciSeviyeID AND OS.OgrenciID = @KisiID	
                     LEFT JOIN ".$dbnamex."OGT_OkulOgretmenleri ooo ON ooo.OkulOgretmenID = SNV.OkulOgretmenID
                     LEFT JOIN ".$dbnamex."GNL_Kisiler ogt ON ogt.KisiID = ooo.OgretmenID 
-                        WHERE SO.OkulID = @OkulID 
+                    WHERE SO.OkulID = @OkulID
                         AND SNV.EgitimYilID = @EgitimYilID
                         AND SNV.isAltKurumHidden = 0
                         AND SNV.isOgrenciVeliSinavVisible = 1 AND 
-                        cast(getdate() AS date)  <= SNV.SinavTarihi 
-                ) as ssss  ORDER BY  ssss.YaziliStsSinavDersiDersHavuzuID,  ssss.SinavTarihiorder  DESC   
+                        cast(getdate() AS date) <= SNV.SinavTarihi 
+                ) as ssss  
+                ORDER BY ssss.YaziliStsSinavDersiDersHavuzuID, ssss.SinavTarihiorder DESC   
                 
                 SET NOCOUNT OFF;  
  
@@ -5535,7 +5539,8 @@ class MblLogin extends \DAL\DalSlim {
                 sira,
                 dashboardSira,
                 COALESCE(NULLIF(COALESCE(NULLIF(cast(adet as varchar(5)),NULL),'00'),'00'),'00') as adet,
-                header 
+                header ,
+                description
                FROM (
                     SELECT
                         a.[ID],
@@ -5553,6 +5558,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.sira,
                         a.dashboardSira,
                         COALESCE(NULLIF(ax.header,''),a.headerEng) as header ,
+                        COALESCE(NULLIF(ax.description,''),a.descriptionEng) as description ,  
                         case a.URL
                             when 'mesajlar/gelenMesaj.html' then (SELECT  count(M.MesajID) as adet  
                                         FROM  ".$dbnamex."MSJ_Mesajlar M 
@@ -5642,6 +5648,7 @@ class MblLogin extends \DAL\DalSlim {
                         a.sira,
                         a.dashboardSira,
                         COALESCE(NULLIF(ax.header,''),a.headerEng) as header,
+                        COALESCE(NULLIF(ax.description,''),a.descriptionEng) as description,
                         case a.URL 
                             when 'mesajlar/gelenMesaj.html' then (SELECT  count(M.MesajID) 
                                         FROM ".$dbnamex."MSJ_Mesajlar M 

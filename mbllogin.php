@@ -324,7 +324,7 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
             "iconclass" => $menu["iconclass"], 
             "collapse" => $menu["collapse"],  
             "header" => html_entity_decode($menu["header"]),
-            
+             "description" => html_entity_decode($menu["description"]),
         );
     }
     
@@ -3154,6 +3154,8 @@ $app->get("/DashboarddataDersProgrami_mbllogin/", function () use ($app ) {
             "collapse" => $menu["collapse"],  
             "adet" =>   $menu["adet"],  
             "header" => html_entity_decode($menu["header"]),
+            "description" => html_entity_decode($menu["description"]),
+           
         );
     }
     
