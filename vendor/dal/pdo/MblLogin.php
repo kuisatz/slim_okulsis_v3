@@ -8119,7 +8119,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         DersKodu,
                         DersAdi,
                         DonemID,
-                        Sira,
+                        ODNB.Sira,
                         EgitimYilID,
                         HaftalikDersSaati,
                         Perf1OdevAldi,
