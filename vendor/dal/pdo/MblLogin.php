@@ -8074,6 +8074,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     isnull(cast(cast(YilSonuPuanAgirliklariToplami as numeric(8,2)) as varchar(10)),'') AS YilSonuPuanAgirliklariToplami,
                     isnull(cast(cast(YilSonuPuanAgirliklariOrtalamasi as numeric(8,2)) as varchar(10)),'') AS YilSonuPuanAgirliklariOrtalamasi,
                     puandegerlendirme,
+                    basaribelgesi,
                     PBYCOrtalama, 
                     DersSabitID,
                     K1,K2,
@@ -8152,6 +8153,18 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         krm.YilSonuAlanDalPuanAgirliklariOrtalamasi  ,
                         (SELECT top 1 pntx.Aciklama FROM ".$dbnamex."GNL_PuanNotTablolari pntx 
                         WHERE pntx.DersYiliID =ODNB.DersYiliID and krm.YilSonuPuanAgirliklariToplami between pntx.BaslangicPuan and pntx.BitisPuan ) as puandegerlendirme,
+                        (SELECT  case hax.AralikTurID 
+                                when 1 then '' 
+                                when 2 then '' 
+                                when 3 then '' 
+                                when 4 then '' 
+                                when 5 then '' 
+                                else '' end
+                            FROM GNL_HesaplamaAraliklari hax 
+                            where
+                            hax.DersYiliID = ODNB.DersYiliID AND
+                            hax.AralikTurID in (1,2,3,4,5) and 
+                            krm.YilSonuPuanAgirliklariOrtalamasi between hax.Baslangic and hax.Bitis ) as basaribelgesi,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",1))  AS K1,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",2)) AS K2,
                         (Select ".$dbnamex."FNC_GNL_NotGirisKontrol(ODNB.SinifID,ODNB.DersHavuzuID,ODGT.OgrenciDersGrupTanimID,".$DonemID.",3)) AS K3,
