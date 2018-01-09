@@ -905,6 +905,18 @@ class MblLogin extends \DAL\DalSlim {
                                 LEFT JOIN  '+@dbnamex+'.dbo.OGT_Ogretmenler ogtx on ogtx.BransID=bx.BransID
                                 LEFT JOIN BILSANET_MOBILE.dbo.Mobile_OGT_Branslar mob ON mob.Brans = bx.Brans 
                                 WHERE ogtx.OgretmenID =sss.KisiID AND ogtx.BransID >0)
+                        WHEN 8 THEN (
+                                SELECT top 1 concat(''('',S9.SinifKodu,''-'',OOB9.Numarasi'')'') as brans_kisa
+                                    S9.SinifKodu,
+                                    OOB9.Numarasi 
+                                FROM '+@dbnamex+'GNL_OgrenciSeviyeleri OS9
+                                INNER JOIN '+@dbnamex+'GNL_Siniflar S9 ON S9.SinifID = OS9.SinifID
+                                INNER JOIN '+@dbnamex+'GNL_DersYillari DY9 ON DY9.DersYiliID = S9.DersYiliID
+                                INNER JOIN '+@dbnamex+'GNL_Okullar OK9 ON OK9.OkulID = DY9.OkulID
+                                INNER JOIN '+@dbnamex+'GNL_OgrenciOkulBilgileri OOB9 ON OOB9.OkulID = OK9.OkulID AND OOB9.OgrenciID = OS9.OgrenciID
+                                INNER JOIN '+@dbnamex+'GNL_Kisiler K9 ON K9.KisiID = OS9.OgrenciID
+                                WHERE     
+                                    OS9.OgrenciID = sss.KisiID  )
                     else '''' end as brans,gg.cinsiyetID
                 FROM ##okimobilfirstdata".$tc." sss
                 inner join '+@dbnamex+'.dbo.GNL_Okullar oo ON oo.OkulID=sss.OkulID
@@ -6782,7 +6794,8 @@ class MblLogin extends \DAL\DalSlim {
                 OK.OkulID, 
                 OK.KurumID,
                 OOB.OgrenciOkulBilgiID,
-                DY.DersYiliID ,
+                DY.DersYiliID,
+                OOB.Numarasi,
                 (CASE WHEN (1 = 1) THEN 1 ELSE 0 END)  as control
             FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
             INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID = OS.SinifID
@@ -6792,7 +6805,7 @@ class MblLogin extends \DAL\DalSlim {
             INNER JOIN ".$dbnamex."GNL_Kisiler K ON K.KisiID = Os.OgrenciID
             WHERE     
                 Os.OgrenciID = '".$KisiID."' 
-            ORDER BY dy.EgitimYilID desc;
+            /* ORDER BY dy.EgitimYilID desc; */
 
             SET NOCOUNT OFF;  
                  "; 
