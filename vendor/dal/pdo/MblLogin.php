@@ -8160,7 +8160,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                                 when 4 then '' 
                                 when 5 then '' 
                                 else '' end
-                            FROM GNL_HesaplamaAraliklari hax 
+                            FROM ".$dbnamex."GNL_HesaplamaAraliklari hax 
                             where
                             hax.DersYiliID = ODNB.DersYiliID AND
                             hax.AralikTurID in (1,2,3,4,5) and 
