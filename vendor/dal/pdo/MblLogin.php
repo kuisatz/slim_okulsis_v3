@@ -2449,7 +2449,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                	
                 WHERE 
                    /*  a.DersYiliID = '".$dersYiliID."' AND */ 
-                    zz.KisiID  ='".$kisiId."'; 
+                    zz.KisiID  ='".$kisiId."'  
                 order by a.Tarih desc 
             SET NOCOUNT OFF; 
                  "; 
