@@ -2418,7 +2418,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
               
             $sql = "  
             SET NOCOUNT ON;  
-             
+                IF OBJECT_ID('tempdb..#mesajlar') IS NOT NULL DROP TABLE #mesajlar;
+                SELECT * 
+                INTO #mesajlar
+                FROM BILSANET_MOBILE.dbo.Mobile_User_Messages
+                WHERE main_group in( 4,5) and active =0 and deleted =0;
+  
                 SELECT 
                     concat(zz.Adi,zz.Soyadi)  as adsoyad,
                     COALESCE(NULLIF(cast(a.OgrenciDevamsizlikID as varchar(50)),NULL),'') as OgrenciDevamsizlikID , 
@@ -2436,7 +2441,10 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     cast(cast(COALESCE(NULLIF(c.OzursuzDevamsiz2,NULL),0) AS numeric(10,2)) AS nvarchar(10)) AS OzursuzDevamsiz2 ,
                     ROW_NUMBER() OVER(ORDER BY Tarih) AS rownum  ,
                     concat(cast(a.DevamsizlikKodID AS varchar(2)),' - ', COALESCE(NULLIF(ddx.DevamsizlikAdi,''),ddx.DevamsizlikAdi_eng) collate SQL_Latin1_General_CP1254_CI_AS) AS DevamsizlikAdi,
-                    cast(cast(COALESCE(NULLIF(dd.GunKarsiligi,NULL),0) AS numeric(10,2)) AS varchar(5)) AS GunKarsiligi
+                    cast(cast(COALESCE(NULLIF(dd.GunKarsiligi,NULL),0) AS numeric(10,2)) AS varchar(5)) AS GunKarsiligi,
+                    case when cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) > 4 then  
+						spdx5.description  collate SQL_Latin1_General_CP1254_CI_AS  + cast(10 - cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10))
+                    else '' end as alertmessage
                 FROM ".$dbnamex."GNL_Kisiler zz 
                 INNER JOIN ".$dbnamex."GNL_DersYillari yy on yy.DersYiliID =  '".$dersYiliID."'
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDevamsizliklari  a on a.OgrenciID = zz.KisiID and yy.DersYiliID =a.DersYiliID
@@ -2444,13 +2452,15 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 LEFT JOIN ".$dbnamex."GNL_OgrenciSeviyeleri c ON c.OgrenciSeviyeID = b.OgrenciSeviyeID
                 LEFT JOIN ".$dbnamex."[GNL_DevamsizlikKodlari] dd ON dd.DevamsizlikKodID = a.DevamsizlikKodID
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_DevamsizlikKodlari_lng ddx ON (ddx.language_parent_id = a.DevamsizlikKodID OR ddx.DevamsizlikKodID = a.DevamsizlikKodID) and 
-                                ddx.language_id = ".$languageIdValue." 
-                LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions spdx on spdx.main_group = 4 and spdx.first_group = 2 and spdx.language_id = ".$languageIdValue." and spdx.active =0 and spdx.deleted =0 
-               	
+                                ddx.language_id = ".$languageIdValue."  
+                LEFT JOIN #mesajlar spdx on spdx.main_group = 4 and spdx.first_group = 2 and spdx.language_id = ".$languageIdValue."  
+                LEFT JOIN #mesajlar spdx5 on spdx5.main_group = 5 and spdx5.first_group = 1 and spdx5.language_id = ".$languageIdValue."   
+               	 
                 WHERE 
                    /*  a.DersYiliID = '".$dersYiliID."' AND */ 
                     zz.KisiID  ='".$kisiId."'  
-                order by a.Tarih desc 
+                order by a.Tarih desc;
+                IF OBJECT_ID('tempdb..#mesajlar') IS NOT NULL DROP TABLE #mesajlar;
             SET NOCOUNT OFF; 
                  "; 
             $statement = $pdo->prepare($sql);   

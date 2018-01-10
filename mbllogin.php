@@ -1165,7 +1165,8 @@ $app->get("/OgrenciDevamsizlikListesi_mbllogin/", function () use ($app ) {
              "OzursuzDevamsiz1" => $menu["OzursuzDevamsiz1"],
              "OzurluDevamsiz2" => $menu["OzurluDevamsiz2"],
              "OzursuzDevamsiz2" => $menu["OzursuzDevamsiz2"],
-             
+            "alertmessage" => html_entity_decode($menu["alertmessage"]),  
+            
         );
     }
     
