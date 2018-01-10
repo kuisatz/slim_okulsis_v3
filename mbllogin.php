@@ -1552,6 +1552,8 @@ $app->get("/Ogretmensinavlistesi_mbllogin/", function () use ($app ) {
             "SinavAciklamasi" =>   html_entity_decode($menu["SinavAciklamasi"]), 
             "SinavID" =>   ($menu["SinavID"]), 
             "SinavDersID" =>   ($menu["SinavDersID"]), 
+            "isDegerlendirildi" =>   ($menu["isDegerlendirildi"]), 
+            
              
         );
     }

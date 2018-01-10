@@ -3096,7 +3096,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         null AS SinavKodu ,
                         null AS SinavID ,  
                         COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS SinavAciklamasi,
-                        NULL as SinavDersID
+                        NULL as SinavDersID,
+                        NULL as isDegerlendirildi
                     FROM BILSANET_MOBILE.dbo.sys_specific_definitions a 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id] ) and  ax.language_id= lx.id  
@@ -3113,7 +3114,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         a.SinavID ,  
                         SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  ,
-                        SD.SinavDersID 
+                        SD.SinavDersID,
+                        a.isDegerlendirildi
                     FROM #okiogrsinavlari a 
                     INNER JOIN ".$dbnamex."[GNL_Donemler] gd on gd.DonemID = a.NotDonemID 
                     INNER JOIN ".$dbnamex."SNV_SinavKategorileri SK ON SK.SinavID = a.SinavID   
