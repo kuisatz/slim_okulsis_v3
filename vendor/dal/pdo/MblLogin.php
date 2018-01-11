@@ -4674,7 +4674,11 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             
             $sql = "  
             SET NOCOUNT ON;  
-            
+            IF OBJECT_ID('tempdb..#legend') IS NOT NULL DROP TABLE #legend;  
+            SELECT * 
+            into #legend
+            FROM BILSANET_MOBILE.dbo.Mobile_User_Messages mum 
+            WHERE mum.main_group=6 and mum.active =0 and mum.deleted =0 and mum.language_id = ".$languageIdValue." ;
             SELECT 
                 OO.OgrenciOdevID,
                 OO.OgrenciID,
@@ -4691,7 +4695,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 FORMAT(OT.Tarih, 'dd-MM-yyyy') as Tarih, 
                 FORMAT(OT.TeslimTarihi, 'dd-MM-yyyy') as TeslimTarihi, 
                 COALESCE(NULLIF(cast(OT.Aciklama as nvarchar(max)) collate SQL_Latin1_General_CP1254_CI_AS,NULL),'' collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama
- 
+                ,mumx1.description as l1
+                ,mumx2.description as l2
+                ,mumx3.description as l3
             FROM ".$dbnamex."ODV_OgrenciOdevleri OO 
             INNER JOIN ".$dbnamex."ODV_OdevTanimlari OT ON OT.OdevTanimID = OO.OdevTanimID 
             INNER JOIN ".$dbnamex."OGT_Ogretmenler AS OGT ON OGT.OgretmenID = OT.OgretmenID 
@@ -4702,9 +4708,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             INNER JOIN ".$dbnamex."GNL_DersHavuzlari AS DH ON DH.DersHavuzuID = SD.DersHavuzuID 
             INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID = DH.DersYiliID 
             INNER JOIN ".$dbnamex."GNL_Dersler AS D ON D.DersID = DH.DersID 
+            INNER JOIN #legend mumx1 on mumx1.first_group =1  
+            INNER JOIN #legend mumx2 on mumx2.first_group =2  
+            INNER JOIN #legend mumx3 on mumx3.first_group =3  
             WHERE OO.OgrenciID = '".$OgrenciID."' AND DY.EgitimYilID = ".intval($EgitimYilID)."
             ORDER BY OT.Tarih DESC 
-                   
+            IF OBJECT_ID('tempdb..#legend') IS NOT NULL DROP TABLE #legend;           
             SET NOCOUNT OFF;   
                  "; 
             $statement = $pdo->prepare($sql);   

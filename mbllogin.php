@@ -2181,8 +2181,10 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
             "Tanim" =>   html_entity_decode($menu["Tanim"]), 
             "Tarih" =>   ($menu["Tarih"]), 
             "TeslimTarihi" =>   ($menu["TeslimTarihi"]),  
-            "Aciklama" =>   html_entity_decode($menu["Aciklama"]), 
-            
+            "Aciklama" =>   html_entity_decode($menu["Aciklama"]),
+            "l1" =>   html_entity_decode($menu["l1"]), 
+            "l2" =>   html_entity_decode($menu["l2"]),  
+            "l3" =>   html_entity_decode($menu["l3"]), 
         );
     } 
     $app->response()->header("Content-Type", "application/json"); 
