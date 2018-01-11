@@ -1848,7 +1848,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     FROM #tmpe  tt
                     LEFT JOIN ".$dbnamex."GNL_Fotograflar ff on ff.KisiID =tt.OgrenciID  
                         ) AS asdadd 
-                    '".$addOrderSql."'
+                     ".$addOrderSql." 
             IF OBJECT_ID('tempdb..#tmpe') IS NOT NULL DROP TABLE #tmpe; 
             SET NOCOUNT OFF; 
                  "; 
