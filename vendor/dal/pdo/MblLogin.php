@@ -2045,14 +2045,14 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
       $devamsizlikKodID = -1 ; 
    //   print_r($std ['yok']);
                        
-                        if ($std ['gec']  == 1) { $devamsizlikKodID = 1 ;}
-                        if ($std ['yok']  == 1) { $devamsizlikKodID = 2 ;}
+                        if ($std ['yokgec']  == 1) { $devamsizlikKodID = 1 ;}
+                        if ($std ['yokgec']  == 2) { $devamsizlikKodID = 2 ;}
     //   print_r("<<<<<<<"); 
    //  print_r($devamsizlikKodID);  
   //   print_r(">>>>>>> ");            
         //  print_r(htmlentities('<Ogrenci><OgrenciID>').$dataValue[0][0]).htmlentities('</OgrenciID><DevamsizlikKodID>').$dataValue[0][1].htmlentities('</DevamsizlikKodID> ' )  ; 
          //    IF ($devamsizlikKodID >-1)  {  echo( '<Ogrenci><OgrenciID>'.$std ['id'].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ); }
-              IF ($devamsizlikKodID >-1)  { $SendXmlData =$SendXmlData.'<Ogrenci><OgrenciID>'.$std ['id'].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ; }
+              IF ($devamsizlikKodID >0)  { $SendXmlData =$SendXmlData.'<Ogrenci><OgrenciID>'.$std ['id'].'</OgrenciID><DevamsizlikKodID>'.$devamsizlikKodID.'</DevamsizlikKodID><Aciklama/></Ogrenci>' ; }
                         }
                     }
                   
