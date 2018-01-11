@@ -457,7 +457,7 @@ $app->get("/fillVarYokGecTypes_sysSpecificDefinitions/", function () use ($app )
     ));
 
         $menus = array();
-        $menus[] = array("text" => "Lütfen Seçiniz", "value" => 0, "selected" => true, "imageSrc" => "", "description" => "Lütfen Seçiniz",); 
+  //      $menus[] = array("text" => "Lütfen Seçiniz", "value" => 0, "selected" => true, "imageSrc" => "", "description" => "Lütfen Seçiniz",); //
     if ($componentType == 'bootstrap') {
         foreach ($resCombobox as $menu) {
             $menus[] = array(
