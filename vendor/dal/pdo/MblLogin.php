@@ -2444,7 +2444,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     cast(cast(COALESCE(NULLIF(dd.GunKarsiligi,NULL),0) AS numeric(10,2)) AS varchar(5)) AS GunKarsiligi,
                     case when cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2))+ cast(COALESCE(NULLIF(c.OzurluDevamsiz2,NULL),0) AS numeric(10,2)) > 4 then  
 						spdx5.description  collate SQL_Latin1_General_CP1254_CI_AS  + cast(10 -cast(COALESCE(NULLIF(c.OzurluDevamsiz2,NULL),0) AS numeric(10,2))- cast(COALESCE(NULLIF(c.OzurluDevamsiz1,NULL),0) AS numeric(10,2)) AS nvarchar(10))
-						else '' end as alertmessage
+						else '1111111111111111111' end as alertmessage
                 FROM ".$dbnamex."GNL_Kisiler zz 
                 INNER JOIN ".$dbnamex."GNL_DersYillari yy on yy.DersYiliID =  '".$dersYiliID."'
                 LEFT JOIN ".$dbnamex."GNL_OgrenciDevamsizliklari  a on a.OgrenciID = zz.KisiID and yy.DersYiliID =a.DersYiliID
