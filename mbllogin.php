@@ -721,13 +721,23 @@ $app->get("/ogretmenDersPrgDersSaatleriOgrencileri_mbllogin/", function () use (
         $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                 $app, $_GET['did']));
     }
-     $vLanguageID = NULL;
+    $vLanguageID = NULL;
     if (isset($_GET['languageID'])) {
         $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
                                                                 $app, 
                                                                 $_GET['languageID']));
     } 
+    $vcmb = NULL;
+    if (isset($_GET['cmb'])) {
+        $stripper->offsetSet('cmb', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                                                                $app, 
+                                                                $_GET['cmb']));
+    } 
+    
     $stripper->strip();
+    if ($stripper->offsetExists('cmb')) {
+        $vcmb = $stripper->offsetGet('cmb')->getFilterValue();
+    }
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -762,6 +772,7 @@ $app->get("/ogretmenDersPrgDersSaatleriOgrencileri_mbllogin/", function () use (
         'Cid' => $vCid, 
         'Did' => $vDid,
         'LanguageID' => $vLanguageID, 
+        'cmb' => $vcmb, 
         )); 
   
     $menus = array();

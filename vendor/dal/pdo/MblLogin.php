@@ -1781,6 +1781,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
             } 
+            $cmb = 0;
+            $addOrderSql = null ; 
+            if (isset($params['cmb']) && $params['cmb'] != "") {
+                $cmb = $params['cmb'];
+                $addOrderSql = ' ORDER BY aciklama '; 
+            } 
              
             $sql = "  
             SET NOCOUNT ON;   
@@ -1808,20 +1814,41 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     @DersYiliID='".$dersYiliID."', 
                     @OgretmenID='".$kisiId."'  ;  
                         
-
-                SELECT 
-                    tt.OgrenciID, 
-                    FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
-                    tt.Numarasi  ,   
-                    UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS,' (', tt.Numarasi,')'   )) AS adsoyad ,                  
-                    tt.CinsiyetID ,
-                    tt.DevamsizlikKodID,
-                    tt.Aciklama,
-                    tt.DersSirasi,
-                    tt.DersYiliID,
-                    ff.Fotograf
-                FROM #tmpe  tt
-                LEFT JOIN  ".$dbnamex."GNL_Fotograflar ff on ff.KisiID =tt.OgrenciID ; 
+                    SELECT * FROM ( 
+                    SELECT  
+                        '00000000-0000-0000-0000-000000000001' AS OgrenciID, 
+                        NULL AS Tarih, 
+                        NULL AS Numarasi, 
+                        COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS aciklama,
+                        -1 AS CinsiyetID,
+                        NULL AS DevamsizlikKodID,
+                        NULL AS Aciklama,
+                        NULL AS DersSirasi,
+                        NULL AS DersYiliID,
+                        NULL AS Fotograf 
+                    FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                    INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                    LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                    WHERE a.[main_group] = 1 and a.[first_group]  = 12 and
+                        a.language_parent_id =0 AND
+                        1 =  ".$cmb." 
+                UNION   
+                    SELECT 
+                        tt.OgrenciID, 
+                        FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
+                        tt.Numarasi  ,   
+                        UPPER(concat(tt.Adi collate SQL_Latin1_General_CP1254_CI_AS , ' ', tt.Soyadi collate SQL_Latin1_General_CP1254_CI_AS,' (', tt.Numarasi,')'   )) AS adsoyad ,                  
+                        tt.CinsiyetID ,
+                        tt.DevamsizlikKodID,
+                        tt.Aciklama,
+                        tt.DersSirasi,
+                        tt.DersYiliID,
+                        ff.Fotograf
+                    FROM #tmpe  tt
+                    LEFT JOIN ".$dbnamex."GNL_Fotograflar ff on ff.KisiID =tt.OgrenciID  
+                        ) AS asdadd 
+                    '".$addOrderSql."'
             IF OBJECT_ID('tempdb..#tmpe') IS NOT NULL DROP TABLE #tmpe; 
             SET NOCOUNT OFF; 
                  "; 
@@ -8502,7 +8529,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 SELECT 
                     NULL AS ID, 
                     NULL AS SinifKodu, 
-                    'LÜTFEN SINIF SEÇİNİZ' AS aciklama,
+                    COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS aciklama,
                     -2 AS SeviyeID,
                     1 as kontrol
                 FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
