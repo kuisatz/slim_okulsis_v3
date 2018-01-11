@@ -1785,7 +1785,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             $addOrderSql = null ; 
             if (isset($params['cmb']) && $params['cmb'] != "") {
                 $cmb = $params['cmb'];
-                $addOrderSql = ' ORDER BY aciklama '; 
+                $addOrderSql = ' ORDER BY adsoyad '; 
             } 
              
             $sql = "  
@@ -1819,7 +1819,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         '00000000-0000-0000-0000-000000000001' AS OgrenciID, 
                         NULL AS Tarih, 
                         NULL AS Numarasi, 
-                        COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS aciklama,
+                        COALESCE(NULLIF(ax.[description],''),a.[description_eng]) AS adsoyad,
                         -1 AS CinsiyetID,
                         NULL AS DevamsizlikKodID,
                         NULL AS Aciklama,
@@ -1833,6 +1833,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     WHERE a.[main_group] = 1 and a.[first_group]  = 12 and
                         a.language_parent_id =0 AND
                         1 =  ".$cmb." 
+                        AND 0 < (select count(1) from #tmpe)
                 UNION   
                     SELECT 
                         tt.OgrenciID, 
