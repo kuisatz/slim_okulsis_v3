@@ -1785,7 +1785,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             $addOrderSql = null ; 
             if (isset($params['cmb']) && $params['cmb'] != "") {
                 $cmb = $params['cmb'];
-                $addOrderSql = ' ORDER BY adsoyad '; 
+                $addOrderSql = ' ORDER BY Numarasi '; 
             } 
              
             $sql = "  
