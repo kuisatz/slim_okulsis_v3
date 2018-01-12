@@ -2133,6 +2133,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
                                                                 $_GET['languageID']));
     } 
     $stripper->strip();
+    
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -2196,7 +2197,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
             "Tanim" =>   html_entity_decode($menu["Tanim"]), 
             "Tarih" =>   ($menu["Tarih"]), 
             "TeslimTarihi" =>   ($menu["TeslimTarihi"]),  
-            "Aciklama" =>  strip_tags($filterHTMLTags->filter(  html_entity_decode($menu["Aciklama"] ))),
+            "Aciklama" => $stripper2-> ripTags( strip_tags($filterHTMLTags->filter(  html_entity_decode($menu["Aciklama"] )))),
             "l1" =>   html_entity_decode($menu["l1"]), 
             "l2" =>   html_entity_decode($menu["l2"]),  
             "l3" =>   html_entity_decode($menu["l3"]), 
