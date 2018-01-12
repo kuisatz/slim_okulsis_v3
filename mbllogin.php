@@ -2158,7 +2158,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         )); 
     
     $filterHTMLTags = $app->getServiceManager()->get(\Services\Filter\FilterServiceNames::FILTER_HTML_TAGS_CUSTOM_BASE);
-     
+      
     $menus = array();
     foreach ($resDataInsert as $menu){
       /*  $Aciklama = NULL; 
