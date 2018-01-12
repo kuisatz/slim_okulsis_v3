@@ -48,9 +48,16 @@ class FilterHtmlTagsCustomAdvanced implements \Zend\ServiceManager\FactoryInterf
                                                "/http/i",*/
                                                 "/style/i",
                                                "/(<a)|(<\/a>)/i",
+                                                "/(\r)+/i",  
                                                ),
                         'replacement' => '',
-                    ), 200));
+                    ), 200)); 
+        $filterChain ->attach(new \Zend\Filter\PregReplace(array(
+                        'pattern'     => array(
+                                               "/ {2,}+/i", // remove multiple spaces
+                                               ),
+                        'replacement' => ' ',
+                    ), 200)); 
         return $filterChain;
 
     }
