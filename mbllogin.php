@@ -2157,7 +2157,8 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         'LanguageID' => $vLanguageID, 
         )); 
     
-    
+    $filterHTMLTags = $app->getServiceManager()->get(\Services\Filter\FilterServiceNames::FILTER_HTML_TAGS_CUSTOM_BASE);
+     
     $menus = array();
     foreach ($resDataInsert as $menu){
       /*  $Aciklama = NULL; 
@@ -2176,6 +2177,9 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
          }
          
         */ 
+        
+          // zend filter sql test 
+     //  echo $filterHTMLTags->filter('select drop deneme char varchar??cccc'); 
          
         $menus[]  = array(  
             "OgrenciOdevID" =>   ($menu["OgrenciOdevID"]), 
@@ -2192,7 +2196,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
             "Tanim" =>   html_entity_decode($menu["Tanim"]), 
             "Tarih" =>   ($menu["Tarih"]), 
             "TeslimTarihi" =>   ($menu["TeslimTarihi"]),  
-            "Aciklama" =>   html_entity_decode($menu["Aciklama"]),
+            "Aciklama" => $filterHTMLTags->filter(  html_entity_decode($menu["Aciklama"])),
             "l1" =>   html_entity_decode($menu["l1"]), 
             "l2" =>   html_entity_decode($menu["l2"]),  
             "l3" =>   html_entity_decode($menu["l3"]), 
