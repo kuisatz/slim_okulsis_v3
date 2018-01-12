@@ -40,13 +40,14 @@ class FilterHtmlTagsCustomAdvanced implements \Zend\ServiceManager\FactoryInterf
                                                "/(<)[^A-Za-z0-9]*(img)/i",
                                                "/([^A-Za-z0-9](eval))|((eval)[^A-Za-z0-9]+)/i",
                                                /*"/HTTP-EQUIV/i",
-                                               "/style/i",
+                                              
                                                "/body/i",
                                                "/HTTP-EQUIV/i",
                                                "/background/i",
                                                "/XML/i",
-                                               "/http/i",
-                                               "/(<a)|(<\/a>)/i",*/
+                                               "/http/i",*/
+                                                "/style/i",
+                                               "/(<a)|(<\/a>)/i",
                                                ),
                         'replacement' => '',
                     ), 200));
