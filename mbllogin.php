@@ -2157,7 +2157,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         'LanguageID' => $vLanguageID, 
         )); 
     
-    $filterHTMLTags = $app->getServiceManager()->get(\Services\Filter\FilterServiceNames::FILTER_HTML_TAGS_CUSTOM_BASE);
+    $filterHTMLTags = $app->getServiceManager()->get(\Services\Filter\FilterServiceNames::FILTER_HTML_TAGS_CUSTOM_ADVANCED);
       
     $menus = array();
     foreach ($resDataInsert as $menu){
