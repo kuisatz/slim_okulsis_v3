@@ -8838,13 +8838,13 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             SELECT * FROM (
             SELECT    
                 NULL AS ID , 
-                'LUTFEN SEÇİNİZ' as aciklama, 
-                0 as kontrol
+                ' LUTFEN SEÇİNİZ' as aciklama, 
+                0 as kontrol 
                 UNION 
             SELECT distinct  
                 OKL.KisiID as ID, 
                 upper(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) as aciklama, 
-                0 as kontrol
+                0 as kontrol  
             FROM  ".$dbnamex."GNL_OkulKullanicilari OKL  
             INNER JOIN ".$dbnamex."GNL_OkulKullaniciRolleri OKR ON OKR.OkulKullaniciID = OKL.OkulKullaniciID 
             INNER JOIN ".$dbnamex."GNL_Roller R ON R.RolID = OKR.RolID
@@ -8858,7 +8858,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 OKR.RolID = ".$SendrolID."  
                     ) as sssss 
             ORDER BY 
-               ID ;
+               aciklama ;
  
             SET NOCOUNT OFF;   
                  "; 
