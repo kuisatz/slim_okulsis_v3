@@ -10721,20 +10721,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             
             $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);  
             
-            $KisiID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
-            if ((isset($params['OgrenciID']) && $params['OgrenciID'] != "")) {
-                $KisiID = $params['OgrenciID'];
-            }
-            
-            $findOgrenciseviyeIDValue= 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC' ; 
-            $findOgrenciseviyeID = $this->findOgrenciseviyeID(
-                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid,'Did' =>$did, ));
-            if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
-                $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID']; 
-            }  
-             
-            $OgrenciSeviyeID = $findOgrenciseviyeIDValue;
-          
+           
             $SinavID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'; 
             if ((isset($params['SinavID']) && $params['SinavID'] != "")) {
                 $SinavID = $params['SinavID'];
@@ -10743,30 +10730,13 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            } 
-            $dosyaID = '##'.str_replace ('-','',$OgrenciSeviyeID);
+            }  
               
         $sql =   
-           " SET NOCOUNT ON;
-            DECLARE @egitimYilID INT;
-            DECLARE @ogrenciID UNIQUEIDENTIFIER;
-            DECLARE @OgrenciSeviyeID UNIQUEIDENTIFIER;
-            DECLARE @SinavID UNIQUEIDENTIFIER;
-            DECLARE @SinavOgrenciID UNIQUEIDENTIFIER;
-            SET @OgrenciSeviyeID='".$OgrenciSeviyeID."';
-            SET @SinavID='".$SinavID."';
-            IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
-            IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; 
-            IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
-            SELECT @egitimYilID=EgitimYilID,@ogrenciID=OgrenciID
-            FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
-            INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID=OS.SinifID
-            INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID=S.DersYiliID
-            WHERE OgrenciSeviyeID=@OgrenciSeviyeID; 
-            
+           " SET NOCOUNT ON; 
             DECLARE @SinavID UNIQUEIDENTIFIER;
             DECLARE @OkulID UNIQUEIDENTIFIER; 
-            SET @SinavID='FD10FF73-D34C-42CF-B773-A0583CF92768';
+            SET @SinavID='".$SinavID."';
             SET @OkulID='316E8400-E6A9-41BF-A428-46948B7877F7'; 
 			 
             IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
@@ -10793,18 +10763,18 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 SKIT.KitapcikAdi,
                 SOK.OkulID
             into #tempogrencibilgileri
-            FROM BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar SNV
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavSiniflari ssf ON ssf.SinavID=SNV.SinavID AND ssf.SinavID=@SinavID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SO ON SO.SinavSinifID=ssf.SinavSinifID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Kisiler KISI ON KISI.KisiID=OS.OgrenciID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Okullar OKUL ON OKUL.OkulID=SOK.OkulID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavTurleri ST ON ST.SinavTurID=SNV.SinavTurID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavKitapciklari SKIT ON SKIT.SinavKitapcikID=SO.SinavKitapcikID
-            LEFT JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Adresler ADR ON ADR.AdresID=OKUL.AdresID
-            LEFT JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Ilceler ILCE ON ILCE.IlceID=ADR.IlceID
-            LEFT JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Iller IL ON IL.IlID=ILCE.IlID
+            FROM ".$dbnamex."SNV_Sinavlar SNV
+            INNER JOIN ".$dbnamex."SNV_SinavSiniflari ssf ON ssf.SinavID=SNV.SinavID AND ssf.SinavID=@SinavID
+            INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavSinifID=ssf.SinavSinifID
+            INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
+            INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
+            INNER JOIN ".$dbnamex."GNL_Kisiler KISI ON KISI.KisiID=OS.OgrenciID
+            INNER JOIN ".$dbnamex."GNL_Okullar OKUL ON OKUL.OkulID=SOK.OkulID
+            INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID=SNV.SinavTurID
+            INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKIT ON SKIT.SinavKitapcikID=SO.SinavKitapcikID
+            LEFT JOIN ".$dbnamex."GNL_Adresler ADR ON ADR.AdresID=OKUL.AdresID
+            LEFT JOIN ".$dbnamex."GNL_Ilceler ILCE ON ILCE.IlceID=ADR.IlceID
+            LEFT JOIN ".$dbnamex."GNL_Iller IL ON IL.IlID=ILCE.IlID
              WHERE SOK.OkulID = @OkulID;
 
             SELECT op.SinavOgrenciID,
@@ -10815,18 +10785,18 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 SUM(OP.Puan) AS TopPuan,
                 S.sinavID
             INTO #tmpSinif
-            FROM BILSANET_TAKEVBODRUM.dbo.OD_SinavPuanTipleri SPT
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar S ON S.SinavID=SPT.SinavID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanlari OP ON OP.SinavPuanTipID=SPT.SinavPuanTipID /* AND OP.SinavOgrenciID = @SinavOgrenciID */
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanTipleri PT ON PT.PuanTipID=SPT.PuanTipID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID=OP.OgrenciPuanID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID=OPS.PuanSiralamaTipID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SO ON SO.SinavOgrenciID=OP.SinavOgrenciID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
-            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_DersYillari DY ON DY.DersYiliID=SNF.DersYiliID
-            WHERE PST.PuanSiralamaTipID IN (4,5)  AND SPT.SinavID = @SinavID 
+            FROM ".$dbnamex."OD_SinavPuanTipleri SPT
+            INNER JOIN ".$dbnamex."SNV_Sinavlar S ON S.SinavID=SPT.SinavID
+            INNER JOIN ".$dbnamex."OD_OgrenciPuanlari OP ON OP.SinavPuanTipID=SPT.SinavPuanTipID  
+            INNER JOIN ".$dbnamex."OD_PuanTipleri PT ON PT.PuanTipID=SPT.PuanTipID
+            INNER JOIN ".$dbnamex."OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID=OP.OgrenciPuanID
+            INNER JOIN ".$dbnamex."OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID=OPS.PuanSiralamaTipID
+            INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavOgrenciID=OP.SinavOgrenciID
+            INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
+            INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
+            INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
+            INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID=SNF.DersYiliID
+            WHERE PST.PuanSiralamaTipID IN (4,5) AND SPT.SinavID = @SinavID 
             GROUP BY op.SinavOgrenciID,Snf.SeviyeID,SNF.SinifID,SNF.SinifKodu,PST.PuanSiralamaTipID,S.sinavID
             ORDER BY Snf.SeviyeID,Snf.SinifKodu;
 	    SELECT
@@ -10847,16 +10817,16 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 PST.PuanSiralamaTipAdi,
                 S.isVeliSiralamaHidden
              into #puanlar
-             FROM BILSANET_TAKEVBODRUM.dbo.OD_SinavPuanTipleri SPT
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar S ON S.SinavID=SPT.SinavID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanlari OP ON OP.SinavPuanTipID=SPT.SinavPuanTipID-- AND OP.SinavOgrenciID=@SinavOgrenciID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanTipleri PT ON PT.PuanTipID=SPT.PuanTipID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID=OP.OgrenciPuanID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID=OPS.PuanSiralamaTipID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SO ON SO.SinavOgrenciID=OP.SinavOgrenciID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
-             INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
+             FROM ".$dbnamex."OD_SinavPuanTipleri SPT
+             INNER JOIN ".$dbnamex."SNV_Sinavlar S ON S.SinavID=SPT.SinavID
+             INNER JOIN ".$dbnamex."OD_OgrenciPuanlari OP ON OP.SinavPuanTipID=SPT.SinavPuanTipID-- AND OP.SinavOgrenciID=@SinavOgrenciID
+             INNER JOIN ".$dbnamex."OD_PuanTipleri PT ON PT.PuanTipID=SPT.PuanTipID
+             INNER JOIN ".$dbnamex."OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID=OP.OgrenciPuanID
+             INNER JOIN ".$dbnamex."OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID=OPS.PuanSiralamaTipID
+             INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SO.SinavOgrenciID=OP.SinavOgrenciID
+             INNER JOIN ".$dbnamex."SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
+             INNER JOIN ".$dbnamex."GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
+             INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
              WHERE SPT.SinavID=@SinavID AND
                 PST.PuanSiralamaTipID IN (4,5)
              ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
