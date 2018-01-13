@@ -10832,7 +10832,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
              ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
             
             declare @raporkey varchar(50) ;
-            set @raporkey = 'OSS'+replace(newID(),'-','');
+            set @raporkey = 'SL'+replace(newID(),'-','');
             
             INSERT INTO BILSANET_MOBILE.dbo.Mobile_tempRaporSinavSonucListesi
                     (raporkey, rowid ,SinavID
@@ -10882,7 +10882,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             ORDER BY okulSira,sinifSira,adsoyad;
 
             SELECT  top 1 raporkey,
-                'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.html?raporkey='+@raporkey+'&j_username=joeuser&j_password=joeuser' as proad,
+                'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/SinavGirenOgrenciListesi.html?raporkey='+@raporkey+'&j_username=joeuser&j_password=joeuser' as proad,
                 'http://mobile.okulsis.net:8000/jasperserver/rest/login?j_username=joeuser&j_password=joeuser' as lroad
             FROM BILSANET_MOBILE.dbo.Mobile_tempRaporSinavSonucListesi
             where raporkey = @raporkey;
