@@ -6034,4 +6034,68 @@ $app->get("/OgrenciSinavDetayRpt_mbllogin/", function () use ($app ) {
   
 }); 
 
+/**
+ * Okan CIRAN
+ * @since 25-10-2017 
+ */
+$app->get("/OgrenciSinavSonucListesiRpt_mbllogin/", function () use ($app ) {
+    $stripper = $app->getServiceManager()->get('filterChainerCustom');
+    $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();        
+    $BLL = $app->getBLLManager()->get('mblLoginBLL'); 
+    $headerParams = $app->request()->headers(); 
+      
+    $vCid = NULL;   
+    if (isset($_GET['cid'])) {
+        $stripper->offsetSet('cid', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['cid']));
+    }  
+    $vSinavID = NULL;     
+    if (isset($_GET['sinavID'])) {
+        $stripper->offsetSet('sinavID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['sinavID']));
+    }  
+    $vDid = NULL;   
+    if (isset($_GET['did'])) {
+        $stripper->offsetSet('did', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['did']));
+    }
+    $vLanguageID = NULL;
+    if (isset($_GET['languageID'])) {
+        $stripper->offsetSet('languageID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                                                                $app, 
+                                                                $_GET['languageID']));
+    } 
+    $stripper->strip();
+    if ($stripper->offsetExists('did')) {
+        $vDid = $stripper->offsetGet('did')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('cid')) {
+        $vCid = $stripper->offsetGet('cid')->getFilterValue();
+    }  
+    if ($stripper->offsetExists('ogrenciID')) {
+        $vOgrenciID= $stripper->offsetGet('ogrenciID')->getFilterValue();
+    } 
+    if ($stripper->offsetExists('languageID')) 
+        {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
+      
+    $resDataMenu = $BLL->ogrenciSinavSonucListesiRpt(array(  
+                                            'Cid' => $vCid,   
+                                            'Did' => $vDid, 
+                                            'SinavID' => $vSinavID,   
+                                            'LanguageID' => $vLanguageID, 
+                                           ) ); 
+    $menus = array();
+    foreach ($resDataMenu as $menu){
+        $menus[]  = array(  
+            "lroad" => ($menu["lroad"]),  
+            "proad" =>  ($menu["proad"]),  
+            "raporkey" =>  ($menu["raporkey"]),  
+        );
+    }
+    
+    $app->response()->header("Content-Type", "application/json"); 
+    $app->response()->body(json_encode($menus));
+  
+}); 
+
 $app->run();

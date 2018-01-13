@@ -1471,5 +1471,19 @@ class MblLogin extends \BLL\BLLSlim{
     $resultSet = $DAL->ogrenciSinavDetayRpt($params);  
     return $resultSet['resultSet'];
     } 
+   
+    /**
+     * Function to get datagrid row count on user interface layer
+     * @param array | null $params 
+     * @return array
+     */ 
+    public function ogrenciSinavSonucListesiRpt($params = array()) {
+    $DAL = $this->slimApp->getDALManager()->get('mblLoginPDO');
+    $resultSet = $DAL->ogrenciSinavSonucListesiRpt($params);  
+    return $resultSet['resultSet'];
+    } 
+    
+    
+    
 }
 

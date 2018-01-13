@@ -1868,6 +1868,25 @@ and open the template in the editor. Ğİ
                         console.warn('error text status-->' + textStatus);
                     }
                 }); 
+                 $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'OgrenciSinavSonucListesiRpt_mbllogin',  
+                        sinavID  :  'A9597CF7-19D4-4DE2-9D68-D804601B70CC', 
+                        languageID : 647,  
+                        cid  : 1,
+                        did  : 91
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 
                 ////////////////////////
                 

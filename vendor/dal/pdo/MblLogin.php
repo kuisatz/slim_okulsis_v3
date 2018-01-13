@@ -1140,18 +1140,18 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 description   
                FROM  (  
                     SELECT 
-                        a.[ID]
-                        ,a.[MenuID]
-                        ,a.[ParentID],  
+                        a.ID
+                        ,a.MenuID
+                        ,a.ParentID,  
                         COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
-                        ,a.[Aciklama]
-                        ,a.[URL]
-                        ,a.[RolID]
-                        ,a.[SubDivision] 
-                        ,a.[ImageURL] 
-                        ,a.[divid] ,
+                        ,a.Aciklama
+                        ,a.URL
+                        ,a.RolID
+                        ,a.SubDivision
+                        ,a.ImageURL
+                        ,a.divid,
                         a.iconcolor,
-                        a.[iconclass],
+                        a.iconclass,
                         a.collapse ,
                         a.sira,
                         COALESCE(NULLIF(ax.header,''),a.headerEng) as header,
@@ -1166,18 +1166,18 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         a.ParentID =0
                      UNION
                      SELECT 
-                        a.[ID]
-                        ,a.[MenuID]
-                        ,a.[ParentID],  
+                        a.ID
+                        ,a.MenuID
+                        ,a.ParentID,  
                         COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
-                        ,a.[Aciklama]
-                        ,a.[URL]
-                        ,a.[RolID]
-                        ,a.[SubDivision] 
-                        ,a.[ImageURL] 
-                        ,a.[divid] ,
+                        ,a.Aciklama
+                        ,a.URL
+                        ,a.RolID
+                        ,a.SubDivision 
+                        ,a.ImageURL
+                        ,a.divid,
                         a.iconcolor,
-                        a.[iconclass],
+                        a.iconclass,
                         a.collapse ,
                         a.sira,
                         COALESCE(NULLIF(ax.header,''),a.headerEng) as header,
@@ -10691,7 +10691,275 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
         }
     }
   
-    
+    /** 
+     * @author Okan CIRAN
+     * @ öğrenci sinav listesi raporu  -- yonetici ve ogretmen için 
+     * @version v 1.0  25.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogrenciSinavSonucListesiRpt($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }     
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);  
+            
+            $KisiID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OgrenciID']) && $params['OgrenciID'] != "")) {
+                $KisiID = $params['OgrenciID'];
+            }
+            
+            $findOgrenciseviyeIDValue= 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC' ; 
+            $findOgrenciseviyeID = $this->findOgrenciseviyeID(
+                            array( 'KisiID' =>$KisiID,  'Cid' =>$cid,'Did' =>$did, ));
+            if (\Utill\Dal\Helper::haveRecord($findOgrenciseviyeID)) {
+                $findOgrenciseviyeIDValue = $findOgrenciseviyeID ['resultSet'][0]['OgrenciseviyeID']; 
+            }  
+             
+            $OgrenciSeviyeID = $findOgrenciseviyeIDValue;
+          
+            $SinavID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'; 
+            if ((isset($params['SinavID']) && $params['SinavID'] != "")) {
+                $SinavID = $params['SinavID'];
+            } 
+            
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            } 
+            $dosyaID = '##'.str_replace ('-','',$OgrenciSeviyeID);
+              
+        $sql =   
+           " SET NOCOUNT ON;
+            DECLARE @egitimYilID INT;
+            DECLARE @ogrenciID UNIQUEIDENTIFIER;
+            DECLARE @OgrenciSeviyeID UNIQUEIDENTIFIER;
+            DECLARE @SinavID UNIQUEIDENTIFIER;
+            DECLARE @SinavOgrenciID UNIQUEIDENTIFIER;
+            SET @OgrenciSeviyeID='".$OgrenciSeviyeID."';
+            SET @SinavID='".$SinavID."';
+            IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
+            IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; 
+            IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
+            SELECT @egitimYilID=EgitimYilID,@ogrenciID=OgrenciID
+            FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS
+            INNER JOIN ".$dbnamex."GNL_Siniflar S ON S.SinifID=OS.SinifID
+            INNER JOIN ".$dbnamex."GNL_DersYillari DY ON DY.DersYiliID=S.DersYiliID
+            WHERE OgrenciSeviyeID=@OgrenciSeviyeID; 
+            
+            DECLARE @SinavID UNIQUEIDENTIFIER;
+            DECLARE @OkulID UNIQUEIDENTIFIER; 
+            SET @SinavID='FD10FF73-D34C-42CF-B773-A0583CF92768';
+            SET @OkulID='316E8400-E6A9-41BF-A428-46948B7877F7'; 
+			 
+            IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
+            IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; 
+            IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
+          
+            SELECT
+                SO.OgrenciSeviyeID,
+                SO.SinavOgrenciID,
+                SO.SinifKodu,
+                SO.OgrenciNumarasi,
+                OKUL.OkulAdi,
+                IL.IlAdi,
+                ILCE.IlceAdi,
+                SNV.SinavAciklamasi,
+                SNV.SinavKodu,
+                SNV.SinavTarihi,
+                SNV.SinavTurID,
+                ST.SinavTurAdi,
+                KISI.Adi,
+                KISI.Soyadi,
+                SNV.EgitimYilID,
+                snv.SinavID,
+                SKIT.KitapcikAdi,
+                SOK.OkulID
+            into #tempogrencibilgileri
+            FROM BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar SNV
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavSiniflari ssf ON ssf.SinavID=SNV.SinavID AND ssf.SinavID=@SinavID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SO ON SO.SinavSinifID=ssf.SinavSinifID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Kisiler KISI ON KISI.KisiID=OS.OgrenciID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Okullar OKUL ON OKUL.OkulID=SOK.OkulID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavTurleri ST ON ST.SinavTurID=SNV.SinavTurID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavKitapciklari SKIT ON SKIT.SinavKitapcikID=SO.SinavKitapcikID
+            LEFT JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Adresler ADR ON ADR.AdresID=OKUL.AdresID
+            LEFT JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Ilceler ILCE ON ILCE.IlceID=ADR.IlceID
+            LEFT JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Iller IL ON IL.IlID=ILCE.IlID
+             WHERE SOK.OkulID = @OkulID;
+
+            SELECT op.SinavOgrenciID,
+                Snf.SeviyeID,
+                SNF.SinifID,
+                SNF.SinifKodu,
+                PST.PuanSiralamaTipID,
+                SUM(OP.Puan) AS TopPuan,
+                S.sinavID
+            INTO #tmpSinif
+            FROM BILSANET_TAKEVBODRUM.dbo.OD_SinavPuanTipleri SPT
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar S ON S.SinavID=SPT.SinavID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanlari OP ON OP.SinavPuanTipID=SPT.SinavPuanTipID /* AND OP.SinavOgrenciID = @SinavOgrenciID */
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanTipleri PT ON PT.PuanTipID=SPT.PuanTipID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID=OP.OgrenciPuanID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID=OPS.PuanSiralamaTipID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SO ON SO.SinavOgrenciID=OP.SinavOgrenciID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
+            INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_DersYillari DY ON DY.DersYiliID=SNF.DersYiliID
+            WHERE PST.PuanSiralamaTipID IN (4,5)  AND SPT.SinavID = @SinavID 
+            GROUP BY op.SinavOgrenciID,Snf.SeviyeID,SNF.SinifID,SNF.SinifKodu,PST.PuanSiralamaTipID,S.sinavID
+            ORDER BY Snf.SeviyeID,Snf.SinifKodu;
+	    SELECT
+                OP.SinavOgrenciID,
+                PT.PuanTipAdi,
+                PT.PuanTipKodu,
+                SPT.SinavPuanTipID,
+                OP.OgrenciPuanID,
+                S.sinavkodu,
+                OP.Puan,
+                (SELECT AVG(TopPuan) FROM #tmpSinif WHERE SinifID=SNF.SinifID AND PuanSiralamaTipID=PST.PuanSiralamaTipID
+                    ) AS SinifOrtalamasi,
+                (SELECT AVG(TopPuan) FROM #tmpSinif WHERE PuanSiralamaTipID=PST.PuanSiralamaTipID
+                    ) AS OkulOrtalamasi,
+                OPS.Sira,
+                OPS.SinavaGirenOgrenciSayisi,
+                PST.PuanSiralamaTipID,
+                PST.PuanSiralamaTipAdi,
+                S.isVeliSiralamaHidden
+             into #puanlar
+             FROM BILSANET_TAKEVBODRUM.dbo.OD_SinavPuanTipleri SPT
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_Sinavlar S ON S.SinavID=SPT.SinavID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanlari OP ON OP.SinavPuanTipID=SPT.SinavPuanTipID-- AND OP.SinavOgrenciID=@SinavOgrenciID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanTipleri PT ON PT.PuanTipID=SPT.PuanTipID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_OgrenciPuanSiralari OPS ON OPS.OgrenciPuanID=OP.OgrenciPuanID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.OD_PuanSiralamaTipleri PST ON PST.PuanSiralamaTipID=OPS.PuanSiralamaTipID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOgrencileri SO ON SO.SinavOgrenciID=OP.SinavOgrenciID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.SNV_SinavOkullari SOK ON SOK.SinavOkulID=SO.SinavOkulID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_OgrenciSeviyeleri OS ON OS.OgrenciSeviyeID=SO.OgrenciSeviyeID
+             INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
+             WHERE SPT.SinavID=@SinavID AND
+                PST.PuanSiralamaTipID IN (4,5)
+             ORDER BY PT.PuanTipID, PST.PuanSiralamaTipID DESC;
+            
+            declare @raporkey varchar(50) ;
+            set @raporkey = 'OSS'+replace(newID(),'-','');
+            
+            INSERT INTO BILSANET_MOBILE.dbo.Mobile_tempRaporSinavSonucListesi
+                    (raporkey, rowid ,SinavID
+                    ,SinavOgrenciID ,SeviyeID
+                    ,SinifID ,SinifKodu
+                    ,TopPuan ,adsoyad
+                    ,OgrenciNumarasi ,OkulAdi
+                    ,IlAdi ,IlceAdi
+                    ,SinavAciklamasi ,SinavKodu
+                    ,SinavTarihi ,SinavTurID
+                    ,SinavTurAdi ,EgitimYilID ,PuanTipAdi ,PuanTipKodu  
+                    ,sinifSinavaGirenSayisi ,okulSinavaGirenSayisi
+                    ,sinifSira ,SinifOrtalamasi
+                    ,okulSira ,OkulOrtalamasi) 
+
+            SELECT @raporkey, ROW_NUMBER() OVER (PARTITION BY SinavID ORDER BY  okulSira ,sinifSira , adsoyad ) AS rowid,* 
+            FROM (
+                    select distinct   tttt.SinavID ,   
+                    tttt.SinavOgrenciID,
+                    tttt.SeviyeID,
+                    tttt.SinifID,
+                    tttt.SinifKodu, 
+                    tttt.TopPuan, 
+                    concat(ooo.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ', ooo.Soyadi collate SQL_Latin1_General_CP1254_CI_AS ) adsoyad,			 
+                    ooo.OgrenciNumarasi,
+                    ooo.OkulAdi,
+                    ooo.IlAdi,
+                    ooo.IlceAdi,
+                    ooo.SinavAciklamasi,
+                    ooo.SinavKodu,
+                    ooo.SinavTarihi ,
+                    ooo.SinavTurID,
+                    ooo.SinavTurAdi, 
+                    ooo.EgitimYilID,
+                   /* ooo.OkulID,  */
+                    (SELECT PuanTipAdi FROM #puanlar px11 where PuanSiralamaTipID=5 and px11.SinavOgrenciID=tttt.SinavOgrenciID) as PuanTipAdi,
+                    (SELECT PuanTipKodu FROM #puanlar px12 where PuanSiralamaTipID=5 and px12.SinavOgrenciID=tttt.SinavOgrenciID) as PuanTipKodu,
+                    (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px1 where PuanSiralamaTipID=5 and px1.SinavOgrenciID=tttt.SinavOgrenciID) as sinifSinavaGirenSayisi,
+                    (SELECT SinavaGirenOgrenciSayisi FROM #puanlar px2 where PuanSiralamaTipID=4 and px2.SinavOgrenciID=tttt.SinavOgrenciID) as okulSinavaGirenSayisi,
+                    (SELECT Sira FROM #puanlar px3 where PuanSiralamaTipID=5 and px3.SinavOgrenciID=tttt.SinavOgrenciID) as sinifSira,
+                    (SELECT SinifOrtalamasi FROM #puanlar px4 where PuanSiralamaTipID=5 and px4.SinavOgrenciID=tttt.SinavOgrenciID) as SinifOrtalamasi,
+                    (SELECT Sira FROM #puanlar px5 where PuanSiralamaTipID=4 and px5.SinavOgrenciID=tttt.SinavOgrenciID) as okulSira,
+                    (SELECT OkulOrtalamasi FROM #puanlar px6 where PuanSiralamaTipID=4 and px6.SinavOgrenciID=tttt.SinavOgrenciID) as OkulOrtalamasi 
+                FROM #tmpSinif tttt
+                INNER JOIN #tempogrencibilgileri ooo on ooo.SinavOgrenciID = tttt.SinavOgrenciID
+            ) as asdasdasd
+            ORDER BY okulSira,sinifSira,adsoyad;
+
+            SELECT  top 1 raporkey,
+                'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.html?raporkey='+@raporkey+'&j_username=joeuser&j_password=joeuser' as proad,
+                'http://mobile.okulsis.net:8000/jasperserver/rest/login?j_username=joeuser&j_password=joeuser' as lroad
+            FROM BILSANET_MOBILE.dbo.Mobile_tempRaporSinavSonucListesi
+            where raporkey = @raporkey;
+			 
+
+             IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
+             IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif;
+             IF OBJECT_ID('tempdb..#puanlar') IS NOT NULL DROP TABLE #puanlar;
+             SET NOCOUNT OFF; 
+
+		 ";
+           // $sql =  $sql +  $sql1;
+       //    print_r($sql);
+            $statement = $pdo->prepare($sql);   
+    // echo debugPDO($sql, $params);
+            $statement->execute();
+            
+            //   http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki
+       /*    $c = new \Jaspersoft\Client\Client(
+                "http://localhost:8000/jasperserver",
+                "jasperadmin",
+                "jasperadmin",
+                "organization_1"
+              );
+         */  
+        //    $info = $c->serverInfo();
+        //    print_r($info);
+// http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/ddd.html
+          //   $report = $c->reportService()->runReport('/reports/bilsa/mobile/rapor/ogrenciSinavDetay', 'pdf');
+        //     print_r($c);
+             //    $report ='http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki';
+          //     echo $report; 
+ 
+          //  'http://localhost:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/ogrenciSinavDetay.pdf&dosyaID=';
+            
+             
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+  
+      
     
     
     
