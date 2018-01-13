@@ -6072,8 +6072,8 @@ $app->get("/OgrenciSinavSonucListesiRpt_mbllogin/", function () use ($app ) {
     if ($stripper->offsetExists('cid')) {
         $vCid = $stripper->offsetGet('cid')->getFilterValue();
     }  
-    if ($stripper->offsetExists('ogrenciID')) {
-        $vSinavID= $stripper->offsetGet('ogrenciID')->getFilterValue();
+    if ($stripper->offsetExists('sinavID')) {
+        $vSinavID= $stripper->offsetGet('sinavID')->getFilterValue();
     } 
     if ($stripper->offsetExists('languageID')) 
         {$vLanguageID = $stripper->offsetGet('languageID')->getFilterValue(); }   
