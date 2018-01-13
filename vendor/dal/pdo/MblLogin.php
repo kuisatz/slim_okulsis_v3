@@ -8818,7 +8818,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 $SendrolID = $params['SendrolID'];
             }  
             
-            $OkulID= 0;
+            $OkulID= 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
             $addSQLWhere =NULL; 
             if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
                 $OkulID = $params['OkulID'];
@@ -8842,7 +8842,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 0 as kontrol
                 UNION 
             SELECT distinct  
-                OKL.KisiID as ID , 
+                OKL.KisiID as ID, 
                 upper(concat (ki.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ',ki.Soyadi collate SQL_Latin1_General_CP1254_CI_AS)) as aciklama, 
                 0 as kontrol
             FROM  ".$dbnamex."GNL_OkulKullanicilari OKL  

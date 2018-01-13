@@ -4315,7 +4315,15 @@ $app->get("/MsjIcinPersonelListesi_mbllogin/", function () use ($app ) {
                                                                 $app, 
                                                                 $_GET['languageID']));
     } 
+    $vOkulID= NULL;     
+    if (isset($_GET['okulID'])) {
+        $stripper->offsetSet('okulID', $stripChainerFactory->get(stripChainers::FILTER_PARANOID_LEVEL2, 
+                $app, $_GET['okulID']));
+    } 
     $stripper->strip();
+     if ($stripper->offsetExists('okulID')) {
+        $vOkulID = $stripper->offsetGet('okulID')->getFilterValue();
+    }
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -4338,6 +4346,7 @@ $app->get("/MsjIcinPersonelListesi_mbllogin/", function () use ($app ) {
                                             'SendrolID' => $vSendrolID, 
                                             'Did' => $vDid,
                                             'LanguageID' => $vLanguageID, 
+                                            'OkulID' => $vOkulID, 
                                            ) ); 
     $menus = array();
     foreach ($resDataMenu as $menu){
