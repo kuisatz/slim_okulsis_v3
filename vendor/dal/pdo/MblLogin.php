@@ -8858,7 +8858,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 OKR.RolID = ".$SendrolID."  
                     ) as sssss 
             ORDER BY 
-               aciklama ;
+               ID ;
  
             SET NOCOUNT OFF;   
                  "; 
