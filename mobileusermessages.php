@@ -48,7 +48,7 @@ $app->add(new \Slim\Middleware\MiddlewareMQManager());
 $app->get("/GetSemesters_mobileusermessages/", function () use ($app ) {
     $stripper = $app->getServiceManager()->get('filterChainerCustom');
     $stripChainerFactory = new \Services\Filter\Helper\FilterChainerFactory();
-    $BLL = $app->getBLLManager()->get('mobilSettingsBLL'); 
+    $BLL = $app->getBLLManager()->get('mobileUserMessagesBLL'); 
     
     $vLanguageID = NULL;
     if (isset($_GET['languageID'])) {
