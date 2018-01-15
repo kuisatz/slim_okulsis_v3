@@ -1887,7 +1887,22 @@ and open the template in the editor. Ğİ
                         console.warn('error text status-->' + textStatus);
                     }
                 }); 
-                
+                  $.ajax({
+                    //  url : '../Slim_Proxy_sorubankasi/SlimProxyBoot.php',   
+                    url: '../Slim_Proxy_okulsis/SlimProxyBoot.php',
+                    data: { 
+                        url: 'GetSemesters_mobileusermessages', 
+                        languageID : 647  
+                    },
+                    method: 'GET',
+                    success: function (data, textStatus, jqXHR) {
+
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.warn('error text status-->' + textStatus);
+                    }
+                }); 
                 ////////////////////////
                 
                    
