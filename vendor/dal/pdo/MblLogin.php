@@ -5603,6 +5603,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 MenuID,
                 ParentID,  
                 MenuAdi, 
+                dbMenuAdi,
                 Aciklama,
                 URL,
                 RolID,
@@ -5620,8 +5621,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     SELECT
                         a.[ID],
                         a.[MenuID],
-                        a.[ParentID],
+                        a.[ParentID]
                         COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi,
+                        COALESCE(NULLIF(ax.dbMenuAdi,''),a.dbMenuAdiEng) as dbMenuAdi,
                         a.[Aciklama],
                         a.[URL],
                         a.[RolID],
@@ -5711,7 +5713,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         a.[ID],
                         a.[MenuID],
                         a.[ParentID],  
-                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi ,
+                        COALESCE(NULLIF(ax.[MenuAdi],''),a.[MenuAdiEng]) as MenuAdi,
+                        COALESCE(NULLIF(ax.dbMenuAdi,''),a.dbMenuAdiEng) as dbMenuAdi,
                         a.[Aciklama],
                         a.[URL],
                         a.[RolID],
