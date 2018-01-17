@@ -315,6 +315,7 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
             "MenuID" => $menu["MenuID"],
            /* "ParentID" => $menu["ParentID"],*/
             "MenuAdi" => html_entity_decode($menu["MenuAdi"]),
+            "dbMenuAdi" => html_entity_decode($menu["dbMenuAdi"]),
             "Aciklama" => html_entity_decode($menu["Aciklama"]),
             "URL" => $menu["URL"],
             "SubDivision" => $menu["SubDivision"],
@@ -325,6 +326,8 @@ $app->get("/mobilMenu_mbllogin/", function () use ($app ) {
             "collapse" => $menu["collapse"],  
             "header" => html_entity_decode($menu["header"]),
              "description" => html_entity_decode($menu["description"]),
+            
+            
         );
     }
     

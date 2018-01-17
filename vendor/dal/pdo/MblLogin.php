@@ -1125,7 +1125,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 ID,
                 MenuID,
                 ParentID,  
-                MenuAdi, 
+                MenuAdi,
+                dbMenuAdi,
                 Aciklama,
                 URL,
                 RolID,
@@ -1142,8 +1143,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     SELECT 
                         a.ID
                         ,a.MenuID
-                        ,a.ParentID,  
-                        COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
+                        ,a.ParentID
+                        ,COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi
+                        ,COALESCE(NULLIF(ax.dbMenuAdi,''),a.dbMenuAdiEng) as dbMenuAdi 
                         ,a.Aciklama
                         ,a.URL
                         ,a.RolID
@@ -1168,8 +1170,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                      SELECT 
                         a.ID
                         ,a.MenuID
-                        ,a.ParentID,  
-                        COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
+                        ,a.ParentID  
+                        ,COALESCE(NULLIF(ax.MenuAdi,''),a.MenuAdiEng) as MenuAdi 
+                        ,COALESCE(NULLIF(ax.dbMenuAdi,''),a.dbMenuAdiEng) as dbMenuAdi 
                         ,a.Aciklama
                         ,a.URL
                         ,a.RolID
@@ -9652,7 +9655,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                    /* LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID */ 
                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID and SKS.SinavKitapcikID =SO.SinavKitapcikID
                     WHERE 
-                            SS.SinavDersID = @SinavDersID1                            
+                        SS.SinavDersID = @SinavDersID1                            
                     ORDER BY 
                             SK.BolumKategoriID, 
                             SD.SinavDersSabitID, 
