@@ -10570,6 +10570,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
            ,OgrenciSeviyeID
            ,Sira
            ,DersKodu
+           ,DugumID
            ,DugumAciklama
            ,SoruPuani
            ,AldigiPuan
@@ -10607,6 +10608,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     t1.OgrenciSeviyeID,
                     SKS.Sira,
                     SDS.DersKodu,
+                    DUGUM.DugumID,
                     DUGUM.DugumAciklama,
                     SS.SoruPuani,
                     SOSC.AldigiPuan,
