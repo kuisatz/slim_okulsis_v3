@@ -10748,10 +10748,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 $SinavID = $params['SinavID'];
             } 
             
+            $lid = NULL;
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            }  
+                if ($languageIdValue!= 647 ) {$lid = 385;}
+            } 
               
         $sql =   
            " SET NOCOUNT ON; 
@@ -10903,7 +10905,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             ORDER BY okulSira,sinifSira,adsoyad;
 
             SELECT  top 1 raporkey,
-                'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/SinavGirenOgrenciListesi.html?raporkey='+@raporkey+'&j_username=joeuser&j_password=joeuser' as proad,
+                'http://mobile.okulsis.net:8000/jasperserver/rest_v2/reports/reports/bilsa/mobile/rapor/SinavGirenOgrenciListesi".$lid.".html?raporkey='+@raporkey+'&lid=".$languageIdValue."&j_password=joeuser' as proad,
                 'http://mobile.okulsis.net:8000/jasperserver/rest/login?j_username=joeuser&j_password=joeuser' as lroad
             FROM BILSANET_MOBILE.dbo.Mobile_tempRaporSinavSonucListesi
             where raporkey = @raporkey;
