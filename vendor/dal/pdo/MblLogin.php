@@ -1013,13 +1013,23 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             $okullogoURL =NULL;
             $dosya = NULL; 
             $dosya1 = "okulsis/image/okullogo/okul.png";  
+            $filename =null ; 
             
             $menus = array();
             foreach ($result as $menu){    
                 if (isset($menu["OkulID"]) && $menu['OkulID'] != "") {
-                       $dosya = "okulsis/image/okullogo/okul".$menu['OkulID'].".png"; 
-                    } 
-                if (file_exists($dosya)) {
+                       $dosya = "okulsis/image/okullogo/okul".$menu['OkulID'].".png";  
+                    } else { $dosya = "okulsis/image/okullogo/okul.png"; }
+                   
+                $filename ="C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$menu['OkulID'].".png";
+            
+            print_r(  "<<<<<<<<");
+            print_r(  ($filename ));
+            print_r(  filesize($filename));
+            print_r( " >>>>>>>>>>>>> ");            
+                    
+                    
+                if (file_exists($dosya)) { 
                     $okullogoURL =$dosya ; 
                     }
                     else {  
@@ -1030,6 +1040,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         $okullogoURL = $dosya;   
                     } 
                     }
+                
+                    
                 
                 $menus[]  = array( 
                     "OkulKullaniciID" => $menu["OkulKullaniciID"],
