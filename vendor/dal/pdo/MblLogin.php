@@ -1679,8 +1679,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             INSERT #ogretmenDersSaatleri  exec  ".$dbnamex."PRC_GNL_DersProgrami_Find_forOgretmenDersSaatleri 
                     @OgretmenID='".$kisiId."',
                     @SinifID='".$sinifID."',
-                     /* @Tarih= @tt  ;   */ 
-                    @Tarih= '2018-01-05 10:20:00.000'  ;   
+                    @Tarih= @tt  ;   
+                  /*  @Tarih= '2018-01-05 10:20:00.000'  ;   */
             
             DECLARE @ttime time ;
             set @ttime = cast(@tt as time);
