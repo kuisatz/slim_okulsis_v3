@@ -3151,7 +3151,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         gd.[Donem] , 
                         FORMAT( SinavTarihi, 'dd-MM-yyyy hh:mm') as SinavTarihi, 
                         FORMAT( SinavBitisTarihi, 'dd-MM-yyyy hh:mm') as SinavBitisTarihi,
-                        a.SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  ,
+                        /* a.SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS  , */ 
+                        COALESCE(NULLIF(COALESCE(NULLIF(stx.SinavTurAdi  collate SQL_Latin1_General_CP1254_CI_AS,''),st.SinavTurAdiEng  collate SQL_Latin1_General_CP1254_CI_AS),''),a.SinavTurAdi collate SQL_Latin1_General_CP1254_CI_AS) AS SinavTurAdi,
                         a.SinavKodu  collate SQL_Latin1_General_CP1254_CI_AS ,
                         a.SinavID ,  
                        /* SinavAciklamasi  collate SQL_Latin1_General_CP1254_CI_AS  ,*/
@@ -3164,6 +3165,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     INNER JOIN ".$dbnamex."SNV_SinavDersleri SD ON SD.SinavKategoriID = SK.SinavKategoriID  /* AND SD.SinavDersSabitID = SDS.SinavDersSabitID */ 
                     LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavlar_lng sit on  sit.SinavID  = a.SinavID and sit.language_id = 647 
                     LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavlar_lng sitx on sitx.SinavID =  a.SinavID and sitx.language_id = ".$languageIdValue." 
+                    LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavTurleri_lng st on  upper(st.SinavTurAdi)  = upper(a.SinavTurAdi) and st.language_id = 647 
+                    LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavTurleri_lng stx on stx.SinavTurAdiEng =  st.SinavTurAdiEng and stx.language_id = ".$languageIdValue." 
             IF OBJECT_ID('tempdb..#okiogrsinavlari') IS NOT NULL DROP TABLE #okiogrsinavlari; 
             SET NOCOUNT OFF; 
                  "; 
