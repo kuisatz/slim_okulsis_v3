@@ -1023,8 +1023,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                    
                 $filename ="C:\\xampp\\htdocs\\okulsis\\image\\okullogo\\okul".$menu['OkulID'].".png";
             
-     
-                $dosyasize=   filesize($filename) ; 
+                 if (file_exists($filename)) { $dosyasize=   filesize($filename) ;  }
+                 else { $dosyasize= 1;}
+             //   $dosyasize=   filesize($filename) ; 
                 if ($dosyasize < 2048 )  { $dosya = "okulsis/image/okullogo/okul.png";}       
                     
                 if (file_exists($dosya)) { 
