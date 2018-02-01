@@ -1685,7 +1685,26 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             
             DECLARE @ttime time ;
             set @ttime = cast(@tt as time);
-                        
+            
+ 	SELECT     
+                null as BaslangicSaati , 
+                null as BitisSaati ,
+                null as DersSirasi , 
+                null as DersAdi , 
+                null as DersKodu ,
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama,
+                null as DersID ,
+                -1 as HaftaGunu  
+            FROM [BILSANET_MOBILE].[dbo].Mobile_User_Messages a
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].Mobile_User_Messages ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and ax.language_id= lx.id  
+            WHERE a.[main_group] = 4 and a.[first_group] = 3 and 
+                a.language_parent_id =0 AND
+				0 = ( SELECT count(1) 
+						FROM #ogretmenDersSaatleri sss 
+						WHERE @ttime between cast(sss.BaslangicSaati as time ) and  cast(sss.BitisSaati  as time )  )
+
+            UNION 
             SELECT     
                 null as BaslangicSaati , 
                 null as BitisSaati ,
@@ -1699,7 +1718,10 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
             LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions] ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and ax.language_id= lx.id  
             WHERE a.[main_group] = 1 and a.[first_group] = 8 and 
-                a.language_parent_id =0 
+                a.language_parent_id =0 AND 
+                0 != ( SELECT count(1) 
+                        FROM #ogretmenDersSaatleri sss 
+                        WHERE @ttime between cast(sss.BaslangicSaati as time ) and  cast(sss.BitisSaati  as time )  )
 
             UNION 
  
