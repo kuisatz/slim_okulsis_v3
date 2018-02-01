@@ -1713,7 +1713,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 sss.DersID ,
                 sss.HaftaGunu 
             FROM #ogretmenDersSaatleri sss 
-        /*    WHERE @ttime between cast(sss.BaslangicSaati as time ) and  cast(sss.BitisSaati  as time ); */ 
+            WHERE @ttime between cast(sss.BaslangicSaati as time ) and  cast(sss.BitisSaati  as time );   
             
             IF OBJECT_ID('tempdb..#ogretmenDersSaatleri') IS NOT NULL DROP TABLE #ogretmenDersSaatleri; 
             SET NOCOUNT OFF;  
