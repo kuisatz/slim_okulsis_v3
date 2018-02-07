@@ -9759,7 +9759,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     declare @SinavDersID1 UNIQUEIDENTIFIER ,@SinavOgrenciID UNIQUEIDENTIFIER; 
                     set @SinavDersID1 = '".$SinavDersID."';  
                     set @SinavOgrenciID = '".$SinavOgrenciID."'; 
-
+                    
+                    SELECT * from (
                     SELECT distinct
                         SKS.SinavKitapcikSoruID,
                         SKS.SinavKitapcikID,
@@ -9785,11 +9786,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID and SKS.SinavKitapcikID =SO.SinavKitapcikID
                     LEFT JOIN ".$dbnamex."SNV_YaziliSinavSinifOnaylari onay on onay.SinavID = SKTP.SinavID
                     WHERE 
-                        SS.SinavDersID = @SinavDersID1                            
+                        SS.SinavDersID = @SinavDersID1  
+                        ) as ssad
                     ORDER BY 
-                            SK.BolumKategoriID, 
-                            SD.SinavDersSabitID, 
-                            SKS.Sira; 
+                            BolumKategoriID, 
+                            SinavDersSabitID, 
+                            Sira; 
 
                 SET NOCOUNT OFF;  
                  "; 
