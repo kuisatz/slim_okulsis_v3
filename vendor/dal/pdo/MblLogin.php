@@ -9760,7 +9760,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     set @SinavDersID1 = '".$SinavDersID."';  
                     set @SinavOgrenciID = '".$SinavOgrenciID."'; 
 
-                    SELECT
+                    SELECT distinct
                         SKS.SinavKitapcikSoruID,
                         SKS.SinavKitapcikID,
                         SKS.SinavSoruID,
