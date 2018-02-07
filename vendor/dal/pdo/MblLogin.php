@@ -9507,7 +9507,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
 	
 
             
-            SELECT  
+            SELECT  SINAV.SinavID, 
                 SINAV.SinavAciklamasi collate SQL_Latin1_General_CP1254_CI_AS as SinavAciklamasi,
                 cast(OP.Puan as numeric(18,2)) as Puan
             FROM ".$dbnamex."GNL_OgrenciSeviyeleri OS

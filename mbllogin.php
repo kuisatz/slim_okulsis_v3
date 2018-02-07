@@ -5254,6 +5254,7 @@ $app->get("/OgrencininAldigiNotlar_mbllogin/", function () use ($app ) {
     foreach ($resDataMenu as $menu){
         $menus[]  = array(
            
+            "SinavID" =>  ($menu["SinavID"]),  
             "Aciklamasi" => html_entity_decode($menu["SinavAciklamasi"]),  
             "Puan" => html_entity_decode($menu["Puan"]),  
         );
