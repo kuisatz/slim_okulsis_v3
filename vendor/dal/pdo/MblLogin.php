@@ -1541,7 +1541,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     DersID [uniqueidentifier] ,
                     HaftaGunu integer 
                             ) ; 
-                /* DECLARE @tt datetime  = cast(substring( '".$tarih."',0,20) as datetime);	 */ 
+               
                 DECLARE @tt datetime  = getdate();	
 
                 DECLARE @SinifDersIDx uniqueidentifier,@OgretmenIDx uniqueidentifier , @SinifIDx uniqueidentifier , @SubeGrupIDx int; 
