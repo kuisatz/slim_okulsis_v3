@@ -1501,6 +1501,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             set nocount on; 
             
             IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
+            IF OBJECT_ID('tempdb..#ogretmenDersSaatleri') IS NOT NULL DROP TABLE #ogretmenDersSaatleri; 
             CREATE TABLE #tmpzz ( 
 		DersYiliID [uniqueidentifier] ,
 		OkulID [uniqueidentifier]  ,
@@ -1530,6 +1531,55 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             INSERT  INTO #tmpzz
             EXEC ".$dbnamex."[PRC_GNL_DersYili_Find] @OkulID = '".$OkulID."'   
  
+                CREATE TABLE #ogretmenDersSaatleri (
+                    BaslangicSaati datetime, 
+                    BitisSaati datetime,
+                    DersSirasi integer, 
+                    DersAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS, 
+                    DersKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Aciklama varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                    DersID [uniqueidentifier] ,
+                    HaftaGunu integer 
+                            ) ; 
+                /* DECLARE @tt datetime  = cast(substring( '".$tarih."',0,20) as datetime);	 */ 
+                DECLARE @tt datetime  = getdate();	
+
+                DECLARE @SinifDersIDx uniqueidentifier,@OgretmenIDx uniqueidentifier , @SinifIDx uniqueidentifier , @SubeGrupIDx int; 
+                DECLARE db_cursorx CURSOR FOR  
+                SELECT DISTINCT   
+                    DP.SinifDersID,
+                    SO.OgretmenID,
+                    SNF.SinifID, 
+                    SNF.SubeGrupID 
+                FROM BILSANET_TAKEVBODRUM.dbo.GNL_DersProgramlari DP
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
+                                                            AND SO.OgretmenID = '".$kisiId."'
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."'       
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Dersler DRS ON DH.DersID = DRS.DersID 
+                INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
+            
+                OPEN db_cursorx   
+                FETCH NEXT FROM db_cursorx INTO  @SinifDersIDx ,@OgretmenIDx  , @SinifIDx  , @SubeGrupIDx 
+                WHILE @@FETCH_STATUS = 0   
+                BEGIN   
+
+                    INSERT #ogretmenDersSaatleri  exec  BILSANET_TAKEVBODRUM.dbo.PRC_GNL_DersProgrami_Find_forOgretmenDersSaatleri 
+                    @OgretmenID=@OgretmenIDx,
+                    @SinifID=@SinifIDx,
+                    @Tarih= @tt; 
+
+		FETCH NEXT FROM db_cursorx INTO @SinifDersIDx ,@OgretmenIDx  , @SinifIDx  , @SubeGrupIDx ;
+                END   
+
+                CLOSE db_cursorx;
+                DEALLOCATE db_cursorx ; 
+
+                DECLARE @count int ; 
+                select @count = count(1)  from #ogretmenDersSaatleri ;
+			 
+		 
 
             SELECT  DISTINCT
                 SinifDersID ,
@@ -1537,6 +1587,21 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 SinifID, 
                 Aciklama
             FROM ( 
+            (	SELECT     
+               
+                null as DersSirasi , 
+                null AS SinifDersID ,
+                null AS DersAdi,  
+                null AS SinifID, 
+                COALESCE(NULLIF(ax.[description]  collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama               
+            FROM [BILSANET_MOBILE].[dbo].Mobile_User_Messages a
+            LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+            LEFT JOIN [BILSANET_MOBILE].[dbo].Mobile_User_Messages ax on (ax.language_parent_id = a.[id] or  ax.[id] = a.[id]) and ax.language_id= lx.id  
+            WHERE a.[main_group] = 4 and a.[first_group] = 3 and 
+                a.language_parent_id =0 AND
+                0 =@count
+
+            ) union 
                 (SELECT   
                     -1 AS DersSirasi, 
                     null AS SinifDersID ,
@@ -1548,7 +1613,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
                 LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
                 WHERE a.[main_group] = 1 and a.[first_group]  = 6 and
-                    a.language_parent_id =0 
+                    a.language_parent_id =0 and @count > 0
                 )
             union  
 
@@ -1572,11 +1637,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS= axx.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id   
      
                 INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
-
+                WHERE @count > 0
                 )   
             ) as sdasd   
              
             IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
+            IF OBJECT_ID('tempdb..#ogretmenDersSaatleri') IS NOT NULL DROP TABLE #ogretmenDersSaatleri; 
             SET NOCOUNT OFF;
  
                  "; 
