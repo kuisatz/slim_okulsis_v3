@@ -1917,6 +1917,25 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     @OgretmenID='".$kisiId."'  ;  
                         
                     SELECT * FROM ( 
+                    SELECT     
+                        '00000000-0000-0000-0000-000000000000' AS OgrenciID, 
+                        NULL AS Tarih, 
+                        NULL AS Numarasi, 
+                        COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng]  collate SQL_Latin1_General_CP1254_CI_AS) AS adsoyad,
+						-1 AS CinsiyetID,
+                        NULL AS DevamsizlikKodID,
+                        NULL AS Aciklama,
+                        NULL AS DersSirasi,
+                        NULL AS DersYiliID,
+                        NULL AS Fotograf 
+                    FROM BILSANET_MOBILE.dbo.sys_specific_definitions a 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =647 AND lx.deleted =0 AND lx.active =0 
+                    LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = a.[id]  or  ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                    WHERE a.[main_group] = 1 and a.[first_group] = 5 AND
+                        a.language_parent_id =0 AND 
+                        1 =  ".$cmb." AND
+                        0 < (select count(1) from #tmpe)
+                    UNION
                     SELECT  
                         '00000000-0000-0000-0000-000000000001' AS OgrenciID, 
                         NULL AS Tarih, 
@@ -2664,7 +2683,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     FROM BILSANET_MOBILE.dbo.sys_specific_definitions a 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0 
                     LEFT JOIN BILSANET_MOBILE.dbo.sys_specific_definitions ax on (ax.language_parent_id = a.[id]  or  ax.[id] = a.[id] ) and  ax.language_id= lx.id  
-                    WHERE a.[main_group] = 1 and a.[first_group] = 7 AND
+                    WHERE a.[main_group] = 1 and a.[first_group] = 5 AND
                         a.language_parent_id =0 
 
             UNION  
