@@ -1917,7 +1917,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     @OgretmenID='".$kisiId."'  ;  
                         
                     SELECT * FROM ( 
-                    SELECT     
+                   /* SELECT     
                         '00000000-0000-0000-0000-000000000000' AS OgrenciID, 
                         NULL AS Tarih, 
                         NULL AS Numarasi, 
@@ -1955,7 +1955,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         a.language_parent_id =0 AND
                         1 =  ".$cmb." 
                         AND 0 < (select count(1) from #tmpe)
-                UNION   
+                UNION   */
                     SELECT 
                         tt.OgrenciID, 
                         FORMAT( tt.Tarih, 'dd-MM-yyyy hh:mm') as Tarih,
