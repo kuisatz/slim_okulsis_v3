@@ -9774,7 +9774,9 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         SKTP.KitapcikTurID,
                         SO.SinavOgrenciID,
                         SOSC.SinavOgrenciSoruCevapID,
-                        onay.Onay
+                        onay.Onay,
+                        SK.BolumKategoriID, 
+                        SD.SinavDersSabitID
                     FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
                     INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKTP ON SKS.SinavKitapcikID = SKTP.SinavKitapcikID
                     INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID = SKS.SinavSoruID
