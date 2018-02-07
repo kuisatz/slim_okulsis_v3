@@ -5407,11 +5407,12 @@ $app->get("/OgretmenSinavSorulariKDK_mbllogin/", function () use ($app ) {
             "Sira" => ($menu["Sira"]),  
             "SoruPuani" => ($menu["SoruPuani"]),  
             "OgrenciSoruPuani" => ($menu["OgrenciSoruPuani"]),  
+            "AldigiPuan" => ($menu["AldigiPuan"]), 
             "SoruTurID" => ($menu["SoruTurID"]),   
             "KitapcikTurID" => ($menu["KitapcikTurID"]),  
-             "SinavOgrenciID" => ($menu["SinavOgrenciID"]),  
-             "SinavOgrenciSoruCevapID" => ($menu["SinavOgrenciSoruCevapID"]),  
-             
+            "SinavOgrenciID" => ($menu["SinavOgrenciID"]),  
+            "SinavOgrenciSoruCevapID" => ($menu["SinavOgrenciSoruCevapID"]),  
+            "Onay" => ($menu["Onay"]),   
         );
     }
     

@@ -9767,11 +9767,13 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         SKS.Sira,
                         cast(SS.SoruPuani as numeric(8,2)) as SoruPuani, 
                         '' AS OgrenciSoruPuani,
+                        isnull(cast(cast(SOSC.AldigiPuan as numeric(8,2)) as varchar(10)),'') AS AldigiPuan, 
                         SORU.SoruTurID,
                         SD.SinavDersID,
                         SKTP.KitapcikTurID,
                         SO.SinavOgrenciID,
-                        SOSC.SinavOgrenciSoruCevapID 
+                        SOSC.SinavOgrenciSoruCevapID,
+                        onay.Onay
                     FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
                     INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKTP ON SKS.SinavKitapcikID = SKTP.SinavKitapcikID
                     INNER JOIN ".$dbnamex."SNV_SinavSorulari SS ON SS.SinavSoruID = SKS.SinavSoruID
@@ -9781,6 +9783,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     LEFT JOIN ".$dbnamex."SNV_SinavOgrenciSoruCevaplari SOSC ON SOSC.SinavSoruID = SS.SinavSoruID 
                    /* LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID */ 
                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID and SKS.SinavKitapcikID =SO.SinavKitapcikID
+                    LEFT JOIN ".$dbnamex."SNV_YaziliSinavSinifOnaylari onay on onay.SinavID = SKTP.SinavID
                     WHERE 
                         SS.SinavDersID = @SinavDersID1                            
                     ORDER BY 
