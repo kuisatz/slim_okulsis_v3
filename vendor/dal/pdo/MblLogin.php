@@ -9774,7 +9774,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         SKTP.KitapcikTurID,
                         SO.SinavOgrenciID,
                         SOSC.SinavOgrenciSoruCevapID,
-                        0 as Onay , /* onay.Onay, */
+                        isDegerlendirildi as Onay , /* onay.Onay, */
                         SK.BolumKategoriID, 
                         SD.SinavDersSabitID
                     FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
@@ -9787,6 +9787,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                    /* LEFT JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID */ 
                     INNER JOIN ".$dbnamex."SNV_SinavOgrencileri SO ON SOSC.SinavOgrenciID = SO.SinavOgrenciID AND SO.SinavOgrenciID = @SinavOgrenciID and SKS.SinavKitapcikID =SO.SinavKitapcikID
                     LEFT JOIN ".$dbnamex."SNV_YaziliSinavSinifOnaylari onay on onay.SinavID = SKTP.SinavID
+                    INNER JOIN ".$dbnamex."SNV_Sinavlar snv ON snv.SinavID = SKTP.SinavID
                     WHERE 
                         SS.SinavDersID = @SinavDersID1  
                         ) as ssad
