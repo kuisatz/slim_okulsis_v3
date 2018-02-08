@@ -4824,7 +4824,20 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             $languageIdValue = 647;
             if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
                 $languageIdValue = $params['LanguageID'];
-            } 
+            }
+            $DonemID = NULL;
+            $addSQL = ' AND DY.DonemID = (select max(DonemID) from BILSANET_TAKEVBODRUM.dbo.GNL_DersYillari dy
+			   where EgitimYilID =  2017 and 
+			   cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)) ';
+            if ((isset($params['DonemID']) && $params['DonemID'] != "")) {
+                $DonemID = $params['DonemID'];
+                IF ($DonemID == 1 ) {
+                $addSQL = ' AND DY.DonemID = 1 ' ;
+                } 
+                ELSE {
+                $addSQL =  ' AND DY.DonemID = 2 ' ;
+                } 
+            }
              
             
             $sql = "  
@@ -4867,6 +4880,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             INNER JOIN #legend mumx2 on mumx2.first_group =2  
             INNER JOIN #legend mumx3 on mumx3.first_group =3  
             WHERE OO.OgrenciID = '".$OgrenciID."' AND DY.EgitimYilID = ".intval($EgitimYilID)."
+                ".$addSQL."   
             ORDER BY OT.Tarih DESC 
             IF OBJECT_ID('tempdb..#legend') IS NOT NULL DROP TABLE #legend;           
             SET NOCOUNT OFF;   
@@ -9775,7 +9789,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         SKTP.KitapcikTurID,
                         SO.SinavOgrenciID,
                         SOSC.SinavOgrenciSoruCevapID,
-                        isDegerlendirildi as Onay , /* onay.Onay, */
+                        snv.isDegerlendirildi as Onay , /* onay.Onay, */
                         SK.BolumKategoriID, 
                         SD.SinavDersSabitID
                     FROM ".$dbnamex."SNV_SinavKitapcikSorulari SKS
