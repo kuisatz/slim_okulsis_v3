@@ -3190,6 +3190,17 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             if (isset($params['Grid']) && $params['Grid'] != "") {
                 $grid = $params['Grid'];
             } 
+            $DonemID = NULL;
+            $addSQL = ' AND CAST(getdate() AS date) BETWEEN CAST(dy.Donem1BaslangicTarihi AS date) AND CAST(dy.Donem2BitisTarihi AS date) ';
+            if ((isset($params['DonemID']) && $params['DonemID'] != "")) {
+                $DonemID = $params['DonemID'];
+                IF ($DonemID == 1 ) {
+                $addSQL = ' AND dy.DonemID = 1 ' ;
+                } 
+                ELSE {
+                $addSQL =  ' AND dy.DonemID = 2 ' ;
+                } 
+            }
              
             
             $sql = "  
@@ -3236,7 +3247,18 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                                                     @EgitimYilID = ".intval($EgitimYilID).",
                                                     @OkulID = '".$OkulID."',
                                                     @KisiID =  '".$KisiID."' ; 
-
+                    DECLARE @DonemBaslangicTarihi date;
+                    DECLARE @DonemBitisTarihi date;
+                    SELECT   
+                        @DonemBaslangicTarihi = CASE MAX(dy.DonemID) WHEN 1 THEN dy.Donem1BaslangicTarihi
+                        ELSE dy.Donem2BaslangicTarihi END,
+                        @DonemBitisTarihi = CASE MAX(dy.DonemID) WHEN 1 THEN dy.Donem1BitisTarihi
+                        ELSE dy.Donem2BitisTarihi END
+                    FROM ".$dbnamex."GNL_DersYillari dy
+                    WHERE dy.EgitimYilID = ".$EgitimYilID."  
+                        ".$addSQL."  
+                    GROUP BY dy.Donem1BaslangicTarihi,dy.Donem2BaslangicTarihi,dy.Donem1BitisTarihi,dy.Donem2BitisTarihi
+  
                     SELECT  
                         null AS Donem  , 
                         null AS SinavTarihi ,
@@ -3275,6 +3297,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavlar_lng sitx on sitx.SinavID =  a.SinavID and sitx.language_id = ".$languageIdValue." 
                     LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavTurleri_lng st on  upper(st.SinavTurAdi)  = upper(a.SinavTurAdi) and st.language_id = 647 
                     LEFT JOIN BILSANET_MOBILE.dbo.Mobil_SNVSinavTurleri_lng stx on stx.SinavTurAdiEng =  st.SinavTurAdiEng and stx.language_id = ".$languageIdValue." 
+                    WHERE a.SinavTarihi between @DonemBaslangicTarihi AND @DonemBitisTarihi
             IF OBJECT_ID('tempdb..#okiogrsinavlari') IS NOT NULL DROP TABLE #okiogrsinavlari; 
             SET NOCOUNT OFF; 
                  "; 
