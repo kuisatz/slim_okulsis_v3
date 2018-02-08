@@ -9767,7 +9767,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                         SKS.SinavSoruID,
                         SKS.Sira,
                         cast(SS.SoruPuani as numeric(8,2)) as SoruPuani, 
-                        '' AS OgrenciSoruPuani,
+                       /* '' AS OgrenciSoruPuani, */ 
+                        COALESCE(NULLIF(isnull(cast(cast(SOSC.AldigiPuan as numeric(8,2)) as varchar(10)),'')  ,''), ''  ) AS OgrenciSoruPuani,
                         isnull(cast(cast(SOSC.AldigiPuan as numeric(8,2)) as varchar(10)),'') AS AldigiPuan, 
                         SORU.SoruTurID,
                         SD.SinavDersID,
