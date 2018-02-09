@@ -1517,9 +1517,16 @@ $app->get("/Ogretmensinavlistesi_mbllogin/", function () use ($app ) {
                                                                 $app, 
                                                                 $_GET['grid']));
     } 
+    $vDonemID = NULL;     
+    if (isset($_GET['donemID'])) {
+        $stripper->offsetSet('donemID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['donemID']));
+    } 
     
     
     $stripper->strip();
+    if ($stripper->offsetExists('donemID')) 
+        {$vDonemID = $stripper->offsetGet('donemID')->getFilterValue(); } 
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
     }
@@ -1542,6 +1549,7 @@ $app->get("/Ogretmensinavlistesi_mbllogin/", function () use ($app ) {
         {$vLanguageID = $stripper->offsetGet('lid')->getFilterValue(); }   
     if ($stripper->offsetExists('grid')) 
         {$vGrid = $stripper->offsetGet('grid')->getFilterValue(); }   
+      
    
     $resDataInsert = $BLL->Ogretmensinavlistesi(array( 
         'url' => $_GET['url'],  
@@ -1553,6 +1561,7 @@ $app->get("/Ogretmensinavlistesi_mbllogin/", function () use ($app ) {
         'Did' => $vDid,
         'LanguageID' => $vLanguageID, 
         'Grid' => $vGrid,
+         'DonemID' => $vDonemID,
         )); 
   
     $menus = array();
@@ -2135,7 +2144,16 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
                                                                 $app, 
                                                                 $_GET['lid']));
     } 
+    $vDonemID = NULL;     
+    if (isset($_GET['donemID'])) {
+        $stripper->offsetSet('donemID', $stripChainerFactory->get(stripChainers::FILTER_ONLY_NUMBER_ALLOWED, 
+                $app, $_GET['donemID']));
+    } 
+    
+    
     $stripper->strip();
+    if ($stripper->offsetExists('donemID')) 
+        {$vDonemID = $stripper->offsetGet('donemID')->getFilterValue(); } 
     
     if ($stripper->offsetExists('did')) {
         $vDid = $stripper->offsetGet('did')->getFilterValue();
@@ -2158,6 +2176,7 @@ $app->get("/OdevListesiOgrenciveYakin_mbllogin/", function () use ($app ) {
         'EgitimYilID' => $vEgitimYilID, 
         'Cid' => $vCid, 
         'Did' => $vDid,
+        'DonemID' => $vDonemID,
         'LanguageID' => $vLanguageID, 
         )); 
     
