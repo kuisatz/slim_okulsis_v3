@@ -1659,7 +1659,204 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             return array("found" => false, "errorInfo" => $e->getMessage());
         }
     }
+   
+         
+    /** 
+     * @author Okan CIRAN
+     * @ login olan ogretmenin ders programı   !!
+     * @version v 1.0  03.10.2017
+     * @param array | null $args
+     * @return array
+     * @throws \PDOException
+     */
+    public function ogretmenProgramindakiDerslerv2($params = array()) {
+        try {
+            $cid = -1;
+            if ((isset($params['Cid']) && $params['Cid'] != "")) {
+                $cid = $params['Cid'];
+            } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            } 
+            $dbnamex = 'dbo.';
+            $dbConfigValue = 'pgConnectFactory';
+            $dbConfig =  MobilSetDbConfigx::mobilDBConfig( array( 'Cid' =>$cid,'Did' =>$did,));
+            if (\Utill\Dal\Helper::haveRecord($dbConfig)) {
+                $dbConfigValue =$dbConfigValue.$dbConfig['resultSet'][0]['configclass']; 
+                if ((isset($dbConfig['resultSet'][0]['configclass']) && $dbConfig['resultSet'][0]['configclass'] != "")) {
+                   $dbnamex =$dbConfig['resultSet'][0]['dbname'].'.'.$dbnamex;
+                    }   
+            }   
+            
+            $pdo = $this->slimApp->getServiceManager()->get($dbConfigValue);
+            
+            $kisiId = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['kisiId']) && $params['kisiId'] != "")) {
+                $kisiId = $params['kisiId'];
+            }  
+            $OkulID = '1CCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
+                $OkulID = $params['OkulID'];
+            }   
+            $dersYiliID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC';
+            if ((isset($params['dersYiliID']) && $params['dersYiliID'] != "")) {
+                $dersYiliID = $params['dersYiliID'];
+            } 
+            $languageIdValue = 647;
+            if (isset($params['LanguageID']) && $params['LanguageID'] != "") {
+                $languageIdValue = $params['LanguageID'];
+            }  
+            
+            $sql = "   
+            set nocount on; 
+            
+            IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
+            IF OBJECT_ID('tempdb..#ogretmenDersSaatleri') IS NOT NULL DROP TABLE #ogretmenDersSaatleri; 
+            CREATE TABLE #tmpzz ( 
+		DersYiliID [uniqueidentifier] ,
+		OkulID [uniqueidentifier]  ,
+		DonemID  [int] ,
+		TedrisatID [int],
+		TakdirTesekkurHesapID  [int]    ,
+		OnKayitTurID  [int]  ,
+                EgitimYilID  [int]  ,
+		Donem1BaslangicTarihi [datetime]  ,
+		Donem1BitisTarihi [datetime]  ,
+		Donem2BaslangicTarihi [datetime]  ,
+		Donem2BitisTarihi [datetime]  ,
+		Donem1AcikGun [decimal](18, 4)  ,
+		Donem2AcikGun [decimal](18, 4)  ,
+		YilSonuHesapla [bit] ,
+		DevamsizliktanBasarisiz [bit]  ,
+		SorumlulukSinavSayisi [tinyint],
+		DevamsizlikSabahOgleAyri  [bit] ,
+		YilSonuPuanYuvarlansin [bit],
+                EgitimYili [varchar](50)  collate SQL_Latin1_General_CP1254_CI_AS,
+		OkulDurumPuani [decimal](18, 4),
+		YilSonuNotYuvarlansin  [bit],
+		YilSonuPuanSinavSonraYuvarlansin  [bit],
+		YilSonuNotSinavSonraYuvarlansin  [bit],
+		AktifMi [bit]    ); 
+
+            INSERT  INTO #tmpzz
+            EXEC ".$dbnamex."[PRC_GNL_DersYili_Find] @OkulID = '".$OkulID."'   
+ 
+                CREATE TABLE #ogretmenDersSaatleri (
+                    BaslangicSaati datetime, 
+                    BitisSaati datetime,
+                    DersSirasi integer, 
+                    DersAdi varchar(100)  collate SQL_Latin1_General_CP1254_CI_AS, 
+                    DersKodu varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                    Aciklama varchar(100) collate SQL_Latin1_General_CP1254_CI_AS,
+                    DersID [uniqueidentifier] ,
+                    HaftaGunu integer 
+                            ) ; 
+               
+                DECLARE @tt datetime  = getdate();	
+
+                DECLARE @SinifDersIDx uniqueidentifier,@OgretmenIDx uniqueidentifier , @SinifIDx uniqueidentifier , @SubeGrupIDx int; 
+                DECLARE db_cursorx CURSOR FOR  
+                SELECT DISTINCT   
+                    DP.SinifDersID,
+                    SO.OgretmenID,
+                    SNF.SinifID, 
+                    SNF.SubeGrupID 
+                FROM BILSANET_TAKEVBODRUM.dbo.GNL_DersProgramlari DP
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
+                                                            AND SO.OgretmenID = '".$kisiId."'
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."'       
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
+                INNER JOIN BILSANET_TAKEVBODRUM.dbo.GNL_Dersler DRS ON DH.DersID = DRS.DersID 
+                INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
+            
+                OPEN db_cursorx   
+                FETCH NEXT FROM db_cursorx INTO  @SinifDersIDx ,@OgretmenIDx  , @SinifIDx  , @SubeGrupIDx 
+                WHILE @@FETCH_STATUS = 0   
+                BEGIN   
+
+                    INSERT #ogretmenDersSaatleri  exec  BILSANET_TAKEVBODRUM.dbo.PRC_GNL_DersProgrami_Find_forOgretmenDersSaatleri 
+                    @OgretmenID=@OgretmenIDx,
+                    @SinifID=@SinifIDx,
+                    @Tarih= @tt; 
+
+		FETCH NEXT FROM db_cursorx INTO @SinifDersIDx ,@OgretmenIDx  , @SinifIDx  , @SubeGrupIDx ;
+                END   
+
+                CLOSE db_cursorx;
+                DEALLOCATE db_cursorx ; 
+
+                DECLARE @count int ; 
+                select @count = count(1)  from #ogretmenDersSaatleri ;
+			 
+		 
+
+            SELECT  DISTINCT
+                SinifDersID ,
+                DersAdi,  
+                SinifID, 
+                Aciklama
+            FROM ( 
+            
+                (SELECT   
+                    -1 AS DersSirasi, 
+                    null AS SinifDersID ,
+                    null AS DersAdi,  
+                    null AS SinifID, 
+                    COALESCE(NULLIF(ax.[description] collate SQL_Latin1_General_CP1254_CI_AS,''),a.[description_eng] collate SQL_Latin1_General_CP1254_CI_AS) AS Aciklama            
+                FROM [BILSANET_MOBILE].[dbo].[sys_specific_definitions] a
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN [BILSANET_MOBILE].[dbo].[sys_specific_definitions]  ax on (ax.language_parent_id = a.[id] or ax.[id] = a.[id] ) and  ax.language_id= lx.id  
+                WHERE a.[main_group] = 1 and a.[first_group]  = 6 and
+                    a.language_parent_id =0 and @count > 0
+                )
+            union  
+
+                (SELECT DISTINCT  
+                    DP.DersSirasi,
+                    DP.SinifDersID,
+                    COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  as DersAdi, 
+                    SNF.SinifID, 
+                    concat(SNF.SinifKodu  collate SQL_Latin1_General_CP1254_CI_AS,' - ',  COALESCE(NULLIF(COALESCE(NULLIF(ax.DersAdi collate SQL_Latin1_General_CP1254_CI_AS,''),ax.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS),''),DRS.DersAdi)  ) as Aciklama	  
+                FROM ".$dbnamex."GNL_DersProgramlari DP
+                INNER JOIN ".$dbnamex."GNL_SinifDersleri SD ON  SD.SinifDersID = DP.SinifDersID
+                INNER JOIN ".$dbnamex."GNL_SinifOgretmenleri SO  ON SO.SinifID = SD.SinifID AND SO.DersHavuzuID = SD.DersHavuzuID 
+                                                            AND SO.OgretmenID = '".$kisiId."'
+                INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SD.SinifID = SNF.SinifID  AND SNF.DersYiliID = '".$dersYiliID."'       
+                INNER JOIN ".$dbnamex."GNL_DersHavuzlari DH ON SD.DersHavuzuID = DH.DersHavuzuID 
+                INNER JOIN ".$dbnamex."GNL_Dersler DRS ON DH.DersID = DRS.DersID
+
+                INNER JOIN BILSANET_MOBILE.dbo.sys_language l ON l.id = 647 AND l.deleted =0 AND l.active =0 
+                LEFT JOIN BILSANET_MOBILE.dbo.sys_language lx ON lx.id =".$languageIdValue." AND lx.deleted =0 AND lx.active =0
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng axx on (axx.DersAdi  collate SQL_Latin1_General_CP1254_CI_AS= DRS.DersAdi collate SQL_Latin1_General_CP1254_CI_AS) and axx.language_id= l.id  
+                LEFT JOIN BILSANET_MOBILE.dbo.Mobil_Dersler_lng ax on (ax.DersAdiEng  collate SQL_Latin1_General_CP1254_CI_AS= axx.DersAdiEng collate SQL_Latin1_General_CP1254_CI_AS) and ax.language_id= lx.id   
      
+                INNER JOIN #tmpzz on #tmpzz.DersYiliID = SNF.DersYiliID and DP.DonemID = #tmpzz.DonemID 
+                WHERE @count > 0
+                )   
+            ) as sdasd   
+             
+            IF OBJECT_ID('tempdb..#tmpzz') IS NOT NULL DROP TABLE #tmpzz; 
+            IF OBJECT_ID('tempdb..#ogretmenDersSaatleri') IS NOT NULL DROP TABLE #ogretmenDersSaatleri; 
+            SET NOCOUNT OFF;
+ 
+                 "; 
+            $statement = $pdo->prepare($sql);   
+   // echo debugPDO($sql, $params);
+            $statement->execute();
+           
+            $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
+            $errorInfo = $statement->errorInfo();
+            if ($errorInfo[0] != "00000" && $errorInfo[1] != NULL && $errorInfo[2] != NULL)
+                throw new \PDOException($errorInfo[0]);
+            return array("found" => true, "errorInfo" => $errorInfo, "resultSet" => $result);
+        } catch (\PDOException $e /* Exception $e */) {    
+            return array("found" => false, "errorInfo" => $e->getMessage());
+        }
+    }
+ 
     /** 
      * @author Okan CIRAN
      * @ login olan ogretmenin ders saatleri   !!
