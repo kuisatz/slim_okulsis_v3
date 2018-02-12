@@ -484,4 +484,30 @@ $app->get("/fillVarYokGecTypes_sysSpecificDefinitions/", function () use ($app )
 
     $app->response()->body(json_encode($menus));
 });
+
+
+/**
+ *  * Okan CIRAN
+ * @since 15-07-2016
+ */
+$app->get("/getserverkontrol_sysSpecificDefinitions/", function () use ($app ) {
+    
+    $languageCode = 'tr';
+    if (isset($_GET['language_code'])) {
+        $languageCode = strtolower(trim($_GET['language_code']));
+    } 
+    
+    $menus = array();  
+    $menus[] = array(
+        "id" => '647',
+        "value" =>  '200', 
+        "description" => 'Ok', 
+    );
+      
+    $app->response()->header("Content-Type", "application/json"); 
+    $app->response()->body(json_encode($menus));
+});
+
+
+
 $app->run();
