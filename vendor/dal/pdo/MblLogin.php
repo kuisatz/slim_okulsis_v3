@@ -2439,6 +2439,10 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             if ((isset($params['Cid']) && $params['Cid'] != "")) {
                 $cid = $params['Cid'];
             } 
+            $did = NULL;
+            if ((isset($params['Did']) && $params['Did'] != "")) {
+                $did = $params['Did'];
+            }
             
             $dbnamex = 'dbo.';
             $dbConfigValue = 'pgConnectFactory';
@@ -11060,6 +11064,10 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             if ((isset($params['SinavID']) && $params['SinavID'] != "")) {
                 $SinavID = $params['SinavID'];
             } 
+            $OkulID = 'CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC'; 
+            if ((isset($params['OkulID']) && $params['OkulID'] != "")) {
+                $OkulID = $params['OkulID'];
+            } 
             
             $lid = NULL;
             $languageIdValue = 647;
@@ -11073,7 +11081,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             DECLARE @SinavID UNIQUEIDENTIFIER;
             DECLARE @OkulID UNIQUEIDENTIFIER; 
             SET @SinavID='".$SinavID."';
-            SET @OkulID='316E8400-E6A9-41BF-A428-46948B7877F7'; 
+            SET @OkulID='".$OkulID."';
 			 
             IF OBJECT_ID('tempdb..#tempogrencibilgileri') IS NOT NULL DROP TABLE #tempogrencibilgileri;
             IF OBJECT_ID('tempdb..#tmpSinif') IS NOT NULL DROP TABLE #tmpSinif; 
