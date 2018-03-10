@@ -521,7 +521,7 @@ class MblLogin extends \DAL\DalSlim {
    
              SELECT top 1 * from ( 
                 SELECT top 1
-                    null as KisiID, '' as adsoyad,  null as TCKimlikNo, null as Fotograf, null as CinsiyetID, -99 as tcID, @KullaniciKontrol as KullaniciKontrol,
+                    null as KisiID, '' as adsoyad,  null as TCKimlikNo, null as Fotograf, null as CinsiyetID, -99 as tcID, -1 /* @KullaniciKontrol */ as KullaniciKontrol,
                      COALESCE(NULLIF(spdx.description,''),spd.description_eng) as description  
                 FROM [BILSANET_MOBILE].[dbo].sys_specific_definitions spd 
                 left JOIN [BILSANET_MOBILE].[dbo].sys_specific_definitions spdx on (spdx.id = spd.id OR spdx.language_parent_id = spd.id) and spdx.language_id = 647 
@@ -11105,7 +11105,10 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                 SNV.EgitimYilID,
                 snv.SinavID,
                 SKIT.KitapcikAdi,
-                SOK.OkulID
+                SOK.OkulID,
+                Snf.SeviyeID,
+                SNF.SinifKodu,
+                OS.SinifID
             into #tempogrencibilgileri
             FROM ".$dbnamex."SNV_Sinavlar SNV
             INNER JOIN ".$dbnamex."SNV_SinavSiniflari ssf ON ssf.SinavID=SNV.SinavID AND ssf.SinavID=@SinavID
@@ -11116,6 +11119,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
             INNER JOIN ".$dbnamex."GNL_Okullar OKUL ON OKUL.OkulID=SOK.OkulID
             INNER JOIN ".$dbnamex."SNV_SinavTurleri ST ON ST.SinavTurID=SNV.SinavTurID
             INNER JOIN ".$dbnamex."SNV_SinavKitapciklari SKIT ON SKIT.SinavKitapcikID=SO.SinavKitapcikID
+            INNER JOIN ".$dbnamex."GNL_Siniflar SNF ON SNF.SinifID=OS.SinifID
             LEFT JOIN ".$dbnamex."GNL_Adresler ADR ON ADR.AdresID=OKUL.AdresID
             LEFT JOIN ".$dbnamex."GNL_Ilceler ILCE ON ILCE.IlceID=ADR.IlceID
             LEFT JOIN ".$dbnamex."GNL_Iller IL ON IL.IlID=ILCE.IlID
@@ -11194,12 +11198,12 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
 
             SELECT @raporkey, ROW_NUMBER() OVER (PARTITION BY SinavID ORDER BY  okulSira ,sinifSira , adsoyad ) AS rowid,* 
             FROM (
-                    select distinct   tttt.SinavID ,   
-                    tttt.SinavOgrenciID,
-                    tttt.SeviyeID,
-                    tttt.SinifID,
-                    tttt.SinifKodu, 
-                    tttt.TopPuan, 
+                    select distinct   ooo.SinavID ,   
+                    ooo.SinavOgrenciID,
+                    ooo.SeviyeID,
+                    ooo.SinifID,
+                    ooo.SinifKodu, 
+                    COALESCE(NULLIF(tttt.TopPuan,null),null) as TopPuan, 
                     concat(ooo.Adi collate SQL_Latin1_General_CP1254_CI_AS,' ', ooo.Soyadi collate SQL_Latin1_General_CP1254_CI_AS ) adsoyad,			 
                     ooo.OgrenciNumarasi,
                     ooo.OkulAdi,
@@ -11220,8 +11224,8 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     (SELECT SinifOrtalamasi FROM #puanlar px4 where PuanSiralamaTipID=5 and px4.SinavOgrenciID=tttt.SinavOgrenciID) as SinifOrtalamasi,
                     (SELECT Sira FROM #puanlar px5 where PuanSiralamaTipID=4 and px5.SinavOgrenciID=tttt.SinavOgrenciID) as okulSira,
                     (SELECT OkulOrtalamasi FROM #puanlar px6 where PuanSiralamaTipID=4 and px6.SinavOgrenciID=tttt.SinavOgrenciID) as OkulOrtalamasi 
-                FROM #tmpSinif tttt
-                INNER JOIN #tempogrencibilgileri ooo on ooo.SinavOgrenciID = tttt.SinavOgrenciID
+                FROM  #tempogrencibilgileri ooo
+                LEFT JOIN ##tmpSinif tttt  on ooo.SinavOgrenciID = tttt.SinavOgrenciID
             ) as asdasdasd
             ORDER BY okulSira,sinifSira,adsoyad;
 
@@ -11241,7 +11245,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
            // $sql =  $sql +  $sql1;
        //    print_r($sql);
             $statement = $pdo->prepare($sql);   
-    // echo debugPDO($sql, $params);
+    //  echo debugPDO($sql, $params);
             $statement->execute();
             
             //   http://localhost:8081/jasperserver/flow.html?_flowId=viewReportFlow&reportUnit=/reports/bilsa/mobile/oppp&output=pdf&j_username=jasperadmin&j_password=12345678oki
