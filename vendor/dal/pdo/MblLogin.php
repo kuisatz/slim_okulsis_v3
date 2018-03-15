@@ -776,6 +776,7 @@ class MblLogin extends \DAL\DalSlim {
             DECLARE @sqlxx nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
             DECLARE @sqlx1 nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
             DECLARE @sqlxx1 nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
+            DECLARE @sqlxxz nvarchar(max)='' collate SQL_Latin1_General_CP1254_CI_AS;
             declare @MEBKodu int;
 
             CREATE TABLE #okidbname".$tc."(database_id int , name  nvarchar(200) collate SQL_Latin1_General_CP1254_CI_AS, sqlx nvarchar(2000) collate SQL_Latin1_General_CP1254_CI_AS,MEBKodu int);
@@ -874,6 +875,24 @@ class MblLogin extends \DAL\DalSlim {
  
                 /* print(@sqlxx); */
                 EXEC sp_executesql @sqlxx;
+                
+                SET @sqlxxz=' 
+                    DELETE FROM ##omfd".$tc." WHERE OkulKullaniciID in (
+                    SELECT distinct a.OkulKullaniciID from  ##omfd".$tc." a 
+                    INNER JOIN '+@dbnamex+'.dbo.GNL_DersYillari DY ON DY.OkulID=a.OkulID and DY.AktifMi=1
+                    LEFT JOIN '+@dbnamex+'.dbo.OGT_Ogretmenler ooo ON ooo.OgretmenID = a.KisiID   
+                    where DY.DersYiliID  in (
+                    SELECT DY.DersYiliID FROM '+@dbnamex+'.dbo.GNL_DersYillari dy
+                    WHERE cast(getdate() AS date) BETWEEN cast(dy.Donem1BaslangicTarihi AS date) AND cast(dy.Donem2BitisTarihi AS date)
+                    ) AND 1 = (
+                        CASE  
+                            WHEN a.RolId = 8 then 0
+                            WHEN a.RolId = 9 then 0
+                        ELSE (SELECT count(distinct 1) FROM '+@dbnamex+'.dbo.OGT_Ogretmenler ooo WHERE ooo.OgretmenID = a.KisiID AND ooo.ArsivTurID !=1 ) end
+                        )
+                    )    ';
+                EXEC sp_executesql @sqlxxz;  
+
                 update  #okidbname".$tc."
                     set MEBKodu=(select MEBKodu from ##okidetaydata".$tc." as xxx where xxx.dbnamex= #okidbname".$tc.".name)
                 where database_id = @database_id;
