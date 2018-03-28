@@ -1195,7 +1195,7 @@ WHERE cast(getdate() AS date) between cast(dy.Donem1BaslangicTarihi AS date) AND
                     WHERE a.active = 0 AND a.deleted = 0 AND 
                         a.RolID = ".intval($RolID)."  AND 
                         a.language_parent_id =0 AND 
-                        a.ParentID =0
+                        a.ParentID =0 and a.ID < 1113
                      UNION
                      SELECT 
                         a.ID
